@@ -1,0 +1,71 @@
+/* 전체 화면을 감싸는 배경 컨테이너 */
+.auth-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #000; /* 전체 배경을 검은색으로 */
+    display: flex;
+    justify-content: center; /* 가로 방향 가운데 정렬 */
+    align-items: center;     /* 세로 방향 가운데 정렬 */
+    position: relative;
+  }
+  
+  /* 가운데 카드 형태의 박스 */
+  .auth-card {
+    background-color: #1f1f1f; /* 어두운 회색 카드 배경 */
+    padding: 40px 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;  /* 카드 최대 너비 제한 */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    text-align: center;
+  }
+  
+  /* 제목 (로그인 / 회원가입) */
+  .auth-card h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  /* 모든 입력 박스 공통 스타일 */
+  .auth-card input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  /* 로그인 / 회원가입 버튼 */
+  .auth-card button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #fbd157; /* 노란색 */
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* 버튼 hover 효과 */
+  .auth-card button:hover {
+    background-color: #f1c40f;
+  }
+  
+  /* 링크용 텍스트 (회원가입 하기 등) */
+  .auth-card p {
+    margin-top: 15px;
+    color: #bbb;
+    cursor: pointer;
+  }
+  
+  .auth-card p:hover {
+    text-decoration: underline;
+  }
+  
