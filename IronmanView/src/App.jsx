@@ -1,33 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import axios from 'axios'
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/HomePage' 
 
 function App() {
-  const idRef = useRef();
-  const pwRef = useRef();
-
-  return(
-    <div>
-      
-    <input type="text" id = "id" ref={idRef}/>
-    <input type="text" id = "pw" ref={pwRef}/>
-    <button onClick={()=>{
-      const id = idRef.current.value;
-      const pw = pwRef.current.value;
-      axios.post("http://localhost:329/web/login",{ // post 방식으로 해당 url에 요청
-        id : id,
-        pw : pw
-      }, {headers: {
-    "Content-Type": "application/json"
-  }})
-      
-    }}></button>
-
-    </div>
-  
-
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </Router>
   )
 }
 
