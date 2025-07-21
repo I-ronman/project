@@ -1,0 +1,46 @@
+/* styles/LoginCard.css */
+.login-card {
+    width: 320px;
+    padding: 30px;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    margin: auto;
+    position: relative;
+    z-index: 10;
+  }
+  
+  .login-title {
+    font-size: 20px;
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  .login-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #333;
+    color: white;
+  }
+  
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #fbd157;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .login-footer {
+    margin-top: 12px;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  

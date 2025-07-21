@@ -62,7 +62,7 @@ function RegisterPage() {
           onChange={(e) => setEmail(e.target.value)}
         />
         <button onClick={handleRegister}>회원가입</button>
-        <p onClick={() => navigate('/')}>로그인 화면으로</p>
+        <p onClick={() => navigate('/Login')}>로그인 화면으로</p>
       </div>
     </div>
   )

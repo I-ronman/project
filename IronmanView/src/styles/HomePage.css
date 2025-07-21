@@ -1,0 +1,28 @@
+
+
+.homepage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .top-section {
+    z-index: 20; /* BlurOverlay보다 위 */
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .main-section-wrapper {
+    position: relative; /* BlurOverlay 포지셔닝 기준 */
+    width: 100%;
+    max-width: 600px;
+    margin-top: 2rem;
+  }
+  
+  .main-content-container {
+    position: relative; /* BlurOverlay가 덮이도록 */
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
