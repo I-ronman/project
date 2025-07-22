@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name ="userinfo")
+@Table(name ="user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,10 +13,8 @@ import lombok.*;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT 와 같은기능
-    private Long userid;
-
     private String email;
+
     private String pw;
     private String name;
     private String gender;

@@ -1,4 +1,16 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
 #Wed Jul 23 09:03:19 KST 2025
 host=DESKTOP-ET6GDIV
 process-id=14228
+=======
+#Thu Jul 24 17:35:56 KST 2025
+host=DESKTOP-ET6GDIV
+process-id=8348
+>>>>>>> d12c074 (이메일 중복방지 및 인증코드 초기화 구현)
+=======
+#Fri Jul 25 10:15:03 KST 2025
+host=DESKTOP-ET6GDIV
+process-id=16016
+>>>>>>> c5c0de2 (Remove client secret from tracked history)
 user=smhrd
