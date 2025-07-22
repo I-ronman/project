@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import Training from "./components/TrainingCam";
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage'; 
+import ChatBotPage from './pages/ChatBotPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -15,6 +16,7 @@ const AppRoutes = () => {
       <Route path="/training" element={<Training />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/ChatBot" element={<ChatBotPage />} />
     </Routes>
   );
 };
