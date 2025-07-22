@@ -1,0 +1,116 @@
+.onboarding-wrapper {
+    background-color: #111;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+    overflow-y: auto;
+  }
+  
+  .onboarding-container {
+    width: 100%;
+    max-width: 430px;
+    background-color: #111;
+    color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 8px;
+  }
+  
+  h1 {
+    font-size: 22px;
+    margin-bottom: 16px;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+  
+  h1 span {
+    color: #d6ff00;
+    font-weight: bold;
+  }
+  
+  .onboarding-image {
+    width: 100%;
+    max-width: 360px;
+    height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin: 0 auto 20px;
+  }
+  
+  .onboarding-desc p {
+    font-size: 14px;
+    color: #ccc;
+    margin: 4px 0;
+  }
+  
+  .onboarding-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .option-box {
+    background: #333;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: left;
+    transition: 0.2s;
+    cursor: pointer;
+  }
+  
+  .option-box.selected {
+    background-color: #d6ff00;
+    color: #000;
+  }
+  
+  .option-box p {
+    font-size: 13px;
+    margin: 4px 0;
+  }
+  
+  .onboarding-footer {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .dots {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #444;
+  }
+  
+  .dots span.active {
+    background: #d6ff00;
+  }
+  
+  .next-btn {
+    background: #d6ff00;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 60%;
+    max-width: 240px;
+  }
+  

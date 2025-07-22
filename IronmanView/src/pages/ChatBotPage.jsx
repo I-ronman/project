@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ 추가
 import '../styles/ChatBotPage.css';
 
 function ChatBotPage() {
+  const navigate = useNavigate(); // ✅ 추가
+
   const [messages, setMessages] = useState([
     { sender: 'bot', text: '안녕하세요. 무엇을 도와드릴까요?' }
   ]);
@@ -19,7 +22,6 @@ function ChatBotPage() {
     setMessages(newMessages);
     setInput('');
 
-    // 실제 백엔드 연동 준비 (Flask 연동 시)
     fetch('http://localhost:5000/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -41,7 +43,7 @@ function ChatBotPage() {
         <div className="chat-header">
           <img src="/src/assets/logo.png" alt="로고" className="chat-logo" />
           <h3>챗 봇</h3>
-          <button className="chat-exit" onClick={() => navigate('/HomePage')}>나가기</button>
+          <button className="chat-exit" onClick={() => navigate('/')}>나가기</button>
         </div>
 
         <div className="chat-body">

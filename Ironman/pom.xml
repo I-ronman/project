@@ -38,7 +38,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
-
+		<dependency>
+		    <groupId>io.github.cdimascio</groupId>
+		    <artifactId>java-dotenv</artifactId>
+		    <version>5.2.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -64,6 +68,30 @@
 		        <groupId>org.springframework.boot</groupId>
 		        <artifactId>spring-boot-starter-data-jpa</artifactId>
     	</dependency>
+    	<dependency>
+			  <groupId>org.springframework.boot</groupId>
+			  <artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		 <!-- Spring Security -->
+		 <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		 </dependency>
+		  <!-- OAuth2 Client (Google 로그인 등 소셜 로그인에 필요) -->
+		 <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-oauth2-client</artifactId>
+		 </dependency>
+		  <!-- Web (기본 MVC) -->
+		 <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-web</artifactId>
+		 </dependency>
+		  <!-- Thymeleaf (선택: OAuth 로그인 성공 후 리디렉션 페이지용 템플릿) -->
+		 <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		 </dependency>
 	</dependencies>
 
 	<build>

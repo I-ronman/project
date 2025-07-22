@@ -1,6 +1,8 @@
 package com.Ironman.back.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.Ironman.back.dto.UserDto;
 import com.Ironman.back.entity.UserEntity;
@@ -12,10 +14,31 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 
-		private final UserRepository userRepository;
-		
-		public void signup(UserDto dto) {
-			UserEntity user = dto.toEntity();
-			userRepository.save(user);
+	private final UserRepository userRepository;
+	private final EmailService emailService;
+	
+	public void signup(UserDto dto) {
+		// 이메일 중복 체크
+		if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 이메일입니다.");
 		}
+		
+		if (!emailService.isVerified(dto.getEmail())) {
+	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 인증을 먼저 완료해주세요.");
+	    }
+
+		// 회원 저장
+		  UserEntity user = UserEntity.builder()
+			        .email(dto.getEmail())
+			        .pw(dto.getPw())
+			        .name(dto.getName())
+			        .gender(dto.getGender())
+			        .birthDate(dto.getBrithdate())
+			        .build();
+		  
+		userRepository.save(user);
+		
+		// 회원가입후 인증 상태 초기화
+		emailService.clearVerification(dto.getEmail());
+	}
 }
