@@ -1,28 +1,56 @@
-
-
-.homepage-container {
+/* 중앙 정렬 및 전체 디자인 스타일 */
+.home-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem;
+    justify-content: start;
+    height: 100vh;
+    background-color: white; /* 이후 배경 이미지로 교체 가능 */
+    position: relative;
   }
   
-  .top-section {
-    z-index: 20; /* BlurOverlay보다 위 */
+  /* 상단 로고와 버튼 배치 */
+  .top-bar {
     width: 100%;
-    max-width: 600px;
+    max-width: 430px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: black;
+    color: white;
   }
   
-  .main-section-wrapper {
-    position: relative; /* BlurOverlay 포지셔닝 기준 */
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .login-button {
+    background-color: #222;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* 메인 콘텐츠 영역 */
+  .main-content {
     width: 100%;
-    max-width: 600px;
-    margin-top: 2rem;
+    max-width: 430px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #ddd; /* 임시 배경색 */
   }
   
-  .main-content-container {
-    position: relative; /* BlurOverlay가 덮이도록 */
-    border-radius: 16px;
-    overflow: hidden;
+  /* 블러처리 텍스트 예시 */
+  .blur-text {
+    font-size: 20px;
+    font-weight: bold;
   }
   

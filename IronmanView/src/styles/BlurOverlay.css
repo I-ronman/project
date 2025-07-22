@@ -1,23 +1,15 @@
-
+/* 로그인하지 않은 경우 흐릿한 블러 배경 처리 */
 .blur-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 80px; /* 상단 bar 제외 */
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  height: 100%;
+  max-width: 430px;
+  height: calc(100% - 80px);
   backdrop-filter: blur(8px);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(255, 255, 255, 0.3);
   z-index: 10;
-  border-radius: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.blur-message {
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-size: 16px;
+  pointer-events: none; /* 클릭 막기 */
+  border-radius: 0 0 10px 10px;
 }
