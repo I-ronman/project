@@ -8,7 +8,6 @@ import SignupPage from './pages/SignupPage';
 const AppRoutes = () => {
   const location = useLocation();
   const isLogin = !!localStorage.getItem('user');
-  const isHome = location.pathname === '/';
 
   return (
     <Routes>
@@ -16,7 +15,6 @@ const AppRoutes = () => {
       <Route path="/training" element={<Training />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-
     </Routes>
   );
 };
@@ -24,7 +22,16 @@ const AppRoutes = () => {
 function App() {
   return (
     <Router>
-      <AppRoutes />
+      {/*  전체 중앙 정렬 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#f5f5f5'  // 배경색은 추후 수정
+      }}>
+        <AppRoutes />
+      </div>
     </Router>
   );
 }
