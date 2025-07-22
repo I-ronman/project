@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import HomePage from './pages/HomePage';
 import Training from "./components/TrainingCam";
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import SignupPage from './pages/SignupPage'; 
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -15,7 +15,8 @@ const AppRoutes = () => {
       <Route path="/" element={<HomePage isLoggedIn={isLogin} />} />
       <Route path="/training" element={<Training />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+
     </Routes>
   );
 };

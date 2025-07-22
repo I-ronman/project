@@ -1,56 +1,66 @@
-/* 중앙 정렬 및 전체 디자인 스타일 */
+/* 화면 전체 중앙 정렬 */
+.home-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 카드형 전체 레이아웃 */
 .home-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-    height: 100vh;
-    background-color: white; /* 이후 배경 이미지로 교체 가능 */
-    position: relative;
-  }
-  
-  /* 상단 로고와 버튼 배치 */
-  .top-bar {
-    width: 100%;
-    max-width: 430px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: black;
-    color: white;
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .login-button {
-    background-color: #222;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  /* 메인 콘텐츠 영역 */
-  .main-content {
-    width: 100%;
-    max-width: 430px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    background-color: #ddd; /* 임시 배경색 */
-  }
-  
-  /* 블러처리 텍스트 예시 */
-  .blur-text {
-    font-size: 20px;
-    font-weight: bold;
-  }
-  
+  width: 100%;
+  max-width: 430px;
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 상단 검정 배경바 */
+.top-bar {
+  background-color: black;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.login-button {
+  background-color: #222;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* 콘텐츠 부분 */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ddd;
+  position: relative;
+}
+
+.blur-text {
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 5;
+}
+.logo-img {
+  height: 30px;
+}

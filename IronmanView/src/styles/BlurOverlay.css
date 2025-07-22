@@ -1,15 +1,12 @@
-/* 로그인하지 않은 경우 흐릿한 블러 배경 처리 */
+/* 블러 오버레이 */
 .blur-overlay {
   position: absolute;
-  top: 80px; /* 상단 bar 제외 */
-  left: 50%;
-  transform: translateX(-50%);
+  top: 60px; /* 상단바 높이만큼 내려줌 */
+  left: 0;
   width: 100%;
-  max-width: 430px;
-  height: calc(100% - 80px);
-  backdrop-filter: blur(8px);
+  height: calc(100% - 60px);
+  backdrop-filter: blur(6px);
   background-color: rgba(255, 255, 255, 0.3);
-  z-index: 10;
-  pointer-events: none; /* 클릭 막기 */
-  border-radius: 0 0 10px 10px;
+  z-index: 4;
+  pointer-events: none;
 }

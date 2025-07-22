@@ -46,7 +46,8 @@ function LoginPage() {
           onChange={(e) => setPw(e.target.value)}
         />
         <button onClick={handleLogin}>로그인</button>
-        <p onClick={() => navigate('/register')}>회원가입 하기</p>
+        <p onClick={() => navigate('/signup')}>회원가입 하기</p>
+
       </div>
     </div>
   )

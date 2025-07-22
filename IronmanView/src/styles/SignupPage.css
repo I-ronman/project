@@ -1,0 +1,94 @@
+.signup-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    height: 100vh;
+  }
+  
+  .signup-container {
+    width: 100%;
+    max-width: 430px;
+    background-color: #222;
+    color: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-sizing: border-box;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  }
+  
+  .signup-logo {
+    display: block;
+    width: 50px;
+    margin: 0 auto 16px auto;
+  }
+  
+  .signup-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .signup-container label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .signup-container input,
+  .date-picker {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .gender-group {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+  }
+  
+  .password-hint {
+    color: red;
+    font-size: 12px;
+    margin-top: -5px;
+    margin-bottom: 10px;
+  }
+  
+  .agreement {
+    font-size: 12px;
+    color: #ccc;
+    margin-bottom: 20px;
+  }
+  
+  .signup-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #f5ff00;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  
+  .google-btn,
+  .kakao-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #eee;
+    color: black;
+  }
+  .kakao-btn {
+    background-color: #ffea00;
+  }
+  
