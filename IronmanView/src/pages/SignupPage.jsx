@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/SignupPage.css';
 import logo from '../assets/logo.png';
+import axios from 'axios';
 
 function SignupPage() {
   const [name, setName] = useState('');
@@ -11,18 +12,23 @@ function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = () => {
-    // TODO: 백엔드와 연동
+  const handleSubmit = async () => {
     const data = {
-      name,
-      gender,
-      birthDate,
-      email,
-      password
-    };
-    console.log('회원가입 요청:', data);
-    // axios.post(...) 가능
+    email: email,
+    pw: password,
+    name: name,
+    gender: gender,
+    birthdate: birthDate ? birthDate.toISOString().split('T')[0] : ''
   };
+    try {
+      await axios.post('http://localhost:329/web/signup', data);
+      console.log('회원가입 성공:', response.data);
+      // 성공 후 리다이렉트 또는 알림 처리
+    } catch (error) {
+      console.error('회원가입 실패:', error.response?.data || error.message);
+    }
+  }
+
 
   return (
     <div className="signup-wrapper">

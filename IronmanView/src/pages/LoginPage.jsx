@@ -3,26 +3,28 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../styles/Auth.css'
 
+
 function LoginPage() {
   const navigate = useNavigate()
-  const [id, setId] = useState('')
+  const [email, setEmail] = useState('')
   const [pw, setPw] = useState('')
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:329/web/login', {
-        id,
+      await axios.post('http://localhost:329/web/login', {
+        email,
         pw
       }, {
         headers: { 'Content-Type': 'application/json' }
-      })
-
-      // 로그인 성공 시 리디렉션
+      }).then((res) => {
+        console.log(res.data);
+        // 로그인 성공 시 리디렉션
       if (res.data.success) {
         navigate('/home')  // 나중에 홈페이지로 연결
       } else {
         alert('아이디 또는 비밀번호가 올바르지 않습니다.')
       }
+      })
     } catch (err) {
       console.error(err)
       alert('서버 오류가 발생했습니다.')
@@ -35,9 +37,9 @@ function LoginPage() {
         <h2>로그인</h2>
         <input
           type="text"
-          placeholder="아이디"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
+          placeholder="이메일"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
