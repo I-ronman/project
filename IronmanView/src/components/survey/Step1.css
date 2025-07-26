@@ -1,0 +1,61 @@
+.survey-step {
+  text-align: center;
+  padding: 20px;
+}
+
+.survey-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.survey-input-group {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.survey-input::placeholder {
+  font-size: 24px;
+  color: #aaa;
+}
+
+.survey-input:focus::placeholder {
+  opacity: 0;
+}
+
+.survey-input {
+  width: auto;
+  min-width: 100px;
+  max-width: 200px;
+  font-size: 48px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #fff;
+  color: #fff;
+  text-align: center;
+  outline: none;
+}
+
+.unit {
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.survey-button {
+  background-color: #d3ff00;
+  border: none;
+  padding: 12px 36px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.survey-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
