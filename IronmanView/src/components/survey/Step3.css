@@ -1,0 +1,101 @@
+.survey-step {
+  text-align: center;
+  padding: 20px;
+}
+
+.survey-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.weight-input {
+  font-size: 28px;
+  width: 100px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.weight-unit {
+  font-size: 20px;
+  color: #fff;
+  margin-left: 4px;
+}
+
+.goal-weight-display-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 20px 0;
+  height: 50px;
+}
+
+.goal-weight-display-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 1;
+}
+
+.original-weight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9078f1;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.original-weight.left {
+  right: 20px;
+}
+
+.original-weight.right {
+  left: 20px;
+}
+
+.bmi-box {
+  margin-top: 20px;
+  background-color: #111;
+  padding: 20px;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  min-height: 100px;
+  transition: all 0.3s ease;
+}
+
+.bmi-status-message {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #fff;
+}
+
+.bmi-tip-message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.survey-button {
+  background-color: #d3ff00;
+  border: none;
+  padding: 12px 36px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.survey-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

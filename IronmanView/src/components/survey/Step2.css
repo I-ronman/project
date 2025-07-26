@@ -1,0 +1,85 @@
+.survey-step {
+  text-align: center;
+  padding: 20px;
+}
+
+.survey-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.survey-input-group {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.survey-input::placeholder {
+  font-size: 24px;
+  color: #aaa;
+}
+
+.survey-input:focus::placeholder {
+  opacity: 0;
+}
+
+.survey-input {
+  width: auto;
+  min-width: 100px;
+  max-width: 200px;
+  font-size: 48px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #fff;
+  color: #fff;
+  text-align: center;
+  outline: none;
+}
+
+.unit {
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.bmi-box {
+  margin-top: 20px;
+  background-color: #111;
+  padding: 20px;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  min-height: 100px;
+  transition: all 0.3s ease;
+}
+
+.bmi-score {
+  position: relative;
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-icon {
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.bmi-tooltip {
+  position: fixed;
+  top: 340px;
+  right: 90px;
+  background-color: #fff;
+  color: #000;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 2px 6p
+}

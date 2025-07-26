@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+
+.font-test-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f0f0f0;
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+  padding: 20px;
+}
+
+/* 소제목 */
+.text-3d-smalltitle {
+  font-size: 40px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase; /* 대문자화 */
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.15),
+    2px 2px 6px rgba(0, 0, 0, 0.25),
+    0 0 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 2px;
+}
+
+/* 타이틀 */
+.text-3d-title {
+  font-size: 70px;
+  font-weight: 700;
+  color: white;
+  text-shadow:
+    2px 2px 3px rgba(0, 0, 0, 0.2),
+    4px 4px 6px rgba(0, 0, 0, 0.3),
+    0 0 2px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* 본문 설명 */
+.text-3d-content {
+  font-size: 26px;
+  font-weight: 900; /* 더 두껍게 */
+  font-family: 'Noto Sans KR', 'Playfair Display', serif; /* 한글은 앞 폰트가 우선됨 */
+  color: white;
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.1),
+    2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  letter-spacing: 1px;
+}
