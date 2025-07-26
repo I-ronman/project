@@ -1,0 +1,133 @@
+/* ProfileEditPage.css */
+
+.profile-edit-wrapper {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  
+  .profile-edit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .profile-photo-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .profile-photo-section img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+  }
+  
+  .profile-photo-section input[type="file"] {
+    font-size: 14px;
+  }
+  
+  .profile-basic-info {
+    width: 100%;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+  }
+  
+  .profile-basic-info div {
+    margin-bottom: 10px;
+  }
+  
+  .profile-basic-info label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .profile-basic-info input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    color: #555;
+  }
+  
+  .profile-basic-info input[disabled] {
+    background-color: #e0e0e0;
+    color: #999;
+  }
+  
+  .profile-body-info {
+    position: relative;
+    width: 100%;
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+  }
+  
+  .profile-body-info.blur {
+    filter: blur(3px);
+    pointer-events: none;
+  }
+  
+  .profile-body-info label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  
+  .profile-body-info input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 12px;
+  }
+  
+  .blur-overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.9);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+    z-index: 10;
+  }
+  
+  .save-button {
+    width: 100%;
+    background-color: #FBD157;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .save-button:hover {
+    background-color: #f8c93a;
+  }
+  

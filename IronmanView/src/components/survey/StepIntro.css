@@ -1,0 +1,41 @@
+/* StepIntro.css 또는 SurveyPage.css의 StepIntro 영역 */
+
+.coach-img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+  margin-bottom: 12px;
+}
+
+.intro-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 20px 0 12px 0;
+}
+
+.intro-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #eee;
+  white-space: pre-line;
+  margin-bottom: 30px;
+}
+
+.ready-button {
+  background-color: #d3ff00;
+  color: black;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 30px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(211, 255, 0, 0.5);
+  transition: transform 0.2s;
+}
+
+.ready-button:hover {
+  transform: scale(1.03);
+}
