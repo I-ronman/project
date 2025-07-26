@@ -2,8 +2,8 @@ import math
 
 
 def getDistance(a,b):
-    '''a좌표와 b좌표를 3차원 좌표 값을 토대로 3차원 거리 값을 반환해줍니다.'''
-    distance = math.sqrt((a.x-b.x)**2+(a.y-b.y)**2+(a.z-b.z)**2)
+    '''a좌표와 b좌표를 2차원 좌표 값을 토대로 2차원 거리 값을 반환해줍니다.'''
+    distance = math.sqrt((a.x-b.x)**2+(a.y-b.y)**2)
     return distance
 
 
@@ -14,4 +14,4 @@ def getAngle(a,b,c):
     cos_C = max(-1, min(1, cos_C))
     angle_C_rad = math.acos(cos_C)
     angle_C_deg = math.degrees(angle_C_rad)
-    return angle_C_deg
+    return int(angle_C_deg)
