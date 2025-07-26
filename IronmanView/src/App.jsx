@@ -20,6 +20,9 @@ import MyPage from './pages/MyPage';
 import ProfileEditPage from './pages/ProfileEditPage';
 import EnvironmentSettingPage from './pages/EnvironmentSettingPage';
 
+// 시험 페이지
+import FontTest from './pages/FontTest';
+
 const AppRoutes = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -47,6 +50,7 @@ const AppRoutes = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/profile-edit" element={<ProfileEditPage />} />
       <Route path="/settings" element={<EnvironmentSettingPage />} />
+      <Route path="/font" element={<FontTest />} />
     </Routes>
   );
 };
