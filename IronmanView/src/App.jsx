@@ -1,11 +1,24 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+
+// Context 추가
+import { AuthProvider } from './context/AuthContext';
+
+// 기존 페이지들
 import HomePage from './pages/HomePage';
 import Training from './components/TrainingCam';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ChatBotPage from './pages/ChatBotPage';
-import OnboardingPage from './pages/OnboardingPage';  // 온보딩 페이지 import
+import OnboardingPage from './pages/OnboardingPage';
+import SchedulePage from './pages/SchedulePage';
+import SurveyPage from './pages/SurveyPage';
+import RoutinePage from './pages/RoutinePage';
+
+// 추가된 페이지들
+import MyPage from './pages/MyPage';
+import ProfileEditPage from './pages/ProfileEditPage';
+import EnvironmentSettingPage from './pages/EnvironmentSettingPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -14,9 +27,8 @@ const AppRoutes = () => {
   const isFirstLogin = localStorage.getItem('firstLogin') === 'true';
 
   useEffect(() => {
-    // 홈 경로에 있을 때만 온보딩 체크
     if (location.pathname === '/' && isLogin && isFirstLogin) {
-      localStorage.setItem('firstLogin', 'false'); // 이후부터는 다시 안 뜨게 설정
+      localStorage.setItem('firstLogin', 'false');
       navigate('/onboarding');
     }
   }, [location, isLogin, isFirstLogin, navigate]);
@@ -29,24 +41,31 @@ const AppRoutes = () => {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/chatbot" element={<ChatBotPage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
+      <Route path="/schedulepage" element={<SchedulePage />} />
+      <Route path="/survey" element={<SurveyPage />} />
+      <Route path="/routine" element={<RoutinePage />} />
+      <Route path="/mypage" element={<MyPage />} />
+      <Route path="/profile-edit" element={<ProfileEditPage />} />
+      <Route path="/settings" element={<EnvironmentSettingPage />} />
     </Routes>
   );
 };
 
 function App() {
   return (
-    <Router>
-      {/* 전체 중앙 정렬 */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        backgroundColor: '#f5f5f5' // 배경색은 추후 수정
-      }}>
-        <AppRoutes />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: '#f5f5f5'
+        }}>
+          <AppRoutes />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
