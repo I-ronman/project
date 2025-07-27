@@ -1,6 +1,7 @@
 import math
+import cv2
 
-
+def to_pixel(lm,h,w): return int(lm.x * w), int(lm.y * h)
 def getDistance(a,b):
     '''a좌표와 b좌표를 2차원 좌표 값을 토대로 2차원 거리 값을 반환해줍니다.'''
     distance = math.sqrt((a.x-b.x)**2+(a.y-b.y)**2)
@@ -15,3 +16,54 @@ def getAngle(a,b,c):
     angle_C_rad = math.acos(cos_C)
     angle_C_deg = math.degrees(angle_C_rad)
     return int(angle_C_deg)
+
+def get_angle(a, b, c):
+    # 세점을 기준으로 두 선(Vector)를 그리고, 해당 백터사이의 각도를 구한다
+    # dot product 기반 또는 atan 기반의 수학 함수를 통해서.. 각도를 구할수 있음.
+    ang = int(math.degrees(
+        math.atan2(c.y - b.y, c.x - b.x) - math.atan2(a.y - b.y, a.x - b.x)
+    ))
+    ang = abs(ang)
+    if ang > 180:
+        ang = 360 - ang
+    return ang
+
+def draw_angle_arc(img,h,w, a, b, c, radius=40, color=(255, 255, 0)):
+    # 각도 계산
+    
+
+    angle = get_angle(a, b, c)
+
+    # 시작/끝 각도 (단위: degree)
+    start = math.degrees(math.atan2(a.y - b.y, a.x - b.x))
+    end = math.degrees(math.atan2(c.y - b.y, c.x - b.x))
+
+    start = start % 360
+    end = end % 360
+
+    # 방향에 따라 sweep angle 조절
+    # sweep = (end - start) % 360
+    # if sweep > 180:
+    #     start, end = end, start
+    #     sweep = (end - start) % 360
+    b = to_pixel(b,h,w)
+
+    # 타원(호) 그리기
+    cv2.ellipse(
+        img,
+        center=b,
+        axes=(radius, radius),
+        angle=0,
+        startAngle=start,
+        endAngle=(end),
+        color=color,
+        thickness=2
+        
+    )
+
+    # 각도 텍스트 표시
+    text_pos = b
+    cv2.putText(img, f'{int(angle)} deg', text_pos,
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+
+    
