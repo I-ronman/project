@@ -22,6 +22,8 @@ import EnvironmentSettingPage from './pages/EnvironmentSettingPage';
 
 // 시험 페이지
 import FontTest from './pages/FontTest';
+import PostureAnalysisPage from './pages/PostureAnalysisPage';
+import StatisticsPage from './pages/StatisticsPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -51,6 +53,8 @@ const AppRoutes = () => {
       <Route path="/profile-edit" element={<ProfileEditPage />} />
       <Route path="/settings" element={<EnvironmentSettingPage />} />
       <Route path="/font" element={<FontTest />} />
+      <Route path="/postureanalysis" element={<PostureAnalysisPage />} />
+      <Route path="/statistics" element={<StatisticsPage />} />
     </Routes>
   );
 };
