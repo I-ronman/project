@@ -1,27 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../styles/RoutinePage.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useRoutine } from '../contexts/RoutineContext.jsx';
 
 const RoutinePage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState('routine');
-  const [savedRoutines, setSavedRoutines] = useState([]);
-
-  // 새로운 루틴 저장
-  useEffect(() => {
-    const newRoutine = location.state?.newRoutine;
-    if (newRoutine) {
-      setSavedRoutines((prev) => [...prev, newRoutine]);
-    }
-  }, [location.state]);
+  const { savedRoutines, deleteRoutine } = useRoutine();
 
   const handleRoutineClick = (routine) => {
     navigate('/routinedetail', { state: { routine } });
   };
 
+  const handleDeleteRoutine = (routineName) => {
+    deleteRoutine(routineName);
+  };
+
   const handleAddRoutine = () => {
-    navigate('/routinedetail');
+    const newRoutine = {
+      name: `루틴 ${String.fromCharCode(65 + savedRoutines.length)}`,
+      duration: 30,
+      exercises: [],
+    };
+    navigate('/routinedetail', { state: { routine: newRoutine } });
   };
 
   const handleChatbotNavigate = () => {
@@ -49,14 +50,25 @@ const RoutinePage = () => {
 
             <div className="routine-card-list">
               {savedRoutines.map((r, index) => (
-                <div key={index} className="routine-card" onClick={() => handleRoutineClick(r)}>
-                  <h2>{r.name}</h2>
+                <div key={index} className="routine-card">
+                  <div className="routine-card-header">
+                    <h2>{r.name}</h2>
+                    <span
+                      className="delete-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteRoutine(r.name);
+                      }}
+                    >
+                      X
+                    </span>
+                  </div>
                   <p>⏱ {r.duration}분</p>
-                  <p>💪 {r.exercises.join(', ')}</p>
+                  <p>💪 {r.exercises.map((e) => e.name).join(', ')}</p>
+                  <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
                 </div>
               ))}
 
-              {/* 무조건 추가 버튼 표시 */}
               <div className="add-routine-card" onClick={handleAddRoutine}>
                 ＋ 루틴 추가하기
               </div>
