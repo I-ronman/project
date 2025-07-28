@@ -19,8 +19,8 @@ function LoginPage() {
       }).then((res) => {
         console.log(res.data);
         // 로그인 성공 시 리디렉션
-      if (res.data.success) {
-        navigate('/home')  // 나중에 홈페이지로 연결
+      if (res.data && res.data.email) {
+        navigate('/')  // 나중에 홈페이지로 연결
       } else {
         alert('아이디 또는 비밀번호가 올바르지 않습니다.')
       }
@@ -29,6 +29,10 @@ function LoginPage() {
       console.error(err)
       alert('서버 오류가 발생했습니다.')
     }
+  }
+
+ const handleGoogleLogin = () => {
+    window.location.href = 'http://localhost:329/web/oauth2/authorization/google'
   }
 
   return (
@@ -48,6 +52,15 @@ function LoginPage() {
           onChange={(e) => setPw(e.target.value)}
         />
         <button onClick={handleLogin}>로그인</button>
+        <button onClick={handleGoogleLogin} style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <img
+        src="https://developers.google.com/identity/images/g-logo.png"
+        alt="Google"
+        style={{ width: '20px', height: '20px', marginRight: '10px' }}
+      />
+      구글 로그인
+    </button>
+
         <p onClick={() => navigate('/signup')}>회원가입 하기</p>
 
       </div>

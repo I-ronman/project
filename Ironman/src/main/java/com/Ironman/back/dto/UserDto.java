@@ -27,4 +27,15 @@ public class UserDto {
 				.birthDate(this.brithdate)
 				.build();
 	}
+	
+	public static UserDto from(UserEntity entity) {
+		return UserDto.builder()
+				.email(entity.getEmail())
+				.name(entity.getName())
+				.gender(entity.getGender())
+				.brithdate(entity.getBirthDate())
+				.pw(null) // 보안상 패스워드는 제외하거나 null 처리
+				.build();
+	}
+	
 }
