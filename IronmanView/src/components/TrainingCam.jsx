@@ -1,36 +1,51 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Webcam from "react-webcam";
+import {io} from "socket.io-client"
 
 function TrainingCam() {
-  const ws = useRef<WebSocket | null> (null)
-  useEffect(()=>{
-    ws.current = new WebSocket("localhost:525/analyze")
-    ws.current.onopen = () => {
-      console.log('WebSocket connection opened.')
-      setIsLoading(false);
-    }
-    ws.current.onmessage = (event) => {
-      if (event.data) {
-        const base64ImageData = 'data:image/jpg;base64,' + event.data;
-        setCctvData(base64ImageData);
-      }
-    };
-    ws.current.onerror = () => console.log('WebSocket Error');
-    ws.current.onclose = () => {
-      console.log('Websocket connection is closed');
-    };
+  const wsRef = useRef(null);
+  const webcamRef = React.useRef(null);
+  const [imgSrc,setImgSrc] = useState("");
+  <webcamRef ref={webcamRef}></webcamRef>
 
-    return () => {
-      if (ws.current && ws.current.readyState === 1) {
-        ws.current.close();
+  useEffect(()=>{
+    wsRef.current = io.connect('http://localhost:525');
+    wsRef.current.on("show",(data) => {
+      try{
+        setImgSrc(`data:image/jpeg;base64,${data}`)
+        
+      }catch(error){
+        console.error(error)
       }
+      
+    })
+    
+    const sendImage = setInterval(()=>{
+      const imgSrc= webcamRef.current.getScreenshot();
+      console.log();
+      const data = {
+        "image": imgSrc
+      }
+      wsRef.current.emit("analyze",data)
+    },100);
+    sendImage
+    // wsRef.current.emit("analyze",webcamRef.current.getScreenshot())
+    return () => {
+      wsRef.current.disconnect();
     };
   },[]);
-  const WebcamComponent = () => <Webcam />;
+  
+  
+  // if (event.data) {
+  //       const base64ImageData = 'data:image/jpg;base64,' + event.data;
+  //       setCctvData(base64ImageData);
+  //     }
+
   return (
     
     <div>
-      <Webcam/>
+      <Webcam ref={webcamRef}/>
+      <img src={imgSrc} alt="" />
     </div>
   )
 }
