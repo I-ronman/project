@@ -1,4 +1,4 @@
-package com.Ironman.back.config;
+package com.Ironman.back.controller;
 
 import java.util.List;
 
