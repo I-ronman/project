@@ -28,6 +28,7 @@ import EnvironmentSettingPage from './pages/EnvironmentSettingPage';
 import FontTest from './pages/FontTest';
 import PostureAnalysisPage from './pages/PostureAnalysisPage';
 import StatisticsPage from './pages/StatisticsPage';
+import WorkoutResultPage from './pages/WorkoutResultPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -61,6 +62,7 @@ const AppRoutes = () => {
       <Route path="/font" element={<FontTest />} />
       <Route path="/postureanalysis" element={<PostureAnalysisPage />} />
       <Route path="/statistics" element={<StatisticsPage />} />
+      <Route path="/workoutresult" element={<WorkoutResultPage />} />
     </Routes>
   );
 };
