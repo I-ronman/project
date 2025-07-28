@@ -236,17 +236,7 @@ function SignupPage() {
         <button className="signup-btn" onClick={handleSubmit}>
           계속하기
         </button>
-        <button
-          className="google-btn"
-          onClick={() => {
-            window.location.href =
-              'http://localhost:329/web/oauth2/authorization/google';
-          }}
-        >
-          Google 계정으로 로그인
-        </button>
-        <button className="kakao-btn">Kakaotalk 계정으로 로그인</button>
-      </div>
+    </div>
     </div>
   );
 }
