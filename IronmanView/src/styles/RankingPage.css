@@ -1,0 +1,36 @@
+.ranking-page {
+    padding: 20px;
+    max-width: 430px;
+    margin: auto;
+    background-color: #111;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ranking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 40px;
+  }
+  
+  .filter-button {
+    background: none;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  

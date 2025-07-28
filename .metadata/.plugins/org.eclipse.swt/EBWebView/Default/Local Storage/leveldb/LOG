@@ -1,3 +1,2 @@
-2025/07/25-10:17:11.942 4c08 Reusing MANIFEST C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2025/07/25-10:17:11.949 4c08 Recovering log #3
-2025/07/25-10:17:11.951 4c08 Reusing old log C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+2025/07/28-13:24:25.081 5b0 Creating DB C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
+2025/07/28-13:24:25.106 5b0 Reusing MANIFEST C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
