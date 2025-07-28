@@ -13,7 +13,9 @@ const AppLayout = () => {
         </div>
       </div>
       <div className="right-panel">
-        <Outlet /> {/* 페이지 콘텐츠 자리 */}
+        <div className="right-content">
+          <Outlet />  {/* 페이지 콘텐츠 자리 */}
+        </div>
       </div>
     </div>
   );
