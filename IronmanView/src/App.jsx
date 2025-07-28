@@ -25,7 +25,6 @@ import EnvironmentSettingPage from './pages/EnvironmentSettingPage';
 
 
 // 시험 페이지
-import FontTest from './pages/FontTest';
 import PostureAnalysisPage from './pages/PostureAnalysisPage';
 import StatisticsPage from './pages/StatisticsPage';
 import WorkoutResultPage from './pages/WorkoutResultPage';
@@ -62,7 +61,6 @@ const AppRoutes = () => {
         <Route path="mypage" element={<MyPage />} />
         <Route path="profile-edit" element={<ProfileEditPage />} />
         <Route path="settings" element={<EnvironmentSettingPage />} />
-        <Route path="font" element={<FontTest />} />
         <Route path="postureanalysis" element={<PostureAnalysisPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
         <Route path="/workoutresult" element={<WorkoutResultPage />} />
@@ -83,7 +81,7 @@ function App() {
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
-            backgroundColor: '#f5f5f5' // 배경색은 추후 수정
+            backgroundColor: '#000000ff' // 배경색은 추후 수정
           }}>
             <AppRoutes />
           </div>
