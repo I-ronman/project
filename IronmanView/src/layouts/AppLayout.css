@@ -1,0 +1,130 @@
+/* 구글 폰트 import */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+/* index.css 또는 AppLayout.css 가장 상단에 추가 */
+html, body {
+  margin: 0;
+  padding: 0;
+  height:100%;
+  background-image: url('../images/background1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+#root {
+  height: 100%;
+  background-color: transparent;
+}
+
+/* 전체 레이아웃 설정 */
+.app-layout {
+  display: flex;
+  justify-content: center;  /* 중앙 정렬 */
+  align-items: center;
+  height: 100vh;
+  padding: 0 40px; /* 좌우 여백 확보 */
+  box-sizing: border-box;
+}
+
+/* 왼쪽 소개 영역 */
+.left-panel {
+  flex: 2;
+  height: 100%;
+
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 오른쪽 콘텐츠 영역 */
+.right-panel {
+  flex: 1;
+  max-width: 500px;
+  width: 500px;
+  background-color: #121212;
+  color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-left: 80px;  /* 왼쪽 종이 질감과 간격 */
+  margin-right: 0;    /* 오른쪽 여백은 app-layout이 관리함 */
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+/* 텍스트 스타일 공통 영역 */
+.branding {
+  text-align: center;
+  padding: 20px;
+}
+
+/* 소제목 */
+.text-3d-smalltitle {
+  font-size: 40px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.15),
+    2px 2px 6px rgba(0, 0, 0, 0.25),
+    0 0 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+/* 타이틀 */
+.text-3d-title {
+  font-size: 70px;
+  font-weight: 700;
+  color: white;
+  text-shadow:
+    2px 2px 3px rgba(0, 0, 0, 0.2),
+    4px 4px 6px rgba(0, 0, 0, 0.3),
+    0 0 2px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* 본문 설명 */
+.text-3d-content {
+  font-size: 26px;
+  font-weight: 900;
+  font-family: 'Noto Sans KR', 'Playfair Display', serif;
+  color: white;
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.1),
+    2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  letter-spacing: 1px;
+}
+
+
+/* 반응형 - 왼쪽 패널 숨김 */
+@media screen and (max-width: 1024px) {
+  .left-panel {
+    display: none;
+  }
+
+  .right-panel {
+    margin: 0;
+    border-radius: 0;
+    height: 100vh;
+  }
+
+  .app-layout {
+    justify-content: center;
+  }
+}
+
+/* 반응형 - 모바일 화면 최적화 */
+@media screen and (max-width: 480px) {
+  .right-panel {
+    width: 100%;
+    padding: 16px;
+  }
+}

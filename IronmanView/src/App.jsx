@@ -28,6 +28,7 @@ import EnvironmentSettingPage from './pages/EnvironmentSettingPage';
 import FontTest from './pages/FontTest';
 import PostureAnalysisPage from './pages/PostureAnalysisPage';
 import StatisticsPage from './pages/StatisticsPage';
+import AppLayout from './layouts/AppLayout';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -44,23 +45,25 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage isLoggedIn={isLogin} />} />
-      <Route path="/training" element={<Training />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/chatbot" element={<ChatBotPage />} />
-      <Route path="/onboarding" element={<OnboardingPage />} />
-      <Route path="/schedulepage" element={<SchedulePage />} />
-      <Route path="/survey" element={<SurveyPage />} />
-      <Route path="/routine" element={<RoutinePage />} />
-      <Route path="/routinedetail" element={<RoutineDetail/>} />
-      <Route path="/search" element={<ExerciseSearch/>} />
-      <Route path="/mypage" element={<MyPage />} />
-      <Route path="/profile-edit" element={<ProfileEditPage />} />
-      <Route path="/settings" element={<EnvironmentSettingPage />} />
-      <Route path="/font" element={<FontTest />} />
-      <Route path="/postureanalysis" element={<PostureAnalysisPage />} />
-      <Route path="/statistics" element={<StatisticsPage />} />
+      <Route path="/" element={<AppLayout/>}>
+        <Route index element={<HomePage isLoggedIn={isLogin} />} />
+        <Route path="training" element={<Training />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="signup" element={<SignupPage />} />
+        <Route path="chatbot" element={<ChatBotPage />} />
+        <Route path="onboarding" element={<OnboardingPage />} />
+        <Route path="schedulepage" element={<SchedulePage />} />
+        <Route path="survey" element={<SurveyPage />} />
+        <Route path="routine" element={<RoutinePage />} />
+        <Route path="routinedetail" element={<RoutineDetail/>} />
+        <Route path="search" element={<ExerciseSearch/>} />
+        <Route path="mypage" element={<MyPage />} />
+        <Route path="profile-edit" element={<ProfileEditPage />} />
+        <Route path="settings" element={<EnvironmentSettingPage />} />
+        <Route path="font" element={<FontTest />} />
+        <Route path="postureanalysis" element={<PostureAnalysisPage />} />
+        <Route path="statistics" element={<StatisticsPage />} />
+      </Route>
     </Routes>
   );
 };
