@@ -1,4 +1,4 @@
-// src/pages/WorkoutResultPage.jsx
+// project/IronmanView/src/pages/WorkoutResultPage.jsx
 
 import React, { useState } from 'react';
 import '../styles/WorkoutResultPage.css';

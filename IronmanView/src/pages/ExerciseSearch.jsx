@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/ExerciseSearch.jsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/ExerciseSearch.css';

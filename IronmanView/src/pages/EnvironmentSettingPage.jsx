@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/EnvironmentSettingPage.jsx
 import React, { useState } from 'react';
 import '../styles/EnvironmentSettingPage.css';
 

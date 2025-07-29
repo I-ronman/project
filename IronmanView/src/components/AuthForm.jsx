@@ -1,3 +1,4 @@
+// project/IronmanView/src/components/AuthForm.jsx
 // 로그인/회원가입 화면에 공통으로 사용하는 폼 컴포넌트
 import React, { useState } from 'react'
 

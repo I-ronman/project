@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/ChatBotPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // ✅ 추가
 import '../styles/ChatBotPage.css';
@@ -43,7 +44,7 @@ function ChatBotPage() {
         <div className="chat-header">
           <img src="/src/assets/logo.png" alt="로고" className="chat-logo" />
           <h3>챗 봇</h3>
-          <button className="chat-exit" onClick={() => navigate('/')}>나가기</button>
+          <button className="chat-exit" onClick={() => navigate('/main')}>나가기</button>
         </div>
 
         <div className="chat-body">

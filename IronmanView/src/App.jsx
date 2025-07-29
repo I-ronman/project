@@ -31,6 +31,7 @@ import StatisticsPage from './pages/StatisticsPage';
 import WorkoutResultPage from './pages/WorkoutResultPage';
 import AppLayout from './layouts/AppLayout';
 import RankingPage from './pages/RankingPage';
+import MainDashboardPage from './pages/MainDashboardPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -61,12 +62,13 @@ const AppRoutes = () => {
         <Route path="search" element={<ExerciseSearch/>} />
         <Route path="mypage" element={<MyPage />} />
         <Route path="profile-edit" element={<ProfileEditPage />} />
-        <Route path="settings" element={<EnvironmentSettingPage />} />
+        <Route path="settings" element={<EnvironmentSettingPage />} />  
         <Route path="font" element={<FontTest />} />
         <Route path="postureanalysis" element={<PostureAnalysisPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
         <Route path="/workoutresult" element={<WorkoutResultPage />} />
-        <Route path="/rankingpage" element={<RankingPage />} />
+        <Route path="/ranking" element={<RankingPage />} />
+        <Route path="main" element={<MainDashboardPage />} />
       </Route>
     </Routes>
   );
