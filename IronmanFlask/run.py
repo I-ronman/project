@@ -153,7 +153,8 @@ def analyze(data):
 
     _, buffer = cv2.imencode('.jpg', frame)
     sendImg = base64.b64encode(buffer).decode("utf-8")
-    socket_io.emit("show",sendImg)
+    data = {"sendImg":sendImg,"goodCount":good_cnt,"badCount":bad_cnt}
+    socket_io.emit("show",)
 
 
 
