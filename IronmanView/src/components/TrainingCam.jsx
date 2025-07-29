@@ -4,7 +4,7 @@ import Webcam from "react-webcam";
 function TrainingCam() {
   const ws = useRef<WebSocket | null> (null)
   useEffect(()=>{
-    ws.current = new WebSocket("localhost:525/analyze")
+    ws.current = new WebSocket("172.30.16.1:525/analyze")
     ws.current.onopen = () => {
       console.log('WebSocket connection opened.')
       setIsLoading(false);
