@@ -112,6 +112,7 @@
 .save-button {
   background-color: #d7fb07;
   color: black;
+
 }
 .routine-name-input {
   font-size: 20px;
@@ -136,4 +137,5 @@
   background-color: #333;
   color: white;
   font-size: 14px;
+
 }

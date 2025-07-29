@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+package com.Ironman.back.config;
+=======
 package com.Ironman.back.controller;
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 
 import java.util.List;
 
@@ -22,6 +26,14 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/oauth/**", "/css/**", "/js/**", "/images/**", "/email/**",      //  이메일 인증 관련 요청 허용
+<<<<<<< HEAD
+                        "/signup"     ).permitAll() // 비로그인 허용 경로
+                .anyRequest().authenticated() // 나머지는 인증 필요
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login") // 프론트 커스텀 로그인 페이지 경로
+                .defaultSuccessUrl("/oauth/success", true) // 로그인 성공시 이동 경로
+=======
                         "/signup","/login"     ).permitAll() // 비로그인 허용 경로
                 .anyRequest().authenticated() // 나머지는 인증 필요
             )
@@ -32,6 +44,7 @@ public class SecurityConfig {
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/loginPage") // 프론트 커스텀 로그인 페이지 경로
                 .defaultSuccessUrl("http://localhost:5173", true) // 로그인 성공시 이동 경로
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
             );
 
         return http.build();

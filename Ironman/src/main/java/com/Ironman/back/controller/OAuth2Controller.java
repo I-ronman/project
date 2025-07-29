@@ -24,13 +24,21 @@ public class OAuth2Controller {
         session.setAttribute("name", oAuth2User.getAttribute("name"));
         session.setAttribute("email", oAuth2User.getAttribute("email"));
 
+<<<<<<< HEAD
+        // ✅ 로그인 성공 후 프론트로 이동
+=======
         //  로그인 성공 후 프론트로 이동
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
         response.sendRedirect("http://localhost:5173/signup");
         System.out.println("👉 oauthSuccess() 실행됨");
 
     }
 
+<<<<<<< HEAD
+    // ✅ 프론트에서 유저 정보 요청 (axios.get)
+=======
     //  프론트에서 유저 정보 요청 (axios.get)
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
     @GetMapping("/oauth/userinfo")
     @ResponseBody
     public Map<String, Object> getUserInfo(HttpSession session) {

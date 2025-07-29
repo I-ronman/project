@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
-import PageWrapper from '../layouts/PageWrapper';
 
 const RoutineDetail = () => {
   const navigate = useNavigate();
@@ -131,6 +130,7 @@ const RoutineDetail = () => {
     <PageWrapper>
       <div className="routine-detail-container">
         <div className="routine-detail-header">
+          <h2>{location.state?.routine?.name || '루틴 A'}</h2>
           <input
             type="text"
             className="routine-name-input"
@@ -144,6 +144,7 @@ const RoutineDetail = () => {
             onChange={(e) => setRoutineDesc(e.target.value)}
             placeholder="defaultDesc"
           />
+          <p className="routine-description">루틴 설명을 작성해주세요</p>
         </div>
 
         <div className="ex-list">

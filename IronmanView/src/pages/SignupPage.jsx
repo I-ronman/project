@@ -230,8 +230,7 @@ function SignupPage() {
         {passwordError && <p className="error-text">{passwordError}</p>}
 
         <p className="agreement">
-          계정을 만들거나 가입하면 당사의 이용 약관 및 개인정보 보호정책에
-          동의하는 것으로 간주됩니다.
+          계정을 만들거나 가입하면 당사의 이용 약관 및 개인정보 보호정책에 동의하는 것으로 간주됩니다.
         </p>
 
         <button className="signup-btn" onClick={handleSubmit}>
