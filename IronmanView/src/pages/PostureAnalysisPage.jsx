@@ -9,6 +9,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import TrainingCam from '../components/TrainingCam';
 import PageWrapper from '../layouts/PageWrapper';
+import { CountContext } from '../context/CountContext';
+
 
 const PostureAnalysisPage = () => {
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
@@ -37,7 +39,9 @@ const PostureAnalysisPage = () => {
 
 
   return (
+      <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount}}>
     <PageWrapper>
+
       <div className="posture-container">
         <div className="posture-left">
           <header className="posture-header">
@@ -50,13 +54,13 @@ const PostureAnalysisPage = () => {
             <StatBox label="운동 횟수" count={successCount} />
             <StatBox label="실패 횟수" count={failCount} />
           </div>
-
+          
           <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
 
           <div className="exercise-buttons">
             {exerciseList.map((exercise, idx) => (
               <button
-                key={idx}
+              key={idx}
                 className={`exercise-btn ${selectedVideo === exercise.videoUrl ? 'active' : ''}`}
                 onClick={() => setSelectedVideo(exercise.videoUrl)}
               >
@@ -69,14 +73,14 @@ const PostureAnalysisPage = () => {
         </div>
 
         <div className="posture-right">
-          <VideoFeed />
+          <TrainingCam></TrainingCam>
         </div>
       </div>
 
       <div className="posture-right">
-        <TrainingCam></TrainingCam>
       </div>
-    </PageWrapper>
+      </PageWrapper>
+      </CountContext.Provider>
   );
 };
 
