@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
+import PageWrapper from '../layouts/PageWrapper';
 
 const RoutineDetail = () => {
   const navigate = useNavigate();
@@ -17,9 +18,6 @@ const RoutineDetail = () => {
       image: '/images/sample-placeholder.png',
     },
   ]);
-
-  const defaultDesc = '루틴 설명을 적어주세요';
-  const [routineDesc, setRoutineDesc] = useState(location.state?.routine?.description || defaultDesc);
 
   // ✅ 최초 진입 시 루틴 로드
   useEffect(() => {
@@ -92,7 +90,6 @@ const RoutineDetail = () => {
   const handleSave = () => {
     const routine = {
       name: routineName,
-      description: routineDesc === defaultDesc ? '' : routineDesc,
       duration: 30,
       exercises: exerciseList
         .filter((e) => e.name !== '운동 선택')
@@ -130,7 +127,6 @@ const RoutineDetail = () => {
     <PageWrapper>
       <div className="routine-detail-container">
         <div className="routine-detail-header">
-          <h2>{location.state?.routine?.name || '루틴 A'}</h2>
           <input
             type="text"
             className="routine-name-input"
@@ -138,23 +134,17 @@ const RoutineDetail = () => {
             onChange={(e) => setRoutineName(e.target.value)}
             placeholder="루틴 이름을 입력하세요"
           />
-          <textarea
-            className="routine-description-input"
-            value={routineDesc}
-            onChange={(e) => setRoutineDesc(e.target.value)}
-            placeholder="defaultDesc"
-          />
           <p className="routine-description">루틴 설명을 작성해주세요</p>
         </div>
 
-        <div className="ex-list">
+        <div className="exercise-list">
           {exerciseList.map((exercise, i) => (
-            <div key={i} className="ex-card" onClick={() => handleCardClick(i)}>
-              <div className="ex-info">
+            <div key={i} className="exercise-card" onClick={() => handleCardClick(i)}>
+              <div className="exercise-info">
                 <img src={exercise.image} alt={exercise.name} />
                 <div>
-                  <div className="ex-name">{exercise.name}</div>
-                  <div className="ex-target">{exercise.description}</div>
+                  <div className="exercise-name">{exercise.name}</div>
+                  <div className="exercise-target">{exercise.description}</div>
                 </div>
               </div>
             </div>
