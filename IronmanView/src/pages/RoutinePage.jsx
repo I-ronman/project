@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import '../styles/RoutinePage.css';
 import { useNavigate } from 'react-router-dom';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
+import PageWrapper from '../layouts/PageWrapper';
 
 const RoutinePage = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const RoutinePage = () => {
   };
 
   return (
-    <div className="routine-wrapper">
+    <PageWrapper>
       <div className="routine-container">
         <div className="routine-tab">
           <button className={activeTab === 'routine' ? 'tab active' : 'tab'} onClick={() => setActiveTab('routine')}>
@@ -94,7 +95,7 @@ const RoutinePage = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

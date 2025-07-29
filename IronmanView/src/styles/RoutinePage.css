@@ -1,5 +1,6 @@
 /*project/IronmanView/src/styles/RoutinePage.css*/
 .routine-wrapper {
+<<<<<<< HEAD
   background: black;
   min-height: 100vh;
   display: flex;
@@ -124,3 +125,165 @@
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: 1;
 }
+=======
+    background: black;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  
+  .routine-container {
+    background: #111;
+    color: white;
+    width: 100%;
+    max-width: 430px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .routine-tab {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .tab {
+    background: #333;
+    color: #aaa;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .tab.active {
+    background: white;
+    color: black;
+  }
+  
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .survey-btn {
+    font-size: 13px;
+    padding: 6px 10px;
+    background: #666;
+    border: none;
+    color: white;
+    border-radius: 6px;
+  }
+  
+  .routine-card {
+    background: #222;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .routine-card h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  
+  .routine-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  
+  .routine-actions button {
+    background: #aaa;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: bold;
+  }
+  
+  .routine-form input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+  }
+  
+  .calories-text {
+    margin: 10px 0;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .btn-row button {
+    flex: 1;
+    background: #d7fb07;
+    color: black;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  
+  .individual-list {
+    margin-top: 20px;
+  }
+  
+  .individual-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .individual-list li {
+    background: #333;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .card-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 8px;
+  }
+  
+  .card-buttons button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: #ff6464;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .card-buttons button:first-child {
+    background-color: #d7fb07;
+    color: black;
+  }
+  
+  .routine-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px; /* 여백 추가해서 아래 버튼과 거리 확보 */
+}
+
+/* 추천받기 버튼은 맨 아래에 고정되는 게 아니라 자연스럽게 따라 내려가야 함 */
+.routine-actions {
+  display: flex;
+  justify-content: center;
+}
+>>>>>>> c1eb23205d810c75a239152dc1bd937c7cd70d80

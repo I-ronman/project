@@ -5,6 +5,7 @@ import defaultProfileImage from '../images/default_profile.jpg';
 import SurveyBlurOverlay from '../components/SurveyBlurOverlay';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { useNavigate } from 'react-router-dom';
+import PageWrapper from '../layouts/PageWrapper';
 
 const MyPage = ({ user, hasSurvey = false }) => {
   const [showBodyInfo, setShowBodyInfo] = useState(false);
@@ -39,7 +40,7 @@ const MyPage = ({ user, hasSurvey = false }) => {
   const bodyRef = useRef(null);
 
   return (
-    <div className="mypage-wrapper">
+    <PageWrapper>
       <div className="mypage-container">
         <div className="profile-card">
           <img
@@ -161,7 +162,7 @@ const MyPage = ({ user, hasSurvey = false }) => {
           </button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/ExerciseSearch.css';
+import PageWrapper from '../layouts/PageWrapper';
 
 const ExerciseSearch = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const ExerciseSearch = () => {
   };
 
   return (
-    <div className="exercise-search-wrapper">
+    <PageWrapper>
       <div className="exercise-search-header">
         <h2>{index !== null ? '운동 선택' : '운동 검색'}</h2>
       </div>
@@ -93,7 +94,7 @@ const ExerciseSearch = () => {
         <button className="back-button" onClick={handleBack}>돌아가기</button>
         <button className="save-button" onClick={handleSave} disabled={!selectedExercise}>저장</button>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

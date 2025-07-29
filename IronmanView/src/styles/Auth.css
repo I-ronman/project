@@ -38,6 +38,7 @@
     background-color: #333;
     color: #fff;
     font-size: 16px;
+    box-sizing: border-box;
   }
   
   /* 로그인 / 회원가입 버튼 */

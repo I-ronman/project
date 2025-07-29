@@ -14,14 +14,18 @@
   
   
   .signup-container {
-    width: 100%;
-    max-width: 430px;
+    width: 90%;
+    max-width: 500px;
     background-color: #222;
     color: white;
     border-radius: 16px;
     padding: 30px;
     box-sizing: border-box;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  }
+
+  .signup-container input, .date-picker{
+    box-sizing: border-box;
   }
   
   .signup-logo {
@@ -83,6 +87,8 @@
     margin-bottom: 12px;
     cursor: pointer;
   }
+
+  
   
   .google-btn,
   .kakao-btn {

@@ -7,15 +7,16 @@
   display: flex;
   justify-content: center;
   align-items: start;
-  width: 100%;
+  max-width: 500%;
+  width: 90%;
 }
 
 .mypage-container {
   background-color: #222;
   border-radius: 16px;
-  padding: 50px;
-  max-width: 540px;
-  width: 100%;
+  padding: 20px;
+  max-width: 450px;
+  width: 90%;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
@@ -121,8 +122,8 @@
   margin: 20px auto;
   padding: 20px;
   position: relative;
-  width: 100%;
-  max-width: 480px;
+  width: 90%;
+  max-width: 500px;
 
   /* ✅ 가운데 정렬을 위한 설정 */
   display: flex;

@@ -12,13 +12,17 @@
   color: white;
   width: 100%;
   max-width: 430px;
-  padding: 20px;
+  padding: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
 .routine-detail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 수평 가운데 정렬 */
+  gap: 12px; /* 요소 간 간격 */
   margin-bottom: 10px;
 }
 
@@ -35,13 +39,13 @@
   line-height: 1.5;
 }
 
-.exercise-list {
+.ex-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.exercise-card {
+.ex-card {
   background: #222;
   border-radius: 12px;
   padding: 14px;
@@ -50,25 +54,25 @@
   justify-content: space-between;
 }
 
-.exercise-info {
+.ex-info {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.exercise-info img {
+.ex-info img {
   width: 64px;
   height: 64px;
   object-fit: cover;
   border-radius: 6px;
 }
 
-.exercise-name {
+.ex-name {
   font-size: 16px;
   font-weight: bold;
 }
 
-.exercise-target {
+.ex-target {
   font-size: 12px;
   color: #aaa;
 }
@@ -109,6 +113,10 @@
 .save-button {
   background-color: #d7fb07;
   color: black;
+<<<<<<< HEAD
+=======
+
+>>>>>>> c1eb23205d810c75a239152dc1bd937c7cd70d80
 }
 .routine-name-input {
   font-size: 20px;
@@ -120,4 +128,21 @@
   width: 100%;
   margin-bottom: 8px;
   outline: none;
+<<<<<<< HEAD
+=======
+}
+
+.routine-description-input {
+  width: 90%;
+  max-width: 400px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  resize: none;
+  background-color: #333;
+  color: white;
+  font-size: 14px;
+
+>>>>>>> c1eb23205d810c75a239152dc1bd937c7cd70d80
 }

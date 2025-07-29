@@ -1,9 +1,10 @@
 /* project/IronmanView/src/styles/EnvironmentSettingPage.css */
 .env-wrapper {
-    max-width: 430px;
+    max-width: 500px;
+    width: 80%;
     margin: 0 auto;
     padding: 30px 20px;
-    background-color: #fff;
+    background-color: #030303;
     min-height: 100vh;
     box-sizing: border-box;
   }
@@ -13,7 +14,7 @@
     font-weight: bold;
     margin-bottom: 30px;
     text-align: center;
-    color: #333;
+    color: #fff;
   }
   
   .env-setting {
@@ -22,7 +23,7 @@
     justify-content: space-between;
     margin-bottom: 25px;
     font-size: 16px;
-    color: #333;
+    color: #fff;
   }
   
   /* 스위치 스타일 */

@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/SignupPage.css';
 import logo from '../assets/logo.png';
 import axios from 'axios';
+import PageWrapper from '../layouts/PageWrapper';
 
 function SignupPage() {
   const [name, setName] = useState('');
@@ -146,7 +147,7 @@ function SignupPage() {
   };
 
   return (
-    <div className="signup-wrapper">
+    <PageWrapper>
       <div className="signup-container">
         <img src={logo} alt="I언맨 로고" className="signup-logo" />
         <h2>회원가입</h2>
@@ -235,9 +236,9 @@ function SignupPage() {
 
         <button className="signup-btn" onClick={handleSubmit}>
           계속하기
-        </button>
-    </div>
-    </div>
+      </button>
+      </div>
+    </PageWrapper>
   );
 }
 

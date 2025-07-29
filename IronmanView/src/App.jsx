@@ -70,6 +70,7 @@ const AppRoutes = () => {
         <Route path="/ranking" element={<RankingPage />} />
         <Route path="main" element={<MainDashboardPage />} />
       </Route>
+      <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
   );
 };
@@ -85,7 +86,7 @@ function App() {
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
-            backgroundColor: '#f5f5f5' // 배경색은 추후 수정
+            backgroundColor: '#000000ff' // 배경색은 추후 수정
           }}>
             <AppRoutes />
           </div>

@@ -46,7 +46,7 @@ while cap.isOpened():
 
         if result.pose_landmarks:
             lm = result.pose_landmarks.landmark
-         
+
             l_leg_ang = get_angle(lm[27],lm[25],lm[23])
             l_hip_ang = get_angle(lm[25],lm[23],lm[11])
             data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
@@ -55,7 +55,7 @@ while cap.isOpened():
             base_line.y = lm[25].y
             base_line.x = lm[31].x
             knee_over_foot = get_angle(base_line,lm[31],lm[25])
-
+            
             # 엉덩이 뒤로 빠진 정도 구하는 각도 로직
             base_line.y = lm[23].y
             hip_back = get_angle(base_line,lm[31],lm[23])

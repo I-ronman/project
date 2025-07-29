@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
+import PageWrapper from '../layouts/PageWrapper';
 
 const RoutineDetail = () => {
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ const RoutineDetail = () => {
   };
 
   return (
-    <div className="routine-detail-wrapper">
+    <PageWrapper>
       <div className="routine-detail-container">
         <div className="routine-detail-header">
           <input
@@ -156,7 +157,7 @@ const RoutineDetail = () => {
           <button className="save-button" onClick={handleSave}>저장</button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

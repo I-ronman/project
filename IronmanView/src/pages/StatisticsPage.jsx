@@ -7,6 +7,7 @@ import ErrorBox from '../components/statistics/ErrorBox';
 import WeeklyBarChart from '../components/statistics/WeeklyBarChart';
 import '../styles/StatisticsPage.css';
 import axios from 'axios';
+import PageWrapper from '../layouts/PageWrapper';
 
 const StatisticsPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -35,23 +36,25 @@ const StatisticsPage = () => {
   }, [selectedDate]);
 
   return (
-    <div className="statistics-container">
-      <Header />
-      <h2 className="section-title">통계 보기</h2>
-      <DateSelector selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+    <PageWrapper>
+      <div className="statistics-container">
+        <Header />
+        <h2 className="section-title">통계 보기</h2>
+        <DateSelector selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
-      {isFuture ? (
-        <div className="no-data-box">미래 날짜는 데이터가 없습니다.</div>
-      ) : (
-        <>
-          <div className="chart-section">
-            <DonutChart data={exerciseStats?.ratios || []} />
-            <ErrorBox errors={exerciseStats?.errors || {}} />
-          </div>
-          <WeeklyBarChart data={weeklyStats} />
-        </>
-      )}
-    </div>
+        {isFuture ? (
+          <div className="no-data-box">미래 날짜는 데이터가 없습니다.</div>
+        ) : (
+          <>
+            <div className="chart-section">
+              <DonutChart data={exerciseStats?.ratios || []} />
+              <ErrorBox errors={exerciseStats?.errors || {}} />
+            </div>
+            <WeeklyBarChart data={weeklyStats} />
+          </>
+        )}
+      </div>
+    </PageWrapper>
   );
 };
 

@@ -12,6 +12,7 @@ import Step7 from '../components/survey/Step7';
 import Step8 from '../components/survey/Step8';
 import Step9 from '../components/survey/Step9';
 import StepFinal from '../components/survey/StepFinal';
+import PageWrapper from '../layouts/PageWrapper';
 
 // import StepGoal from '../components/survey/StepGoal'; // 제거된 경우
 
@@ -64,7 +65,7 @@ function SurveyPage() {
   ];
 
   return (
-  <div className="survey-wrapper">
+  <PageWrapper>
     {step > 0 && (
       <div className="progress-bar">
         <div
@@ -83,7 +84,7 @@ function SurveyPage() {
     <div className="survey-content">
       {stepComponents[step] || null}
     </div>
-  </div>
+  </PageWrapper>
 );
 
 }

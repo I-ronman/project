@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import '../styles/OnboardingPage.css';
 import { useNavigate } from 'react-router-dom';
+import PageWrapper from '../layouts/PageWrapper';
 
 const slides = [
   {
@@ -98,7 +99,7 @@ function OnboardingPage() {
   };
 
   return (
-    <div className="onboarding-wrapper">
+    <PageWrapper>
       <div className="onboarding-container">
         <h2>{current.title}</h2>
         <h1>
@@ -144,7 +145,7 @@ function OnboardingPage() {
           </button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 
