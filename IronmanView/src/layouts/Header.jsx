@@ -7,7 +7,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="logo" onClick={() => navigate('/')}>I언맨</div>
+      <div className="logo" onClick={() => navigate('/main')}>I언맨</div>
       <nav className="nav">
         {/* <button onClick={() => navigate('/mypage')}>마이페이지</button> */}
         {/* <button onClick={() => navigate('/routine')}>루틴</button> */}
