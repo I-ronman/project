@@ -1,0 +1,26 @@
+.header {
+  position: sticky;
+  background-color: #111;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+  padding: 16px 24px;
+  align-items: center;
+  border-bottom: 1px solid #333;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.nav button {
+  background: none;
+  color: white;
+  border: none;
+  margin-left: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}

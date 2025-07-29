@@ -5,6 +5,7 @@ import '../styles/SignupPage.css';
 import logo from '../assets/logo.png';
 import axios from 'axios';
 import PageWrapper from '../layouts/PageWrapper';
+import { useNavigate } from 'react-router-dom';
 
 function SignupPage() {
   const [name, setName] = useState('');
@@ -17,6 +18,8 @@ function SignupPage() {
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  
+  const navigate = useNavigate();
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (pw) =>
@@ -137,6 +140,7 @@ function SignupPage() {
       );
       console.log('회원가입 성공:', response.data);
       alert('회원가입이 완료되었습니다.');
+      navigate('/login');
     } catch (error) {
       const message =
         error.response?.data || '회원가입 중 오류가 발생했습니다.';

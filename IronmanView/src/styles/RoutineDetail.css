@@ -57,6 +57,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;           /* 부모 기준 너비 꽉 채우기 */
+  justify-content: space-between;  /* 왼쪽 이미지 - 오른쪽 텍스트 분리 */
 }
 
 .ex-info img {
@@ -64,6 +66,12 @@
   height: 64px;
   object-fit: cover;
   border-radius: 6px;
+}
+.ex-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* ← 오른쪽 정렬 */
+  text-align: right;     /* ← 텍스트도 오른쪽 정렬 */
 }
 
 .ex-name {

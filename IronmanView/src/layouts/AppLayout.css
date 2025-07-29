@@ -142,3 +142,13 @@ html, body, #root {
     padding: 16px;
   }
 }
+
+.page-description {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  color: #ccc;
+  border-bottom: 1px solid #333;
+  text-align: left;
+  box-sizing: border-box;
+}

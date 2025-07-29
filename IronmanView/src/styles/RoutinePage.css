@@ -1,17 +1,9 @@
-.routine-wrapper {
-    background: black;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 20px 0;
-  }
-  
+
   .routine-container {
     background: #111;
     color: white;
-    width: 100%;
-    max-width: 430px;
-    padding: 20px;
+    width: 90%;
+    max-width: 500px;
     box-sizing: border-box;
   }
   
@@ -39,6 +31,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
   }
   
   .survey-btn {
@@ -54,8 +47,8 @@
     background: #222;
     border-radius: 12px;
     padding: 16px;
-    margin-top: 12px;
-    margin-bottom: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
   
   .routine-card h2 {
@@ -158,4 +151,52 @@
 .routine-actions {
   display: flex;
   justify-content: center;
+}
+
+.routine-description {
+  font-size: 13px;
+  color: #ccc;
+  margin-top: 6px;
+  white-space: pre-wrap;
+}
+
+.routine-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.routine-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.delete-btn {
+  color: #f55;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 8px;
+}
+
+.top-btn-group {
+  display: flex;
+}
+
+/* 루틴 시작하기 버튼 */
+.start-routine-btn {
+  margin-top: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 100%;
+  cursor: pointer;
+  z-index: 1;
+  position: relative;
+}
+
+.start-routine-btn:hover {
+  background-color: #666;
 }
