@@ -1,0 +1,23 @@
+.ranking-list {
+    background-color: #444;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .rank-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fbd157;
+    color: black;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 30px;
+  }
+  
+  .rank-item.first {
+    font-weight: bold;
+    border: 2px solid gold;
+  }
+  

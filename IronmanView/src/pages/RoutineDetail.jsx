@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
+<<<<<<< HEAD
+=======
+import { useRoutine } from '../contexts/RoutineContext.jsx';
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 
 const RoutineDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
+<<<<<<< HEAD
 
   const [exerciseList, setExerciseList] = useState([]);
 
@@ -37,11 +42,55 @@ const RoutineDetail = () => {
     }
 
     // 특정 운동만 수정된 경우
+=======
+  const { updateRoutine } = useRoutine();
+
+  const [routineName, setRoutineName] = useState(location.state?.routine?.name || '루틴 A');
+  const [exerciseList, setExerciseList] = useState([
+    {
+      name: '운동 선택',
+      part: '',
+      description: '운동을 선택해주세요',
+      image: '/images/sample-placeholder.png',
+    },
+  ]);
+
+  // ✅ 최초 진입 시 루틴 로드
+  useEffect(() => {
+    const routine = location.state?.routine;
+    if (routine?.exercises?.length > 0) {
+      const mappedExercises = routine.exercises.map((exercise) => ({
+        name: exercise.name,
+        part: exercise.part,
+        description: `${exercise.part} 부위를 강화합니다.`,
+        image: '/images/sample-new.png',
+      }));
+
+      setExerciseList(
+        mappedExercises[mappedExercises.length - 1].name !== '운동 선택'
+          ? [...mappedExercises, {
+              name: '운동 선택',
+              part: '',
+              description: '운동을 선택해주세요',
+              image: '/images/sample-placeholder.png',
+            }]
+          : mappedExercises
+      );
+    }
+  }, []);
+
+  // ✅ 운동 선택 후 돌아왔을 때 반영
+  useEffect(() => {
+    const { updatedExercise, index, routine } = location.state || {};
+    const preservedName = routine?.name || routineName;
+
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
     if (updatedExercise && index !== undefined) {
       setExerciseList((prevList) => {
         const newList = [...prevList];
         newList[index] = {
           name: updatedExercise.name,
+<<<<<<< HEAD
           description: `${updatedExercise.part} 부위를 강화합니다`,
           image: '/images/sample-new.png',
         };
@@ -70,13 +119,93 @@ const RoutineDetail = () => {
 
   const handleBack = () => {
     navigate(-1);
+=======
+          part: updatedExercise.part,
+          description: `${updatedExercise.part} 부위를 강화합니다.`,
+          image: '/images/sample-new.png',
+        };
+
+        if (newList[newList.length - 1].name !== '운동 선택') {
+          newList.push({
+            name: '운동 선택',
+            part: '',
+            description: '운동을 선택해주세요',
+            image: '/images/sample-placeholder.png',
+          });
+        }
+
+        // ✅ 여기서 최신 newList 기준으로 상태 저장
+        navigate(location.pathname, {
+          replace: true,
+          state: {
+            routine: {
+              name: preservedName,
+              exercises: newList
+                .filter((e) => e.name !== '운동 선택')
+                .map((e) => ({ name: e.name, part: e.part })),
+            },
+          },
+        });
+
+        return newList;
+      });
+
+      setRoutineName(preservedName);
+    }
+  }, [location.state]);
+
+  const handleSave = () => {
+    const routine = {
+      name: routineName,
+      duration: 30,
+      exercises: exerciseList
+        .filter((e) => e.name !== '운동 선택')
+        .map((e) => ({
+          name: e.name,
+          part: e.part,
+        })),
+    };
+    updateRoutine(routine);
+    navigate('/routine');
+  };
+
+  const handleBack = () => {
+    const confirmBack = window.confirm('변경 사항이 저장되지 않습니다. 루틴 목록으로 돌아가시겠습니까?');
+    if (confirmBack) {
+      navigate('/routine');
+    }
+  };
+
+  const handleCardClick = (index) => {
+    navigate('/search', {
+      state: {
+        index,
+        routine: {
+          name: routineName,
+          exercises: exerciseList
+            .filter((e) => e.name !== '운동 선택')
+            .map((e) => ({ name: e.name, part: e.part })),
+        },
+      },
+    });
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
   };
 
   return (
     <div className="routine-detail-wrapper">
       <div className="routine-detail-container">
         <div className="routine-detail-header">
+<<<<<<< HEAD
           <h2>{location.state?.routine?.name || '루틴 A'}</h2>
+=======
+          <input
+            type="text"
+            className="routine-name-input"
+            value={routineName}
+            onChange={(e) => setRoutineName(e.target.value)}
+            placeholder="루틴 이름을 입력하세요"
+          />
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
           <p className="routine-description">루틴 설명을 작성해주세요</p>
         </div>
 

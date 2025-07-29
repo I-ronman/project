@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #Wed Jul 23 09:03:19 KST 2025
 host=DESKTOP-ET6GDIV
 process-id=14228
@@ -13,4 +14,9 @@ process-id=8348
 host=DESKTOP-ET6GDIV
 process-id=16016
 >>>>>>> c5c0de2 (Remove client secret from tracked history)
+=======
+#Mon Jul 28 16:37:11 KST 2025
+host=DESKTOP-ET6GDIV
+process-id=6872
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 user=smhrd

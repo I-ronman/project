@@ -16,67 +16,93 @@ function SignupPage() {
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  
+
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validatePassword = (pw) => /[A-Z]/.test(pw) && /[^A-Za-z0-9]/.test(pw);
+  const validatePassword = (pw) =>
+    /[A-Z]/.test(pw) && /[^A-Za-z0-9]/.test(pw);
 
- useEffect(() => {
+  useEffect(() => {
+    const fetchOAuthUser = async () => {
+      try {
+        const res = await axios.get(
+          'http://localhost:329/web/oauth/userinfo',
+          { withCredentials: true }
+        );
+        if (res.data) {
+          setName(res.data.name || '');
+          setEmail(res.data.email || '');
+          setEmailVerified(true);
+        }
+      } catch (err) {
+        console.error('유저 정보 조회 실패:', err);
+      }
+    };
 
-  return () => {
-    if (email) {
-      axios.delete(`http://localhost:329/web/email/clear`, {
-        params: { email },
-      }).catch(err => {
-        console.error('인증 초기화 실패:', err);
-      });
-    }
-  };
-}, []);
+    fetchOAuthUser();
 
+    // cleanup 함수
+    return () => {
+      if (email) {
+        axios
+          .delete('http://localhost:329/web/email/clear', {
+            params: { email },
+          })
+          .catch((err) => {
+            console.error('인증 초기화 실패:', err);
+          });
+      }
+    };
+  }, []);
 
   const handleEmailAuth = async () => {
-  if (!validateEmail(email)) {
-    setEmailError('올바르지 않은 이메일입니다.');
-    return;
-  }
-  setEmailError('');
+    if (!validateEmail(email)) {
+      setEmailError('올바르지 않은 이메일입니다.');
+      return;
+    }
+    setEmailError('');
 
-  try {
-    await axios.post('http://localhost:329/web/email/send', { email },{
-      withCredentials: true //  여기에 추가해야 함
-    });
-     alert('인증코드가 이메일로 발송되었습니다.');
-  setShowCodeInput(true);
-} catch (err) {
-  if (
-    err.response &&
-    err.response.status === 400 &&
-    err.response.data === '존재하지 않는 이메일입니다.'
-  ) {
-    alert('존재하지 않는 이메일입니다.');
-  } else {
-    alert('이메일 인증 요청에 실패했습니다.');
-  }
-}
-  }
+    try {
+      await axios.post(
+        'http://localhost:329/web/email/send',
+        { email },
+        { withCredentials: true }
+      );
+      alert('인증코드가 이메일로 발송되었습니다.');
+      setShowCodeInput(true);
+    } catch (err) {
+      if (
+        err.response &&
+        err.response.status === 400 &&
+        err.response.data === '존재하지 않는 이메일입니다.'
+      ) {
+        alert('존재하지 않는 이메일입니다.');
+      } else {
+        alert('이메일 인증 요청에 실패했습니다.');
+      }
+    }
+  };
 
   const handleEmailVerify = async () => {
-  try {
-   const res = await axios.post('http://localhost:329/web/email/verify', {
-      email,
-      code: emailCode,
-    }, {
-      withCredentials: true, //  여기에 추가해야 함
-      responseType: 'text' //  이 줄 추가
-    });
-    if (res.status === 200){
-      alert('이메일 인증 완료');
-      setEmailVerified(true);
+    try {
+      const res = await axios.post(
+        'http://localhost:329/web/email/verify',
+        {
+          email,
+          code: emailCode,
+        },
+        {
+          withCredentials: true,
+          responseType: 'text',
+        }
+      );
+      if (res.status === 200) {
+        alert('이메일 인증 완료');
+        setEmailVerified(true);
+      }
+    } catch (err) {
+      alert('인증코드가 일치하지 않습니다.');
     }
-  } catch (err) {
-    alert('인증코드가 일치하지 않습니다.');
-  }
-};
+  };
 
   const handleSubmit = async () => {
     let hasError = false;
@@ -104,16 +130,20 @@ function SignupPage() {
     };
 
     try {
-      const response = await axios.post('http://localhost:329/web/signup', data);
+      const response = await axios.post(
+        'http://localhost:329/web/signup',
+        data
+      );
       console.log('회원가입 성공:', response.data);
       alert('회원가입이 완료되었습니다.');
     } catch (error) {
-     const message = error.response?.data || '회원가입 중 오류가 발생했습니다.';
+      const message =
+        error.response?.data || '회원가입 중 오류가 발생했습니다.';
       console.error('회원가입 실패:', message);
       alert(`회원가입 실패: ${message}`);
+    }
   };
-  }
-  
+
   return (
     <div className="signup-wrapper">
       <div className="signup-container">
@@ -202,12 +232,10 @@ function SignupPage() {
           계정을 만들거나 가입하면 당사의 이용 약관 및 개인정보 보호정책에 동의하는 것으로 간주됩니다.
         </p>
 
-        <button className="signup-btn" onClick={handleSubmit}>계속하기</button>
-        <button className="google-btn" onClick={() => {
-         window.location.href = 'http://localhost:329/web/oauth2/authorization/google';
-          }}>Google 계정으로 로그인</button>
-        <button className="kakao-btn">Kakaotalk 계정으로 로그인</button>
-      </div>
+        <button className="signup-btn" onClick={handleSubmit}>
+          계속하기
+        </button>
+    </div>
     </div>
   );
 }

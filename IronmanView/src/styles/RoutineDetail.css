@@ -108,4 +108,18 @@
 .save-button {
   background-color: #d7fb07;
   color: black;
+<<<<<<< HEAD
+=======
+}
+.routine-name-input {
+  font-size: 20px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  color: white;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 8px;
+  outline: none;
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 }

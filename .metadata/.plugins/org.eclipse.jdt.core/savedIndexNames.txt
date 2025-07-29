@@ -14,6 +14,10 @@ INDEX VERSION 1.134+C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.ecl
 4146591215.index
 1585080808.index
 865106919.index
+<<<<<<< HEAD
+=======
+3874374797.index
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 1742691166.index
 2875388779.index
 73893071.index
@@ -86,6 +90,10 @@ INDEX VERSION 1.134+C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.ecl
 2093421407.index
 2252327315.index
 3016814055.index
+<<<<<<< HEAD
+=======
+2796194790.index
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 182693506.index
 3993038876.index
 2120975983.index
@@ -97,8 +105,13 @@ INDEX VERSION 1.134+C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.ecl
 3547135728.index
 2036512663.index
 1409157383.index
+<<<<<<< HEAD
 312987770.index
 2934979409.index
+=======
+2934979409.index
+312987770.index
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 2649561724.index
 1625959701.index
 338378025.index
@@ -106,10 +119,18 @@ INDEX VERSION 1.134+C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.ecl
 1033126266.index
 77679578.index
 2255772990.index
+<<<<<<< HEAD
 116432910.index
 2868558660.index
 1338144772.index
 2468853042.index
+=======
+2270423786.index
+116432910.index
+2868558660.index
+2468853042.index
+1338144772.index
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 2511055146.index
 4196981625.index
 2352145527.index

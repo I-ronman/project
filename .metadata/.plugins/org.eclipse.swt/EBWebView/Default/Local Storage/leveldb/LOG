@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 2025/07/25-10:17:11.942 4c08 Reusing MANIFEST C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
 2025/07/25-10:17:11.949 4c08 Recovering log #3
 2025/07/25-10:17:11.951 4c08 Reusing old log C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+=======
+2025/07/28-16:43:51.007 2af8 Reusing MANIFEST C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2025/07/28-16:43:51.014 2af8 Recovering log #3
+2025/07/28-16:43:51.015 2af8 Reusing old log C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+>>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
