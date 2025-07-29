@@ -17,7 +17,7 @@ mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
 pose = mp_pose.Pose()
 
-cap = cv2.VideoCapture("sidesquat.mp4")  # 웹캠
+
 
 
 leg_upperbody_parallel = True
@@ -32,6 +32,7 @@ view_upper_body_slope = False
 view_leg_hip_angle = False
 
 app = Flask(__name__)
+# socket_io = SocketIO(app,cors_allowed_origins="http://192.168.219.89:5173")
 socket_io = SocketIO(app,cors_allowed_origins="http://localhost:5173")
 
 class base_line(object):
@@ -63,84 +64,84 @@ def analyze(data):
     # cv2.waitKey(100)
     # cv2.destroyAllWindows()
    
-    # h,w,_ = frame.shape
-    # def to_pixel(lm): return int(lm.x * w), int(lm.y * h)
-    # # def draw_line(a, b, color=(0,255,0)):
-    # #     cv2.line(frame, to_pixel(a), to_pixel(b), color, 2)
+    h,w,_ = frame.shape
+    def to_pixel(lm): return int(lm.x * w), int(lm.y * h)
+    # def draw_line(a, b, color=(0,255,0)):
+    #     cv2.line(frame, to_pixel(a), to_pixel(b), color, 2)
         
-    # frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    # result = pose.process(frame_rgb)
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    result = pose.process(frame_rgb)
 
-    # if result.pose_landmarks:
-    #     lm = result.pose_landmarks.landmark
+    if result.pose_landmarks:
+        lm = result.pose_landmarks.landmark
         
-    #     l_leg_ang = get_angle(lm[27],lm[25],lm[23])
-    #     l_hip_ang = get_angle(lm[25],lm[23],lm[11])
-    #     data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
+        l_leg_ang = get_angle(lm[27],lm[25],lm[23])
+        l_hip_ang = get_angle(lm[25],lm[23],lm[11])
+        data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
 
-    #     # 무릎 나간 각도 구하는 로직
-    #     base_line.y = lm[25].y
-    #     base_line.x = lm[31].x
-    #     knee_over_foot = get_angle(base_line,lm[31],lm[25])
+        # 무릎 나간 각도 구하는 로직
+        base_line.y = lm[25].y
+        base_line.x = lm[31].x
+        knee_over_foot = get_angle(base_line,lm[31],lm[25])
 
-    #     # 엉덩이 뒤로 빠진 정도 구하는 각도 로직
-    #     base_line.y = lm[23].y
-    #     hip_back = get_angle(base_line,lm[31],lm[23])
+        # 엉덩이 뒤로 빠진 정도 구하는 각도 로직
+        base_line.y = lm[23].y
+        hip_back = get_angle(base_line,lm[31],lm[23])
 
-    #     # 상체 기울기가 앞으로 너무 많이 쏠리진 않았는지
-    #     base_line.x = lm[11].x
+        # 상체 기울기가 앞으로 너무 많이 쏠리진 않았는지
+        base_line.x = lm[11].x
         
-    #     upper_body_angle = get_angle(base_line,lm[23],lm[11])
-    #     print(f"{data}굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}",f"upper_body : {upper_body_angle}")
-    #     #data,getDistance(lm[23], lm[25]),sit,stand,f"굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}
+        upper_body_angle = get_angle(base_line,lm[23],lm[11])
+        print(f"{data}굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}",f"upper_body : {upper_body_angle}")
+        #data,getDistance(lm[23], lm[25]),sit,stand,f"굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}
         
         
 
-    #     if upper_body_angle < 35: proper_upper_body_tilt = False
+        if upper_body_angle < 35: proper_upper_body_tilt = False
 
-    #     if lm[31].x < lm[25].x and knee_over_foot > 30: correct_knee = False
+        if lm[31].x < lm[25].x and knee_over_foot > 30: correct_knee = False
     
-    #     if hip_back > 50 :correct_hip_position = False
+        if hip_back > 50 :correct_hip_position = False
 
-    #     if l_leg_ang <= 75 and l_hip_ang <= 70 : sit = True
+        if l_leg_ang <= 75 and l_hip_ang <= 70 : sit = True
         
-    #     if l_leg_ang - 20 > l_hip_ang or l_hip_ang> l_leg_ang + 20: leg_upperbody_parallel = False
+        if l_leg_ang - 20 > l_hip_ang or l_hip_ang> l_leg_ang + 20: leg_upperbody_parallel = False
 
-    #     if sit and l_leg_ang >= 170 and l_hip_ang >= 168: stand = True
+        if sit and l_leg_ang >= 170 and l_hip_ang >= 168: stand = True
                 
-    #     if  sit and stand:
-    #         sit = False
-    #         stand = False
-    #         if not correct_knee or not correct_hip_position or not proper_upper_body_tilt or not leg_upperbody_parallel:
-    #             correct_knee = True
-    #             correct_hip_position = True
-    #             proper_upper_body_tilt = True
-    #             leg_upperbody_parallel = True
-    #             bad_cnt += 1
-    #         else:  
-    #             good_cnt += 1
+        if  sit and stand:
+            sit = False
+            stand = False
+            if not correct_knee or not correct_hip_position or not proper_upper_body_tilt or not leg_upperbody_parallel:
+                correct_knee = True
+                correct_hip_position = True
+                proper_upper_body_tilt = True
+                leg_upperbody_parallel = True
+                bad_cnt += 1
+            else:  
+                good_cnt += 1
         
 
-    #     # cv2.putText(frame, f"{int(r_hip_ang)} ", to_pixel(lm[24]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
-    #     # cv2.putText(frame, f"{int(l_hip_ang)} ", to_pixel(lm[23]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
-    #     # cv2.putText(frame, f"count {good_cnt} ", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
-    #     key = cv2.waitKey(5)
-    #     if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
-    #     if key == ord("2"): view_leg_hip_angle = True if view_leg_hip_angle == False else  False
+        # cv2.putText(frame, f"{int(r_hip_ang)} ", to_pixel(lm[24]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
+        # cv2.putText(frame, f"{int(l_hip_ang)} ", to_pixel(lm[23]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
+        # cv2.putText(frame, f"count {good_cnt} ", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
+        key = cv2.waitKey(5)
+        if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
+        if key == ord("2"): view_leg_hip_angle = True if view_leg_hip_angle == False else  False
     
-    # if view_upper_body_slope:
-    #     cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
-    #     draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
-    # if view_leg_hip_angle:
-    #     draw_angle_arc(frame,h,w,lm[25],lm[23],lm[11],l_hip_ang,40,(0,255,0))  
-    #     draw_angle_arc(frame,h,w,lm[23],lm[25],lm[27],l_leg_ang,40,(0,255,0))  
-    # mp_draw.draw_landmarks(
-    #     frame,
-    #     result.pose_landmarks,
-    #     mp_pose.POSE_CONNECTIONS,
-    #     mp_draw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
-    #     mp_draw.DrawingSpec(color=(255,0,0), thickness=2),
-    # )
+    if view_upper_body_slope:
+        cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
+        draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
+    if view_leg_hip_angle:
+        draw_angle_arc(frame,h,w,lm[25],lm[23],lm[11],l_hip_ang,40,(0,255,0))  
+        draw_angle_arc(frame,h,w,lm[23],lm[25],lm[27],l_leg_ang,40,(0,255,0))  
+    mp_draw.draw_landmarks(
+        frame,
+        result.pose_landmarks,
+        mp_pose.POSE_CONNECTIONS,
+        mp_draw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
+        mp_draw.DrawingSpec(color=(255,0,0), thickness=2),
+    )
         
     
 
