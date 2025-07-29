@@ -1,3 +1,4 @@
+/*project/IronmanView/src/styles/RoutineDetail.css*/
 .routine-detail-wrapper {
   background: black;
   min-height: 100vh;
@@ -120,7 +121,10 @@
 .save-button {
   background-color: #d7fb07;
   color: black;
+<<<<<<< HEAD
+=======
 
+>>>>>>> c1eb23205d810c75a239152dc1bd937c7cd70d80
 }
 .routine-name-input {
   font-size: 20px;
@@ -132,6 +136,8 @@
   width: 100%;
   margin-bottom: 8px;
   outline: none;
+<<<<<<< HEAD
+=======
 }
 
 .routine-description-input {
@@ -146,4 +152,5 @@
   color: white;
   font-size: 14px;
 
+>>>>>>> c1eb23205d810c75a239152dc1bd937c7cd70d80
 }

@@ -1,4 +1,4 @@
-// AppLayout.jsx
+// project/IronmanView/src/layouts/AppLayout.jsx
 import './AppLayout.css';
 import { useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router-dom'; // 페이지 내용 자리

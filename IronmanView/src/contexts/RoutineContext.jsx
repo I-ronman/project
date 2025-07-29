@@ -1,7 +1,9 @@
+
+
+// project/IronmanView/src/contexts/RoutineContext.jsx
+
 // 루틴 리스트를 전역 상태로 관리하는 방식으로 변경
 // 1. 루틴 Context 생성 (RoutineContext.js)
-
-// src/contexts/RoutineContext.js
 import React, { createContext, useContext, useState } from 'react';
 
 const RoutineContext = createContext();

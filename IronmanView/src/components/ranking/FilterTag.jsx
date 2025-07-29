@@ -1,3 +1,4 @@
+// project/IronmanView/src/components/ranking/FilterTag.jsx
 import React from 'react';
 import '../../styles/FilterTag.css';
 

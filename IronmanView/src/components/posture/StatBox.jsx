@@ -1,3 +1,4 @@
+// project/IronmanView/src/components/posture/StatBox.jsx
 import React from 'react';
 
 // 운동/실패 횟수 박스 컴포넌트

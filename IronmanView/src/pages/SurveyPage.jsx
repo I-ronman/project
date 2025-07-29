@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/SurveyPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StepIntro from '../components/survey/StepIntro';

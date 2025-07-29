@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/MyPage.jsx
 import React, { useState, useRef } from 'react';
 import '../styles/MyPage.css';
 import defaultProfileImage from '../images/default_profile.jpg';

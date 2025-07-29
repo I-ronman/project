@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/OnboardingPage.jsx
 import React, { useState } from 'react';
 import '../styles/OnboardingPage.css';
 import { useNavigate } from 'react-router-dom';
