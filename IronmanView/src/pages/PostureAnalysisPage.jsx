@@ -6,6 +6,7 @@ import GuideVideoPlayer from '../components/posture/GuideVideoPlayer';
 import VideoFeed from '../components/posture/VideoFeed';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
+import PageWrapper from '../layouts/PageWrapper';
 
 const PostureAnalysisPage = () => {
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
@@ -42,40 +43,42 @@ const PostureAnalysisPage = () => {
   }, []);
 
   return (
-    <div className="posture-container">
-      <div className="posture-left">
-        <header className="posture-header">
-          <div className="logo">💪 언맨</div>
-          <h2>운동 및 자세분석</h2>
-          <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
-        </header>
+    <PageWrapper>
+      <div className="posture-container">
+        <div className="posture-left">
+          <header className="posture-header">
+            <div className="logo">💪 언맨</div>
+            <h2>운동 및 자세분석</h2>
+            <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
+          </header>
 
-        <div className="posture-stats">
-          <StatBox label="운동 횟수" count={successCount} />
-          <StatBox label="실패 횟수" count={failCount} />
+          <div className="posture-stats">
+            <StatBox label="운동 횟수" count={successCount} />
+            <StatBox label="실패 횟수" count={failCount} />
+          </div>
+
+          <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
+
+          <div className="exercise-buttons">
+            {exerciseList.map((exercise, idx) => (
+              <button
+                key={idx}
+                className={`exercise-btn ${selectedVideo === exercise.videoUrl ? 'active' : ''}`}
+                onClick={() => setSelectedVideo(exercise.videoUrl)}
+              >
+                {exercise.name}
+              </button>
+            ))}
+          </div>
+
+          <GuideVideoPlayer videoUrl={selectedVideo} />
         </div>
 
-        <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
-
-        <div className="exercise-buttons">
-          {exerciseList.map((exercise, idx) => (
-            <button
-              key={idx}
-              className={`exercise-btn ${selectedVideo === exercise.videoUrl ? 'active' : ''}`}
-              onClick={() => setSelectedVideo(exercise.videoUrl)}
-            >
-              {exercise.name}
-            </button>
-          ))}
+        <div className="posture-right">
+          <VideoFeed />
         </div>
-
-        <GuideVideoPlayer videoUrl={selectedVideo} />
       </div>
-
-      <div className="posture-right">
-        <VideoFeed />
-      </div>
-    </div>
+    </PageWrapper>
   );
 };
 

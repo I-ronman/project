@@ -1,6 +1,7 @@
 .ranking-page {
     padding: 20px;
-    max-width: 430px;
+    width: 90%;
+    max-width: 500px;
     margin: auto;
     background-color: #111;
     color: white;

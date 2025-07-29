@@ -61,11 +61,11 @@ const AppRoutes = () => {
         <Route path="mypage" element={<MyPage />} />
         <Route path="profile-edit" element={<ProfileEditPage />} />
         <Route path="settings" element={<EnvironmentSettingPage />} />
-        <Route path="postureanalysis" element={<PostureAnalysisPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
-        <Route path="/workoutresult" element={<WorkoutResultPage />} />
-        <Route path="/rankingpage" element={<RankingPage />} />
+        <Route path="workoutresult" element={<WorkoutResultPage />} />
+        <Route path="rankingpage" element={<RankingPage />} />
       </Route>
+      <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
   );
 };

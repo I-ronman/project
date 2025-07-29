@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // ✅ 추가
 import '../styles/ChatBotPage.css';
+import PageWrapper from '../layouts/PageWrapper';
 
 function ChatBotPage() {
   const navigate = useNavigate(); // ✅ 추가
@@ -38,7 +39,7 @@ function ChatBotPage() {
   };
 
   return (
-    <div className="chat-wrapper">
+    <PageWrapper>
       <div className="chat-container">
         <div className="chat-header">
           <img src="/src/assets/logo.png" alt="로고" className="chat-logo" />
@@ -72,7 +73,7 @@ function ChatBotPage() {
           <button onClick={() => handleSend(input)}>전송</button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 

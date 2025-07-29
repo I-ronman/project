@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/HomePage.css'
 import '../styles/BlurOverlay.css'
+import PageWrapper from '../layouts/PageWrapper';
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ const HomePage = () => {
   }
 
   return (
-    <div className="home-wrapper">
+    <PageWrapper>
       <div className="home-container">
         <div className="top-bar">
           <div className="logo">I언맨</div>
@@ -28,7 +29,7 @@ const HomePage = () => {
 
         {!isLoggedIn && <div className="blur-overlay" />}
       </div>
-    </div>
+    </PageWrapper>
   )
 }
 

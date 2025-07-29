@@ -1,0 +1,16 @@
+.page-wrapper {
+  width: 100%; /* ✅ right-content 안에서 전체를 채움 */
+  height: 100%;
+  padding: 0;
+  padding-top: 30px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.596);
+  color: white;
+  display: flex;
+  justify-content: fles-start; /* 가로 방향 가운데 정렬 */
+  align-items: center;     /* 세로 방향 가운데 정렬 */
+  position: relative;
+  flex-direction: column;
+}
+
+    
