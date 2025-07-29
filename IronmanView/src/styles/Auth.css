@@ -1,3 +1,4 @@
+/*project/IronmanView/src/styles/Auth.css*/
 /* 전체 화면을 감싸는 배경 컨테이너 */
 .auth-container {
     width: 100vw;
@@ -37,6 +38,7 @@
     background-color: #333;
     color: #fff;
     font-size: 16px;
+    box-sizing: border-box;
   }
   
   /* 로그인 / 회원가입 버튼 */

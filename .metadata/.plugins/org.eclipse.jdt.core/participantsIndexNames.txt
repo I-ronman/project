@@ -1,7 +1,0 @@
-INDEX VERSION 1.134
-C:\Users\smhrd\Desktop\실전프로젝트\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1164227394.index
-\SpringBoot2\src\main\java
-C:\Users\smhrd\Desktop\실전프로젝트\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1447856689.index
-\SpringBoot1\src\main\java
-C:\Users\smhrd\Desktop\실전프로젝트\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1266899859.index
-\SpringBoot3\src\main\java

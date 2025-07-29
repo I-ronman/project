@@ -1,4 +1,4 @@
-// src/components/FooterNav.jsx
+// project/IronmanView/src/components/FooterNav.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, BarChart, ClipboardCheck, Calendar, User } from 'lucide-react';

@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/SurveyPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StepIntro from '../components/survey/StepIntro';
@@ -11,6 +12,7 @@ import Step7 from '../components/survey/Step7';
 import Step8 from '../components/survey/Step8';
 import Step9 from '../components/survey/Step9';
 import StepFinal from '../components/survey/StepFinal';
+import PageWrapper from '../layouts/PageWrapper';
 
 // import StepGoal from '../components/survey/StepGoal'; // 제거된 경우
 
@@ -63,7 +65,7 @@ function SurveyPage() {
   ];
 
   return (
-  <div className="survey-wrapper">
+  <PageWrapper>
     {step > 0 && (
       <div className="progress-bar">
         <div
@@ -74,7 +76,7 @@ function SurveyPage() {
     )}
 
     <header className="survey-header">
-      <span className="back-button" onClick={prevStep}>←</span>
+      <span className="survey-back-button" onClick={prevStep}>←</span>
       <span className="header-title">설문 조사</span>
       <span className="right-label">이모티콘</span>
     </header>
@@ -82,7 +84,7 @@ function SurveyPage() {
     <div className="survey-content">
       {stepComponents[step] || null}
     </div>
-  </div>
+  </PageWrapper>
 );
 
 }

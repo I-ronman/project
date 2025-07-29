@@ -25,12 +25,12 @@ import EnvironmentSettingPage from './pages/EnvironmentSettingPage';
 
 
 // 시험 페이지
-import FontTest from './pages/FontTest';
 import PostureAnalysisPage from './pages/PostureAnalysisPage';
 import StatisticsPage from './pages/StatisticsPage';
 import WorkoutResultPage from './pages/WorkoutResultPage';
 import AppLayout from './layouts/AppLayout';
 import RankingPage from './pages/RankingPage';
+import MainDashboardPage from './pages/MainDashboardPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -61,13 +61,14 @@ const AppRoutes = () => {
         <Route path="search" element={<ExerciseSearch/>} />
         <Route path="mypage" element={<MyPage />} />
         <Route path="profile-edit" element={<ProfileEditPage />} />
-        <Route path="settings" element={<EnvironmentSettingPage />} />
-        <Route path="font" element={<FontTest />} />
+        <Route path="settings" element={<EnvironmentSettingPage />} />  
         <Route path="postureanalysis" element={<PostureAnalysisPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
         <Route path="/workoutresult" element={<WorkoutResultPage />} />
-        <Route path="/rankingpage" element={<RankingPage />} />
+        <Route path="/ranking" element={<RankingPage />} />
+        <Route path="main" element={<MainDashboardPage />} />
       </Route>
+      <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
   );
 };
@@ -83,7 +84,7 @@ function App() {
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
-            backgroundColor: '#f5f5f5' // 배경색은 추후 수정
+            backgroundColor: '#000000ff' // 배경색은 추후 수정
           }}>
             <AppRoutes />
           </div>

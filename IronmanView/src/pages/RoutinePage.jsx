@@ -1,12 +1,29 @@
+// project/IronmanView/src/pages/RoutinePage.jsx
 import React, { useState } from 'react';
 import '../styles/RoutinePage.css';
 import { useNavigate } from 'react-router-dom';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
+import PageWrapper from '../layouts/PageWrapper';
 
 const RoutinePage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('routine');
   const { savedRoutines, deleteRoutine } = useRoutine();
+  const isSurveyCompleted = localStorage.getItem('surveyCompleted') === 'true';
+  
+  // 임시 설문조사 초기화 버튼
+  const [refresh, setRefresh] = useState(false);
+  const handleSurveyReset = () => {
+    const currentStatus = localStorage.getItem('surveyCompleted') === 'true';
+    localStorage.setItem('surveyCompleted', (!currentStatus).toString());
+    setRefresh(prev => !prev);
+  }
+
+  // 설문조사 페이지로 이동하기 위한 함수
+  const handleSurveyNavigate = () => {
+    navigate('/survey');
+  };
+
 
   const handleRoutineClick = (routine) => {
     navigate('/routinedetail', { state: { routine } });
@@ -30,7 +47,7 @@ const RoutinePage = () => {
   };
 
   return (
-    <div className="routine-wrapper">
+    <PageWrapper>
       <div className="routine-container">
         <div className="routine-tab">
           <button className={activeTab === 'routine' ? 'tab active' : 'tab'} onClick={() => setActiveTab('routine')}>
@@ -45,14 +62,22 @@ const RoutinePage = () => {
           <div>
             <div className="top-row">
               <h3>오늘의 루틴</h3>
-              <button className="survey-btn">설문조사 하기</button>
+              <div className='top-row'>
+                {!isSurveyCompleted && (
+                  <button className="survey-btn" onClick={handleSurveyNavigate}>설문조사 하기</button>
+                )}
+                <button className="survey-btn" onClick={() => navigate('/schedulepage')}>스케쥴 확인하기</button>
+                {/* ✅ 임시 초기화 버튼 */}
+                <button className="survey-btn" onClick={handleSurveyReset}>설문 토글</button>
+            
+              </div>
             </div>
 
             <div className="routine-card-list">
               {savedRoutines.map((r, index) => (
-                <div key={index} className="routine-card">
+                <div key={index} className="routine-card" onClick={() => handleRoutineClick(r)}>
                   <div className="routine-card-header">
-                    <h2>{r.name}</h2>
+                    <h2 className="routine-name">{r.name}</h2>
                     <span
                       className="delete-btn"
                       onClick={(e) => {
@@ -65,7 +90,14 @@ const RoutinePage = () => {
                   </div>
                   <p>⏱ {r.duration}분</p>
                   <p>💪 {r.exercises.map((e) => e.name).join(', ')}</p>
-                  <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
+                  {r.description && r.description !== '루틴 설명을 입력해주세요' && (
+                    <p className="routine-description">{r.description}</p>
+                  )}
+                  <button className="start-routine-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >루틴 시작하기</button>
                 </div>
               ))}
 
@@ -93,7 +125,7 @@ const RoutinePage = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

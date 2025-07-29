@@ -1,3 +1,4 @@
+// project/IronmanView/src/components/TrainingCam.jsx
 import React, { useEffect, useRef, useState } from 'react'
 import Webcam from "react-webcam";
 import {io} from "socket.io-client"

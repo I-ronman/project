@@ -1,0 +1,149 @@
+/*project/IronmanView/src/styles/RoutineDetail.css*/
+.routine-detail-wrapper {
+  background: black;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.routine-detail-container {
+  background: #111;
+  color: white;
+  width: 100%;
+  max-width: 430px;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.routine-detail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 수평 가운데 정렬 */
+  gap: 12px; /* 요소 간 간격 */
+  margin-bottom: 10px;
+}
+
+.routine-detail-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.routine-description {
+  font-size: 14px;
+  color: #bbb;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.ex-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ex-card {
+  background: #222;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ex-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;           /* 부모 기준 너비 꽉 채우기 */
+  justify-content: space-between;  /* 왼쪽 이미지 - 오른쪽 텍스트 분리 */
+}
+
+.ex-info img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.ex-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* ← 오른쪽 정렬 */
+  text-align: right;     /* ← 텍스트도 오른쪽 정렬 */
+}
+
+.ex-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.ex-target {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.save-btn {
+  margin-top: 24px;
+  background: #d7fb07;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+}
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 10px;
+}
+
+.button-row button {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.back-button {
+  background-color: #fff;
+  color: black;
+  border: 1px solid #ccc;
+}
+
+.save-button {
+  background-color: #d7fb07;
+  color: black;
+}
+.routine-name-input {
+  font-size: 20px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  color: white;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 8px;
+  outline: none;
+}
+
+.routine-description-input {
+  width: 90%;
+  max-width: 400px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  resize: none;
+  background-color: #333;
+  color: white;
+  font-size: 14px;
+
+}

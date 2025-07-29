@@ -14,9 +14,8 @@ public class UserEntity {
 
     @Id
     private String email;
-
     private String pw;
     private String name;
     private String gender;
-    private String birthDate;
+    private String birthdate;
 }

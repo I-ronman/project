@@ -1,4 +1,4 @@
-
+// project/IronmanView/src/components/MainContent.jsx
 import React from 'react';
 
 const MainContent = () => {

@@ -1,12 +1,16 @@
+// project/IronmanView/src/pages/RoutineDetail.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
+import PageWrapper from '../layouts/PageWrapper';
 
 const RoutineDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { updateRoutine } = useRoutine();
+
+  const [routineDescription, setRoutineDescription] = useState('');
 
   const [routineName, setRoutineName] = useState(location.state?.routine?.name || '루틴 A');
   const [exerciseList, setExerciseList] = useState([
@@ -45,50 +49,54 @@ const RoutineDetail = () => {
   // ✅ 운동 선택 후 돌아왔을 때 반영
   useEffect(() => {
     const { updatedExercise, index, routine } = location.state || {};
-    const preservedName = routine?.name || routineName;
 
     if (updatedExercise && index !== undefined) {
-      setExerciseList((prevList) => {
-        const newList = [...prevList];
-        newList[index] = {
-          name: updatedExercise.name,
-          part: updatedExercise.part,
-          description: `${updatedExercise.part} 부위를 강화합니다.`,
-          image: '/images/sample-new.png',
-        };
+      const preservedName = routine?.name || routineName;
 
-        if (newList[newList.length - 1].name !== '운동 선택') {
-          newList.push({
-            name: '운동 선택',
-            part: '',
-            description: '운동을 선택해주세요',
-            image: '/images/sample-placeholder.png',
-          });
-        }
+      const updatedList = [...exerciseList];
+      updatedList[index] = {
+        name: updatedExercise.name,
+        part: updatedExercise.part,
+        description: `${updatedExercise.part} 부위를 강화합니다.`,
+        image: '/images/sample-new.png',
+      };
 
-        // ✅ 여기서 최신 newList 기준으로 상태 저장
+      // 마지막이 '운동 선택'이 아니면 추가
+      if (updatedList[updatedList.length - 1].name !== '운동 선택') {
+        updatedList.push({
+          name: '운동 선택',
+          part: '',
+          description: '운동을 선택해주세요',
+          image: '/images/sample-placeholder.png',
+        });
+      }
+
+      // 상태 먼저 반영
+      setExerciseList(updatedList);
+      setRoutineName(preservedName);
+
+      // navigate는 렌더 이후에 실행 (버그 방지용)
+      setTimeout(() => {
         navigate(location.pathname, {
           replace: true,
           state: {
             routine: {
               name: preservedName,
-              exercises: newList
+              exercises: updatedList
                 .filter((e) => e.name !== '운동 선택')
                 .map((e) => ({ name: e.name, part: e.part })),
             },
           },
         });
-
-        return newList;
-      });
-
-      setRoutineName(preservedName);
+      }, 0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
   const handleSave = () => {
     const routine = {
       name: routineName,
+      description: routineDescription,
       duration: 30,
       exercises: exerciseList
         .filter((e) => e.name !== '운동 선택')
@@ -123,7 +131,7 @@ const RoutineDetail = () => {
   };
 
   return (
-    <div className="routine-detail-wrapper">
+    <PageWrapper>
       <div className="routine-detail-container">
         <div className="routine-detail-header">
           <input
@@ -133,17 +141,22 @@ const RoutineDetail = () => {
             onChange={(e) => setRoutineName(e.target.value)}
             placeholder="루틴 이름을 입력하세요"
           />
-          <p className="routine-description">루틴 설명을 작성해주세요</p>
+          <textarea
+            className="routine-description-input"
+            value={routineDescription}
+            onChange={(e) => setRoutineDescription(e.target.value)}
+            placeholder="간단한 설명을 적어주세요"
+          />
         </div>
 
-        <div className="exercise-list">
+        <div className="ex-list">
           {exerciseList.map((exercise, i) => (
-            <div key={i} className="exercise-card" onClick={() => handleCardClick(i)}>
-              <div className="exercise-info">
+            <div key={i} className="ex-card" onClick={() => handleCardClick(i)}>
+              <div className="ex-info">
                 <img src={exercise.image} alt={exercise.name} />
-                <div>
-                  <div className="exercise-name">{exercise.name}</div>
-                  <div className="exercise-target">{exercise.description}</div>
+                <div className='ex-text'>
+                  <div className="ex-name">{exercise.name}</div>
+                  <div className="ex-target">{exercise.description}</div>
                 </div>
               </div>
             </div>
@@ -155,7 +168,7 @@ const RoutineDetail = () => {
           <button className="save-button" onClick={handleSave}>저장</button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 
