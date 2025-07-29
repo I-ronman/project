@@ -13,7 +13,7 @@ function TrainingCam() {
     wsRef.current = io.connect('http://localhost:525');
     wsRef.current.on("show",(data) => {
       try{
-        setImgSrc(`data:image/jpeg;base64,${data}`)
+        setImgSrc(`data:image/jpeg;base64,${data.sendImg}`)
         
       }catch(error){
         console.error(error)
@@ -45,7 +45,7 @@ function TrainingCam() {
   return (
     
     <div>
-      <Webcam ref={webcamRef}/>
+      <Webcam ref={webcamRef} style={{display:"disable"}}/>
       <img src={imgSrc} alt="" />
     </div>
   )
