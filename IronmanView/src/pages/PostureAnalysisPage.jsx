@@ -6,6 +6,7 @@ import GuideVideoPlayer from '../components/posture/GuideVideoPlayer';
 import VideoFeed from '../components/posture/VideoFeed';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
+import TrainingCam from '../components/TrainingCam';
 
 const PostureAnalysisPage = () => {
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
@@ -29,17 +30,9 @@ const PostureAnalysisPage = () => {
       .catch((err) => {
         console.error('운동 리스트 불러오기 실패:', err);
       });
-
-    // 운동 횟수, 실패 횟수 불러오기 (더미 구현)
-    axios.get('http://localhost:5000/api/user/statistics')
-      .then((res) => {
-        setSuccessCount(res.data.success); // ex: 5
-        setFailCount(res.data.fail);       // ex: 2
-      })
-      .catch((err) => {
-        console.error('운동 통계 불러오기 실패:', err);
-      });
   }, []);
+
+
 
   return (
     <div className="posture-container">
@@ -73,7 +66,7 @@ const PostureAnalysisPage = () => {
       </div>
 
       <div className="posture-right">
-        <VideoFeed />
+        <TrainingCam></TrainingCam>
       </div>
     </div>
   );
