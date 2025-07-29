@@ -1,48 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
-<<<<<<< HEAD
-=======
 import { useRoutine } from '../contexts/RoutineContext.jsx';
->>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
 
 const RoutineDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-<<<<<<< HEAD
-
-  const [exerciseList, setExerciseList] = useState([]);
-
-  // 초기 루틴 데이터 또는 선택한 운동 적용
-  useEffect(() => {
-    const { updatedExercise, index, routine } = location.state || {};
-
-    // 기존 루틴 데이터로 초기화
-    if (routine && routine.exercises) {
-      const mappedExercises = routine.exercises.map((name) => ({
-        name,
-        description:
-          name === '운동 선택' ? '운동을 선택해주세요' : '선택된 운동입니다',
-        image:
-          name === '운동 선택'
-            ? '/images/sample-placeholder.png'
-            : '/images/sample-new.png',
-      }));
-
-      // 4개가 안 되면 채움
-      while (mappedExercises.length < 4) {
-        mappedExercises.push({
-          name: '운동 선택',
-          description: '운동을 선택해주세요',
-          image: '/images/sample-placeholder.png',
-        });
-      }
-
-      setExerciseList(mappedExercises);
-    }
-
-    // 특정 운동만 수정된 경우
-=======
   const { updateRoutine } = useRoutine();
 
   const [routineName, setRoutineName] = useState(location.state?.routine?.name || '루틴 A');
@@ -84,42 +47,11 @@ const RoutineDetail = () => {
     const { updatedExercise, index, routine } = location.state || {};
     const preservedName = routine?.name || routineName;
 
->>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
     if (updatedExercise && index !== undefined) {
       setExerciseList((prevList) => {
         const newList = [...prevList];
         newList[index] = {
           name: updatedExercise.name,
-<<<<<<< HEAD
-          description: `${updatedExercise.part} 부위를 강화합니다`,
-          image: '/images/sample-new.png',
-        };
-        return newList;
-      });
-    }
-  }, [location.state]);
-
-  const handleCardClick = (index) => {
-    navigate('/search', {
-      state: { index },
-    });
-  };
-
-  const handleSave = () => {
-    const prevName = location.state?.routine?.name || '루틴 A';
-
-    const routine = {
-      name: prevName,
-      duration: 30,
-      exercises: exerciseList.map((e) => e.name),
-    };
-
-    navigate('/routine', { state: { newRoutine: routine } });
-  };
-
-  const handleBack = () => {
-    navigate(-1);
-=======
           part: updatedExercise.part,
           description: `${updatedExercise.part} 부위를 강화합니다.`,
           image: '/images/sample-new.png',
@@ -188,16 +120,12 @@ const RoutineDetail = () => {
         },
       },
     });
->>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
   };
 
   return (
     <div className="routine-detail-wrapper">
       <div className="routine-detail-container">
         <div className="routine-detail-header">
-<<<<<<< HEAD
-          <h2>{location.state?.routine?.name || '루틴 A'}</h2>
-=======
           <input
             type="text"
             className="routine-name-input"
@@ -205,7 +133,6 @@ const RoutineDetail = () => {
             onChange={(e) => setRoutineName(e.target.value)}
             placeholder="루틴 이름을 입력하세요"
           />
->>>>>>> 8dda8c4bf7fd7ce37b70fe92f556514fc6270d6b
           <p className="routine-description">루틴 설명을 작성해주세요</p>
         </div>
 
