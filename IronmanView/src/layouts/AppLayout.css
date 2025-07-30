@@ -25,6 +25,24 @@ html, body, #root {
   box-sizing: border-box;
 }
 
+.app-layout::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url('/images/background3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.3; /* ✅ 투명도 조절 */
+  z-index: 0;
+}
+
+.app-layout > * {
+  position: relative;
+  z-index: 1; /* ✅ 자식 콘텐츠는 위에 표시 */
+}
+
+
 /* 왼쪽 소개 영역 */
 .left-panel {
   width: 30vw;
