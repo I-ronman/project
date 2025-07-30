@@ -47,7 +47,9 @@ public class EmailController {
 	    String email = request.get("email");
 	    String inputCode = request.get("code");
 
+
 	    //  핵심 수정: 서비스 메서드로 인증 처리
+
 	    boolean verified = emailService.verifyCode(email, inputCode);
 
 	    if (verified) {
