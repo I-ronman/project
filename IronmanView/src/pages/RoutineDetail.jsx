@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
 import PageWrapper from '../layouts/PageWrapper';
+import axios from 'axios';
 
 const RoutineDetail = () => {
   const navigate = useNavigate();
@@ -93,21 +94,32 @@ const RoutineDetail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  const handleSave = () => {
-    const routine = {
-      name: routineName,
-      description: routineDescription,
-      duration: 30,
-      exercises: exerciseList
-        .filter((e) => e.name !== '운동 선택')
-        .map((e) => ({
-          name: e.name,
-          part: e.part,
-        })),
-    };
-    updateRoutine(routine);
-    navigate('/routine');
+  const handleSave = async () => {
+  const routineData = {
+    title: routineName,
+    summary: '루틴 설명', // 현재 고정값, 나중에 추가 입력 받으면 수정
+    exercises: exerciseList
+      .filter((e) => e.name !== '운동 선택')
+      .map((e) => ({
+        name: e.name,
+        part: e.part,
+      })),
   };
+
+  try {
+    const response = await axios.post('http://localhost:329/web/api/routine/add', routineData, {
+      withCredentials: true, // 인증 필요 시
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    console.log('루틴 저장 성공:', response.data);
+    navigate('/routine');
+
+  } catch (error) {
+    console.error('루틴 저장 실패:', error);
+    alert('루틴 저장에 실패했습니다.');
+  }
+};
 
   const handleBack = () => {
     const confirmBack = window.confirm('변경 사항이 저장되지 않습니다. 루틴 목록으로 돌아가시겠습니까?');
