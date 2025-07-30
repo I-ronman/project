@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import csv
 from calcData import get_angle,draw_angle_arc
-
+import math
 class base_line(object):
      def __init__(self,x,y):
         self.x = x,
@@ -13,6 +13,7 @@ class base_line(object):
 good_cnt = 0
 bad_cnt = 0
 
+save_cnt = 0
 
 
 mp_pose = mp.solutions.pose
@@ -52,6 +53,8 @@ while cap.isOpened():
 
             l_leg_ang = get_angle(lm[27],lm[25],lm[23])
             l_hip_ang = get_angle(lm[25],lm[23],lm[11])
+            diff_angle =abs(l_leg_ang - l_hip_ang)
+            
             data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
             
             key = cv2.waitKey(5)
@@ -131,6 +134,9 @@ while cap.isOpened():
             mp_draw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
             mp_draw.DrawingSpec(color=(255,0,0), thickness=2),
         )
+        if diff_angle < 1 and l_leg_ang < 55:
+            cv2.imwrite(f"image/good{save_cnt}.png",frame)
+            save_cnt += 1
         cv2.imshow('Capture', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):  # q를 누르면 종료
             break

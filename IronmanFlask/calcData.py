@@ -32,8 +32,11 @@ def get_angle(a, b, c):
 def draw_angle_arc(img,h,w, a, b, c,ang, radius=40, color=(255, 255, 0)):
     """각을 구하기 위해 시작점과 끝점을 위에서부터 아래 순으로 입력"""
      # 방향각 구하기 (OpenCV 기준: 오른쪽 = 0도, 아래 = 90도)
-    start = math.degrees(math.atan2(a.y - b.y, a.x - b.x)) % 360
-    end   = math.degrees(math.atan2(c.y - b.y, c.x - b.x)) % 360
+    ax,ay = to_pixel(a,h,w)
+    bx,by = to_pixel(b,h,w)
+    cx,cy = to_pixel(c,h,w)
+    start = math.degrees(math.atan2(ay - by, ax - bx)) % 360
+    end   = math.degrees(math.atan2(cy - by, cx - bx)) % 360
 
     # 작은 쪽 각도만 그리기 위해 방향 뒤집기
     sweep = (end - start) % 360
@@ -44,19 +47,20 @@ def draw_angle_arc(img,h,w, a, b, c,ang, radius=40, color=(255, 255, 0)):
     print(start,end)
     # 중심 좌표를 픽셀 좌표로 변환
     center = to_pixel(b, h, w)
+    overLay = img.copy()
 
     # 호 그리기
     cv2.ellipse(
-        img,
+        overLay,
         center=center,
         axes=(radius, radius),
         angle=0,
         startAngle=start,
         endAngle=end,
         color=color,
-        thickness=2
+        thickness=-1
     )
-
+    cv2.addWeighted(overLay,0.5,img,1-0.5,0,img)
     cv2.putText(img, f'{int(ang)} deg', center,
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
