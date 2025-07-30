@@ -37,6 +37,9 @@ const StepFinal = ({
       });
 
       if (response.ok) {
+
+        localStorage.setItem('surveyCompleted', 'true');
+        navigate('/routine')
         // navigate('/recommend'); 성공 시 추천 페이지로 이동
       } else {
         alert('설문 전송 실패');

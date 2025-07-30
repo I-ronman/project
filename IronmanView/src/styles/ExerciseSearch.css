@@ -1,4 +1,4 @@
-/* ExerciseSearch.css */
+/* project/IronmanView/src/styles/ExerciseSearch.css */
 
 .exercise-search-wrapper {
   background-color: #000;
@@ -24,7 +24,7 @@
 }
 
 .search-bar {
-  width: 100%;
+  width: 90%;
   padding: 12px;
   font-size: 14px;
   border-radius: 10px;
@@ -40,6 +40,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 90%;
+  max-width: 500px;
+  align-items: center;
 }
 
 .exercise-item {
@@ -51,6 +54,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 90%;
+  
 }
 
 .exercise-item.selected {
@@ -58,7 +63,7 @@
 }
 
 .exercise-item:hover {
-  background-color: #2a2a2a;
+  background-color: #b2ff00;
 }
 
 .exercise-name {
@@ -74,7 +79,11 @@
 .button-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  margin: 0 auto 40px;
+  margin-bottom: 40px;
+  padding:0;
+  width: 50%;
+  
 }
 
 .back-button,
@@ -86,6 +95,7 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  margin:0;
 }
 
 .back-button {
@@ -102,4 +112,14 @@
 .save-button:disabled {
   background-color: #999;
   cursor: not-allowed;
+}
+
+.back-button:hover {
+  background-color: #e61616; /* 회색 버튼 hover 시 */
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #a5cc00; /* 노란 버튼 hover 시 */
+  color: white;
 }

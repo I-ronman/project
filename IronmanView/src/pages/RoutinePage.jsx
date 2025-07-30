@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/RoutinePage.css';
 import { useNavigate } from 'react-router-dom';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
+import PageWrapper from '../layouts/PageWrapper';
+import axios from 'axios';
 
 const RoutinePage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('routine');
   const { savedRoutines, deleteRoutine } = useRoutine();
+  const [routines, setRoutines] = useState([]);  // 🔧 추가
+
+   // ✅ 루틴 목록을 서버에서 불러오기
+  useEffect(() => {
+    const fetchRoutines = async () => {
+      try {
+        const response = await axios.get('http://localhost:329/web/api/routine/list', {
+          withCredentials: true,
+        });
+        setRoutines(response.data); // 서버에서 받은 루틴 목록
+      } catch (error) {
+        console.error('루틴 목록 불러오기 실패:', error);
+      }
+    };
+
+    fetchRoutines();
+  }, []);
 
   const handleRoutineClick = (routine) => {
     navigate('/routinedetail', { state: { routine } });
@@ -30,7 +49,7 @@ const RoutinePage = () => {
   };
 
   return (
-    <div className="routine-wrapper">
+    <PageWrapper>
       <div className="routine-container">
         <div className="routine-tab">
           <button className={activeTab === 'routine' ? 'tab active' : 'tab'} onClick={() => setActiveTab('routine')}>
@@ -45,26 +64,34 @@ const RoutinePage = () => {
           <div>
             <div className="top-row">
               <h3>오늘의 루틴</h3>
-              <button className="survey-btn">설문조사 하기</button>
+              <div className='top-row'>
+                {!isSurveyCompleted && (
+                  <button className="survey-btn" onClick={handleSurveyNavigate}>설문조사 하기</button>
+                )}
+                <button className="survey-btn" onClick={() => navigate('/schedulepage')}>스케쥴 확인하기</button>
+                {/* ✅ 임시 초기화 버튼 */}
+                <button className="survey-btn" onClick={handleSurveyReset}>설문 토글</button>
+            
+              </div>
             </div>
 
             <div className="routine-card-list">
-              {savedRoutines.map((r, index) => (
+              {routines.map((r, index) => (
                 <div key={index} className="routine-card">
                   <div className="routine-card-header">
-                    <h2>{r.name}</h2>
+                    <h2>{r.title}</h2>
                     <span
                       className="delete-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteRoutine(r.name);
+                        handleDeleteRoutine(r.title);
                       }}
                     >
                       X
                     </span>
                   </div>
                   <p>⏱ {r.duration}분</p>
-                  <p>💪 {r.exercises.map((e) => e.name).join(', ')}</p>
+                  <p>💪 {r.summary || '운동없음'}</p>
                   <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
                 </div>
               ))}
@@ -93,7 +120,7 @@ const RoutinePage = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

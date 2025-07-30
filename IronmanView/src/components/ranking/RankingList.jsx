@@ -1,3 +1,4 @@
+// project/IronmanView/src/components/ranking/RankingList.jsx
 import React from 'react';
 import '../../styles/RankingList.css';
 

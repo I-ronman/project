@@ -1,14 +1,20 @@
 package com.Ironman.back.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -22,20 +28,16 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/oauth/**", "/css/**", "/js/**", "/images/**", "/email/**",      //  이메일 인증 관련 요청 허용
-                        "/signup","/login"     ).permitAll() // 비로그인 허용 경로
+                        "/signup","/login","/api/routine/add", "/api/routine/list","/login/check"     ).permitAll() // 비로그인 허용 경로
                 .anyRequest().authenticated() // 나머지는 인증 필요
             )
-            .formLogin(form -> form
-                    .loginPage("/loginPage")  // 시큐리티 로그인 페이지 (context path 제외)
-                    .permitAll()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .loginPage("/loginPage") // 프론트 커스텀 로그인 페이지 경로
-                .defaultSuccessUrl("http://localhost:5173", true) // 로그인 성공시 이동 경로
-            );
+            .formLogin(form -> form.disable())            
+            .oauth2Login(oauth2 -> oauth2.disable());
+            
 
         return http.build();
     }
+    
     
      // CORS 설정 (React 연동용)
         @Bean

@@ -1,4 +1,4 @@
-/*surveyPage.jsx*/
+/*project/IronmanView/src/styles/SurveyPage.css*/
 
 .survey-wrapper {
   width: 100%;
@@ -32,11 +32,16 @@
   box-sizing: border-box;
 }
 
-.back-button,
+.survey-back-button,
 .right-label {
-  min-width: 60px;
+  min-width: 30px;
   text-align: center;
   white-space: nowrap;
+}
+
+.survey-back-button:hover {
+  transform: translateX(-4px);  /* ✅ 왼쪽으로 살짝 움직임 */
+  color: #d3ff00;               /* ✅ 강조 색상 (형광 노랑 등) */
 }
 
 .header-title {

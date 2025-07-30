@@ -1,4 +1,4 @@
-/* ProfileEditPage.css */
+/* project/IronmanView/src/styles/ProfileEditPage.css */
 
 .profile-edit-wrapper {
     max-width: 430px;
@@ -9,17 +9,23 @@
     box-sizing: border-box;
   }
   
-  .profile-edit-container {
+  .edit-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;       /* 가운데 정렬 */
+    box-sizing: border-box;
   }
   
-  .profile-photo-section {
+  .edit-profile-section {
     display: flex;
     align-items: center;
     gap: 16px;
+    width: 80%;
+    max-width: 500px;
   }
   
   .profile-photo-section img {
@@ -40,6 +46,8 @@
     padding: 15px;
     border-radius: 12px;
     box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    max-width: 430px;
+    color: #000;
   }
   
   .profile-basic-info div {

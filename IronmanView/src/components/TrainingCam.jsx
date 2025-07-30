@@ -1,36 +1,67 @@
-import React, { useEffect, useRef } from 'react'
+// project/IronmanView/src/components/TrainingCam.jsx
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Webcam from "react-webcam";
+import {io} from "socket.io-client"
+import { CountContext } from '../context/CountContext';
 
 function TrainingCam() {
-  const ws = useRef<WebSocket | null> (null)
+  const wsRef = useRef(null);
+  const webcamRef = React.useRef(null);
+  const [imgSrc,setImgSrc] = useState("");
+  const {setSuccessCount,setFailCount} = useContext(CountContext);
+  <webcamRef ref={webcamRef}></webcamRef>
+  const videoConstraints = {
+  width: 1024,
+  height: 680,
+  facingMode: "user"
+  };
   useEffect(()=>{
-    ws.current = new WebSocket("172.30.16.1:525/analyze")
-    ws.current.onopen = () => {
-      console.log('WebSocket connection opened.')
-      setIsLoading(false);
-    }
-    ws.current.onmessage = (event) => {
-      if (event.data) {
-        const base64ImageData = 'data:image/jpg;base64,' + event.data;
-        setCctvData(base64ImageData);
+    wsRef.current = io.connect('http://localhost:525');
+    wsRef.current.on("show",(data) => {
+      try{
+        setImgSrc(`data:image/jpeg;base64,${data.sendImg}`)
+        
+      }catch(error){
+        console.error(error)
       }
-    };
-    ws.current.onerror = () => console.log('WebSocket Error');
-    ws.current.onclose = () => {
-      console.log('Websocket connection is closed');
-    };
-
+      
+    })
+    wsRef.current.on("goodCount",(data)=>{
+      setSuccessCount(data)
+    })
+    wsRef.current.on("badCount",(data)=>{
+      setFailCount(data)
+    })
+    const sendImage = setInterval(()=>{
+      const imgSrc= webcamRef.current.getScreenshot();
+      console.log();
+      const data = {
+        "image": imgSrc
+        
+      }
+      if(data.image){
+        console.log("감?")
+        wsRef.current.emit("analyze",data)
+      }
+    },100);
+    sendImage
+    // wsRef.current.emit("analyze",webcamRef.current.getScreenshot())
     return () => {
-      if (ws.current && ws.current.readyState === 1) {
-        ws.current.close();
-      }
+      wsRef.current.disconnect();
     };
   },[]);
-  const WebcamComponent = () => <Webcam />;
+  
+  
+  // if (event.data) {
+  //       const base64ImageData = 'data:image/jpg;base64,' + event.data;
+  //       setCctvData(base64ImageData);
+  //     }
+
   return (
     
     <div>
-      <Webcam/>
+      <img src={imgSrc} alt="" />
+      <Webcam ref={webcamRef} style={{ visibility: 'hidden', position: 'absolute'}} videoConstraints={videoConstraints}/>
     </div>
   )
 }

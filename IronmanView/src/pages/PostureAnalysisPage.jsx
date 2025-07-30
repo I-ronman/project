@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/PostureAnalysisPage.jsx
 import React, { useEffect, useState } from 'react';
 import '../styles/PostureAnalysis.css';
 import StatBox from '../components/posture/StatBox';
@@ -6,6 +7,10 @@ import GuideVideoPlayer from '../components/posture/GuideVideoPlayer';
 import VideoFeed from '../components/posture/VideoFeed';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
+import TrainingCam from '../components/TrainingCam';
+import PageWrapper from '../layouts/PageWrapper';
+import { CountContext } from '../context/CountContext';
+
 
 const PostureAnalysisPage = () => {
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
@@ -29,53 +34,53 @@ const PostureAnalysisPage = () => {
       .catch((err) => {
         console.error('운동 리스트 불러오기 실패:', err);
       });
-
-    // 운동 횟수, 실패 횟수 불러오기 (더미 구현)
-    axios.get('http://localhost:5000/api/user/statistics')
-      .then((res) => {
-        setSuccessCount(res.data.success); // ex: 5
-        setFailCount(res.data.fail);       // ex: 2
-      })
-      .catch((err) => {
-        console.error('운동 통계 불러오기 실패:', err);
-      });
   }, []);
 
+
+
   return (
-    <div className="posture-container">
-      <div className="posture-left">
-        <header className="posture-header">
-          <div className="logo">💪 언맨</div>
-          <h2>운동 및 자세분석</h2>
-          <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
-        </header>
+      <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount}}>
+    <PageWrapper>
 
-        <div className="posture-stats">
-          <StatBox label="운동 횟수" count={successCount} />
-          <StatBox label="실패 횟수" count={failCount} />
-        </div>
+      <div className="posture-container">
+        <div className="posture-left">
+          <header className="posture-header">
+            <div className="logo">💪 언맨</div>
+            <h2>운동 및 자세분석</h2>
+            <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
+          </header>
 
-        <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
+          <div className="posture-stats">
+            <StatBox label="운동 횟수" count={successCount} />
+            <StatBox label="실패 횟수" count={failCount} />
+          </div>
+          
+          <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
 
-        <div className="exercise-buttons">
-          {exerciseList.map((exercise, idx) => (
-            <button
+          <div className="exercise-buttons">
+            {exerciseList.map((exercise, idx) => (
+              <button
               key={idx}
-              className={`exercise-btn ${selectedVideo === exercise.videoUrl ? 'active' : ''}`}
-              onClick={() => setSelectedVideo(exercise.videoUrl)}
-            >
-              {exercise.name}
-            </button>
-          ))}
+                className={`exercise-btn ${selectedVideo === exercise.videoUrl ? 'active' : ''}`}
+                onClick={() => setSelectedVideo(exercise.videoUrl)}
+              >
+                {exercise.name}
+              </button>
+            ))}
+          </div>
+
+          <GuideVideoPlayer videoUrl={selectedVideo} />
         </div>
 
-        <GuideVideoPlayer videoUrl={selectedVideo} />
+        <div className="posture-right">
+          <TrainingCam></TrainingCam>
+        </div>
       </div>
 
       <div className="posture-right">
-        <VideoFeed />
       </div>
-    </div>
+      </PageWrapper>
+      </CountContext.Provider>
   );
 };
 

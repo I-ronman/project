@@ -1,9 +1,12 @@
+// project/IronmanView/src/pages/SignupPage.jsx
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/SignupPage.css';
 import logo from '../assets/logo.png';
 import axios from 'axios';
+import PageWrapper from '../layouts/PageWrapper';
+import { useNavigate } from 'react-router-dom';
 
 function SignupPage() {
   const [name, setName] = useState('');
@@ -16,6 +19,8 @@ function SignupPage() {
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  
+  const navigate = useNavigate();
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (pw) =>
@@ -136,6 +141,7 @@ function SignupPage() {
       );
       console.log('회원가입 성공:', response.data);
       alert('회원가입이 완료되었습니다.');
+      navigate('/login');
     } catch (error) {
       const message =
         error.response?.data || '회원가입 중 오류가 발생했습니다.';
@@ -145,7 +151,7 @@ function SignupPage() {
   };
 
   return (
-    <div className="signup-wrapper">
+    <PageWrapper>
       <div className="signup-container">
         <img src={logo} alt="I언맨 로고" className="signup-logo" />
         <h2>회원가입</h2>
@@ -229,15 +235,14 @@ function SignupPage() {
         {passwordError && <p className="error-text">{passwordError}</p>}
 
         <p className="agreement">
-          계정을 만들거나 가입하면 당사의 이용 약관 및 개인정보 보호정책에
-          동의하는 것으로 간주됩니다.
+          계정을 만들거나 가입하면 당사의 이용 약관 및 개인정보 보호정책에 동의하는 것으로 간주됩니다.
         </p>
 
         <button className="signup-btn" onClick={handleSubmit}>
           계속하기
-        </button>
-    </div>
-    </div>
+      </button>
+      </div>
+    </PageWrapper>
   );
 }
 

@@ -1,3 +1,4 @@
+/*project/IronmanView/src/styles/RoutineDetail.css*/
 .routine-detail-wrapper {
   background: black;
   min-height: 100vh;
@@ -11,13 +12,17 @@
   color: white;
   width: 100%;
   max-width: 430px;
-  padding: 20px;
+  padding: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
 .routine-detail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 수평 가운데 정렬 */
+  gap: 12px; /* 요소 간 간격 */
   margin-bottom: 10px;
 }
 
@@ -34,13 +39,13 @@
   line-height: 1.5;
 }
 
-.exercise-list {
+.ex-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.exercise-card {
+.ex-card {
   background: #222;
   border-radius: 12px;
   padding: 14px;
@@ -49,25 +54,33 @@
   justify-content: space-between;
 }
 
-.exercise-info {
+.ex-info {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;           /* 부모 기준 너비 꽉 채우기 */
+  justify-content: space-between;  /* 왼쪽 이미지 - 오른쪽 텍스트 분리 */
 }
 
-.exercise-info img {
+.ex-info img {
   width: 64px;
   height: 64px;
   object-fit: cover;
   border-radius: 6px;
 }
+.ex-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* ← 오른쪽 정렬 */
+  text-align: right;     /* ← 텍스트도 오른쪽 정렬 */
+}
 
-.exercise-name {
+.ex-name {
   font-size: 16px;
   font-weight: bold;
 }
 
-.exercise-target {
+.ex-target {
   font-size: 12px;
   color: #aaa;
 }
@@ -119,4 +132,18 @@
   width: 100%;
   margin-bottom: 8px;
   outline: none;
+}
+
+.routine-description-input {
+  width: 90%;
+  max-width: 400px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  resize: none;
+  background-color: #333;
+  color: white;
+  font-size: 14px;
+
 }

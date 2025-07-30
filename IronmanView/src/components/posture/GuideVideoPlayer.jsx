@@ -1,3 +1,4 @@
+// project/IronmanView/src/components/posture/GuideVideoPlayer.jsx
 import React from 'react';
 
 // 선택된 운동 가이드 영상을 보여주는 컴포넌트

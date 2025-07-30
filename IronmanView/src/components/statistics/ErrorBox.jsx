@@ -1,3 +1,4 @@
+// project/IronmanView/src/components/statistics/ErrorBox.jsx
 import React from 'react';
 
 const ErrorBox = ({ errors }) => {

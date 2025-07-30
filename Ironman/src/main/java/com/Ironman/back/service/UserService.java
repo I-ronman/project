@@ -33,7 +33,7 @@ public class UserService {
 			        .pw(dto.getPw())
 			        .name(dto.getName())
 			        .gender(dto.getGender())
-			        .birthDate(dto.getBrithdate())
+			        .birthdate(dto.getBirthdate())
 			        .build();
 		  
 		userRepository.save(user);
