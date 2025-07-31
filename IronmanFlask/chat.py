@@ -2,11 +2,20 @@ import openai
 from dotenv import load_dotenv
 import os
 import base64
+from flask import Flask
+from flask_socketio import SocketIO
+import socketio
+import threading
 
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 
 client = openai.OpenAI(api_key=openai_api_key)
+
+app = Flask(__name__)
+# socket_io = SocketIO(app,cors_allowed_origins="http://192.168.219.89:5173")
+socket_io = SocketIO(app,cors_allowed_origins="http://localhost:525")
+ws_client = socketio.Client()
 
 def encode_image_to_base64(image_path):
     """이미지를 base64로 인코딩하여 Data URL 형식으로 반환"""
@@ -14,8 +23,8 @@ def encode_image_to_base64(image_path):
         base64_bytes = base64.b64encode(image_file.read()).decode("utf-8")
         return f"data:image/png;base64,{base64_bytes}"
 
-def analyze_pose_with_image(image_path, question):
-    image_base64 = encode_image_to_base64(image_path)
+def analyze_pose_with_image(img, question):
+    
 
     response = client.chat.completions.create(
         model="gpt-4o",
@@ -34,7 +43,7 @@ def analyze_pose_with_image(image_path, question):
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": image_base64
+                            "url": img
                         }
                     }
                 ]
@@ -45,10 +54,19 @@ def analyze_pose_with_image(image_path, question):
 
     return response.choices[0].message.content
 
-if __name__ == "__main__":
-    image_path = "image/good7.png"  # 분석할 운동 자세 이미지
+
+
+
+
+@socket_io.on("bestPose")
+def analysis(data):
     question = "이 운동 자세에 대해서 평가해줘."
     
-    result = analyze_pose_with_image(image_path, question)
+    result = analyze_pose_with_image(data, question)
     print("\nGPT 자세 분석 결과:")
     print(result)
+    sendData = {"result":result,"img":data}
+    ws_client.emit("bestPose",sendData)
+
+if __name__ == '__main__':
+    socket_io.run(app, debug=True, port=5001)
