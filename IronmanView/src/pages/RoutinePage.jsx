@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/RoutinePage.css';
 import { useNavigate } from 'react-router-dom';
-import { useRoutine } from '../contexts/RoutineContext.jsx';
+import { useRoutine } from '../context/RoutineContext.jsx';
 import PageWrapper from '../layouts/PageWrapper';
 import axios from 'axios';
 

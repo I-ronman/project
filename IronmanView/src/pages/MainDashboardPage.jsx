@@ -3,20 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/MainDashboardPage.css';
 import logoImage from '../assets/logo.png';
 import defaultProfile from '../images/default_profile.jpg';
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
 const MainDashboardPage = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
-    name: '홍길동',
-    profileImage: defaultProfile,
-    hasSurvey: true,
-    todayRoutine: {
-      name: '루틴 A',
-      totalTime: '30분',
-      steps: ['스트레칭 5분', '스쿼트 10분', '플랭크 15분'],
-    },
-    unreadNotifications: 1,
-  });
+  const { user } = useContext(AuthContext);
+  const displayName = user?.name || '홍길동';
 
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(new Date()));
   const [calendarData, setCalendarData] = useState([
@@ -47,6 +40,10 @@ const MainDashboardPage = () => {
       content: "하체 루틴을 바꿔보려고 하는데 추천 있을까요?",
     },
   ]);
+
+  useEffect(()=> {
+    console.log("전역 로그인 유저 정보:", user);
+  }, [user]);
 
   useEffect(() => {
     const today = new Date();
@@ -119,10 +116,10 @@ const MainDashboardPage = () => {
       
       <div className="profile-card dark-card clickable-card" onClick={() => navigate('/mypage')}>
         <div className="profile-info">
-          <img src={user.profileImage} alt="프로필" className="profile-img" />
+          <img src={user?.profileImage || './images/default_profile.jpg'} alt="프로필" className="profile-img" />
           <div className="profile-texts">
             <p className="welcome-text">어서오세요!</p>
-            <p className="username-text">{user.name} 님</p>
+            <p className="username-text">{displayName} 님</p>
           </div>
         </div>
         <div className="notification-icon" onClick={(e) => { e.stopPropagation(); handleNotificationClick(); }}>

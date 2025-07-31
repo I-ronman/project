@@ -1,19 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../styles/Auth.css'
 import PageWrapper from '../layouts/PageWrapper';
+import { AuthContext } from '../context/AuthContext';
 
 
 function LoginPage() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [pw, setPw] = useState('')
+  const {login} = useContext(AuthContext);
+
 
   useEffect(() => {
   axios.get('http://localhost:329/web/login/check', { withCredentials: true })
     .then(res => {
       if (res.data.loggedIn) {
+        console.log(res.data);
         // 로그인 유지 처리
       } else {
         // 로그인 안 되어 있음 처리
@@ -23,6 +27,7 @@ function LoginPage() {
       console.error('세션 확인 실패', err);
     });
 }, []);
+  
 
 
   const handleLogin = async () => {
@@ -37,6 +42,12 @@ function LoginPage() {
         console.log(res.data);
         // 로그인 성공 시 리디렉션
       if (res.data && res.data.email) {
+
+        login({
+          name: res.data.name,
+          email: res.data.email,
+          
+        })
         navigate('/main')  // 나중에 홈페이지로 연결
       } else {
         alert('아이디 또는 비밀번호가 올바르지 않습니다.')

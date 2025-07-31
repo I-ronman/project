@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { RoutineProvider } from './contexts/RoutineContext';
+import { RoutineProvider } from './context/RoutineContext';
 
 import HomePage from './pages/HomePage';
 import Training from './components/TrainingCam';
