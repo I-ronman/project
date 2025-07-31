@@ -36,6 +36,7 @@ view_center_of_gravity = False
 view_upper_body_slope = False
 view_leg_hip_angle = False
 view_knee_line = False
+
 while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -103,7 +104,7 @@ while cap.isOpened():
        
             if hip_back > 50 :correct_hip_position = False
 
-            if l_leg_ang <= 75 and l_hip_ang <= 70 : sit = True
+            if l_leg_ang <= 55 and l_hip_ang <= 55 : sit = True
             
             if l_leg_ang - 20 > l_hip_ang or l_hip_ang> l_leg_ang + 20: leg_upperbody_parallel = False
 
