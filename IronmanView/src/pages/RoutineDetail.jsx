@@ -17,45 +17,52 @@ const RoutineDetail = () => {
   const [exerciseList, setExerciseList] = useState([
     {
       name: '운동 선택',
-      part: '',
-      description: '운동을 선택해주세요',
-      image: '/images/sample-placeholder.png',
+    part: '',
+    sets: 3,
+    reps: 10,
+    exerciseTime: 60,  // 기본값 60초
+    description: '운동을 선택해주세요',
+    image: '/images/sample-placeholder.png',
     },
-  ]);
+]);
 
-  // ✅ 최초 진입 시 루틴 로드
-  useEffect(() => {
-    const routine = location.state?.routine;
-    if (routine?.exercises?.length > 0) {
-      const mappedExercises = routine.exercises.map((exercise) => ({
-        name: exercise.name,
-        part: exercise.part,
-        description: `${exercise.part} 부위를 강화합니다.`,
-        image: '/images/sample-new.png',
-      }));
 
-      setExerciseList(
-        mappedExercises[mappedExercises.length - 1].name !== '운동 선택'
-          ? [...mappedExercises, {
-              name: '운동 선택',
-              part: '',
-              description: '운동을 선택해주세요',
-              image: '/images/sample-placeholder.png',
-            }]
-          : mappedExercises
-      );
+ useEffect(() => {
+  const routine = location.state?.routine;
+  if (routine?.exercises?.length > 0) {
+    setRoutineDescription(routine.summary || '');
+
+    const mappedExercises = routine.exercises.map((e) => ({
+      ...e,
+      description: `${e.part} 부위를 강화합니다.`,
+      image: '/images/sample-new.png',
+    }));
+
+    // 맨 마지막에 '운동 선택'이 없으면 추가
+    if (mappedExercises[mappedExercises.length - 1].name !== '운동 선택') {
+      mappedExercises.push({
+        name: '운동 선택',
+        part: '',
+        sets: 3,
+        reps: 10,
+        exerciseTime: 60,
+        description: '운동을 선택해주세요',
+        image: '/images/sample-placeholder.png',
+      });
     }
-  }, []);
 
-  // ✅ 운동 선택 후 돌아왔을 때 반영
-  useEffect(() => {
-    const { updatedExercise, index, routine } = location.state || {};
+    setExerciseList(mappedExercises);
+  }
+}, []);  // ✅ 최초 진입 시만 실행
 
-    if (updatedExercise && index !== undefined) {
-      const preservedName = routine?.name || routineName;
+useEffect(() => {
+  const { updatedExercise, index } = location.state || {};
 
-      const updatedList = [...exerciseList];
+  if (updatedExercise && index !== undefined) {
+    setExerciseList((prevList) => {
+      const updatedList = [...prevList];
       updatedList[index] = {
+        ...updatedList[index],
         name: updatedExercise.name,
         part: updatedExercise.part,
         description: `${updatedExercise.part} 부위를 강화합니다.`,
@@ -67,42 +74,37 @@ const RoutineDetail = () => {
         updatedList.push({
           name: '운동 선택',
           part: '',
+          sets: 3,
+          reps: 10,
+          exerciseTime: 60,
           description: '운동을 선택해주세요',
           image: '/images/sample-placeholder.png',
         });
       }
 
-      // 상태 먼저 반영
-      setExerciseList(updatedList);
-      setRoutineName(preservedName);
+      return updatedList;
+    });
 
-      // navigate는 렌더 이후에 실행 (버그 방지용)
-      setTimeout(() => {
-        navigate(location.pathname, {
-          replace: true,
-          state: {
-            routine: {
-              name: preservedName,
-              exercises: updatedList
-                .filter((e) => e.name !== '운동 선택')
-                .map((e) => ({ name: e.name, part: e.part })),
-            },
-          },
-        });
-      }, 0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state]);
+    // ✅ 상태 초기화해서 중복 선택 방지
+    setTimeout(() => {
+      navigate(location.pathname, { replace: true, state: {} });
+    }, 0);
+  }
+}, [location.state]);
+
 
   const handleSave = async () => {
   const routineData = {
-    title: routineName,
-    summary: '루틴 설명', // 현재 고정값, 나중에 추가 입력 받으면 수정
-    exercises: exerciseList
-      .filter((e) => e.name !== '운동 선택')
-      .map((e) => ({
-        name: e.name,
-        part: e.part,
+     title: routineName,
+  summary: routineDescription,
+  exercises: exerciseList
+    .filter((e) => e.name !== '운동 선택')
+    .map((e) => ({
+      exerciseId: e.id,
+      part: e.part,
+      sets: e.sets,
+      reps: e.reps,
+      exerciseTime: e.exerciseTime,
       })),
   };
 
@@ -129,18 +131,19 @@ const RoutineDetail = () => {
   };
 
   const handleCardClick = (index) => {
-    navigate('/search', {
-      state: {
-        index,
-        routine: {
-          name: routineName,
-          exercises: exerciseList
-            .filter((e) => e.name !== '운동 선택')
-            .map((e) => ({ name: e.name, part: e.part })),
-        },
+  navigate('/search', {
+    state: {
+      index,  // ✅ 누른 카드의 index 넘김
+      routine: {
+        name: routineName,
+        summary: routineDescription,
+        exercises: exerciseList,  // ✅ 전체 리스트 넘김
       },
-    });
-  };
+    },
+  });
+};
+
+
 
   return (
     <PageWrapper>
@@ -162,23 +165,94 @@ const RoutineDetail = () => {
         </div>
 
         <div className="ex-list">
-          {exerciseList.map((exercise, i) => (
-            <div key={i} className="ex-card" onClick={() => handleCardClick(i)}>
-              <div className="ex-info">
-                <img src={exercise.image} alt={exercise.name} />
-                <div className='ex-text'>
-                  <div className="ex-name">{exercise.name}</div>
-                  <div className="ex-target">{exercise.description}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+          {exerciseList.map((exercise, i) => {
+  const isSelectable = exercise.name === '운동 선택';
 
-        <div className="button-row">
-          <button className="back-button" onClick={handleBack}>돌아가기</button>
-          <button className="save-button" onClick={handleSave}>저장</button>
+  return (
+    <div
+      key={i}
+      className="ex-card"
+      onClick={isSelectable ? () => handleCardClick(i) : undefined}
+      style={{ cursor: isSelectable ? 'pointer' : 'default' }}
+    >
+      <div className="ex-info">
+        <img src={exercise.image} alt={exercise.name} />
+        <div className="ex-text">
+          <div className="ex-name">{exercise.name}</div>
+          <div className="ex-target">{exercise.description}</div>
+
+          {!isSelectable && (
+            <div className="ex-options">
+              <label>
+                세트:
+                <input
+                  type="number"
+                  value={exercise.sets || 0}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => {
+                    const newList = [...exerciseList];
+                    newList[i] = { ...newList[i], sets: parseInt(e.target.value, 10) };
+                    setExerciseList(newList);
+                  }}
+                />
+              </label>
+
+              <label>
+                반복:
+                <input
+                  type="number"
+                  value={exercise.reps || 0}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => {
+                    const newList = [...exerciseList];
+                    newList[i] = { ...newList[i], reps: parseInt(e.target.value, 10) };
+                    setExerciseList(newList);
+                  }}
+                />
+              </label>
+
+              <label>
+                시간(초):
+                <input
+                  type="number"
+                  value={exercise.exerciseTime || 0}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => {
+                    const newList = [...exerciseList];
+                    newList[i] = { ...newList[i], exerciseTime: parseInt(e.target.value, 10) };
+                    setExerciseList(newList);
+                  }}
+                />
+              </label>
+            </div>
+          )}
         </div>
+      </div>
+    </div>
+  );
+})}
+</div>
+       <div className="button-row">
+  <button className="back-button" onClick={handleBack}>돌아가기</button>
+
+  {/* ✅ 운동 추가 버튼 */}
+  <button className="add-button" onClick={() => {
+    setExerciseList([...exerciseList, {
+      name: '운동 선택',
+      part: '',
+      sets: 3,
+      reps: 10,
+      exerciseTime: 1,
+      description: '운동을 선택해주세요',
+      image: '/images/sample-placeholder.png',
+    }]);
+  }}>
+    운동 추가
+  </button>
+
+  <button className="save-button" onClick={handleSave}>저장</button>
+</div>
+
       </div>
     </PageWrapper>
   );

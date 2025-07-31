@@ -51,6 +51,15 @@ public class LoginController {
 	    }
 	}
 	
+	@GetMapping("/login/user")
+	public ResponseEntity<?> getUserInfo(HttpSession session) {
+	    UserEntity user = (UserEntity) session.getAttribute("user");
+	    if (user == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
+	    }
+	    return ResponseEntity.ok(Map.of("name", user.getName(), "email", user.getEmail()));
+	}
+
 	
 	
 }

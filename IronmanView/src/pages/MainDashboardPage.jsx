@@ -3,8 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/MainDashboardPage.css';
 import logoImage from '../assets/logo.png';
 import defaultProfile from '../images/default_profile.jpg';
+import axios from 'axios';
 
 const MainDashboardPage = () => {
+
+  useEffect(() => {
+  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+    .then(res => {
+      const { name, email } = res.data;
+      setUser(prev => ({ ...prev, name, email }));
+    })
+    .catch(err => {
+      console.error('세션 사용자 정보 불러오기 실패', err);
+      navigate('/login');
+    });
+}, []);
+  
+
   const navigate = useNavigate();
   const [user, setUser] = useState({
     name: '홍길동',

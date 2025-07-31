@@ -10,6 +10,7 @@ const RoutinePage = () => {
   const [activeTab, setActiveTab] = useState('routine');
   const { savedRoutines, deleteRoutine } = useRoutine();
   const [routines, setRoutines] = useState([]);  // 🔧 추가
+  const isSurveyCompleted = true; // 또는 false, 또는 상태로 관리
 
    // ✅ 루틴 목록을 서버에서 불러오기
   useEffect(() => {
@@ -27,22 +28,66 @@ const RoutinePage = () => {
     fetchRoutines();
   }, []);
 
-  const handleRoutineClick = (routine) => {
-    navigate('/routinedetail', { state: { routine } });
-  };
+  const handleSurveyReset = () => {
+  console.log("설문 초기화");
+  // 초기화 로직이 있다면 여기에 작성
+};
 
-  const handleDeleteRoutine = (routineName) => {
-    deleteRoutine(routineName);
-  };
+
+  const handleRoutineClick = (routine) => {
+  navigate('/routinedetail', {
+    state: {
+      routine: {
+        name: routine.title,
+        summary: routine.summary,
+        exercises: routine.exercises.map((e) => ({
+          name: e.name,
+          part: e.part,
+          sets: e.sets,
+          reps: e.reps,
+          exerciseTime: e.exerciseTime,
+        })),
+      },
+    },
+  });
+};
+
+  const handleDeleteRoutine = async (routineId) => {
+  const confirmed = window.confirm('정말 이 루틴을 삭제하시겠습니까?');
+  if (!confirmed) return;
+
+  try {
+    await axios.delete(`http://localhost:329/web/api/routine/${routineId}`, {
+      withCredentials: true,
+    });
+
+    // 프론트 목록에서도 삭제
+    setRoutines((prev) => prev.filter((r) => r.routineId !== routineId));
+  } catch (error) {
+    console.error('루틴 삭제 실패:', error);
+  }
+};
+
 
   const handleAddRoutine = () => {
-    const newRoutine = {
-      name: `루틴 ${String.fromCharCode(65 + savedRoutines.length)}`,
-      duration: 30,
-      exercises: [],
-    };
-    navigate('/routinedetail', { state: { routine: newRoutine } });
+  const newRoutine = {
+    name: `루틴 ${String.fromCharCode(65 + savedRoutines.length)}`,
+    exercises: [
+      {
+        name: '운동 선택',
+        part: '',
+        sets: 3,
+        reps: 10,
+        exerciseTime: 60,
+        description: '운동을 선택해주세요',
+        image: '/images/sample-placeholder.png',
+      }
+    ]
   };
+
+  navigate('/routinedetail', { state: { routine: newRoutine } });
+};
+
 
   const handleChatbotNavigate = () => {
     navigate('/chatbot', { state: { from: '/routine' } });
@@ -84,13 +129,13 @@ const RoutinePage = () => {
                       className="delete-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteRoutine(r.title);
+                        handleDeleteRoutine(r.routineId);
                       }}
                     >
                       X
                     </span>
                   </div>
-                  <p>⏱ {r.duration}분</p>
+                  <p>⏱ {r.exerciseTime}분</p>
                   <p>💪 {r.summary || '운동없음'}</p>
                   <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
                 </div>

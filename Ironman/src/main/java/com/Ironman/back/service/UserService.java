@@ -5,17 +5,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.Ironman.back.dto.UserDto;
+import com.Ironman.back.entity.RoutineEntity;
 import com.Ironman.back.entity.UserEntity;
+import com.Ironman.back.repo.RoutineExerciseRepository;
+import com.Ironman.back.repo.RoutineRepository;
 import com.Ironman.back.repo.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-	private final UserRepository userRepository;
+	
 	private final EmailService emailService;
+	private final UserRepository userRepository;
 	
 	public void signup(UserDto dto) {
 		// 이메일 중복 체크
@@ -41,4 +46,8 @@ public class UserService {
 		// 회원가입후 인증 상태 초기화
 		emailService.clearVerification(dto.getEmail());
 	}
+	
+	
+
+	
 }
