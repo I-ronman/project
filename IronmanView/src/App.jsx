@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-
-// Context
 import { AuthProvider } from './context/AuthContext';
 import { RoutineProvider } from './contexts/RoutineContext';
 
-// 페이지들
-import HomePage from './pages/HomePage'; // 통일된 파일
+import HomePage from './pages/HomePage';
 import Training from './components/TrainingCam';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -26,6 +23,8 @@ import WorkoutResultPage from './pages/WorkoutResultPage';
 import RankingPage from './pages/RankingPage';
 import MainDashboardPage from './pages/MainDashboardPage';
 import AppLayout from './layouts/AppLayout';
+import BoardPage from './pages/BoardPage';
+import PostDetailPage from './pages/PostDetailPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -61,6 +60,8 @@ const AppRoutes = () => {
         <Route path="workoutresult" element={<WorkoutResultPage />} />
         <Route path="ranking" element={<RankingPage />} />
         <Route path="main" element={<MainDashboardPage />} />
+        <Route path="board" element={<BoardPage />} />
+        <Route path="post/:id" element={<PostDetailPage />} /> 
       </Route>
       <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
