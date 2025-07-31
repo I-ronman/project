@@ -9,6 +9,19 @@
   border-bottom: 1px solid #333;
 }
 
+.hamburger {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+}
+
 .logo {
   font-size: 24px;
   font-weight: bold;
@@ -16,11 +29,17 @@
   margin-right: 20px;
 }
 
-.nav button {
+.nav-right button {
   background: none;
   color: white;
   border: none;
   margin-left: 12px;
   font-size: 16px;
   cursor: pointer;
+}
+
+.profile-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 }

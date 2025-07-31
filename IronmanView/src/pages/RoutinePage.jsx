@@ -10,6 +10,19 @@ const RoutinePage = () => {
   const [activeTab, setActiveTab] = useState('routine');
   const { savedRoutines, deleteRoutine } = useRoutine();
   const [routines, setRoutines] = useState([]);  // 🔧 추가
+  const isSurveyCompleted = localStorage.getItem('surveyCompleted') === 'true';
+  
+  // 임시 설문조사 초기화 버튼
+  const [refresh, setRefresh] = useState(false);
+  const handleSurveyReset = () => {
+    const currentStatus = localStorage.getItem('surveyCompleted') === 'true';
+    localStorage.setItem('surveyCompleted', (!currentStatus).toString());
+    setRefresh(prev => !prev);
+  }
+  // 설문조사 페이지로 이동하기 위한 함수
+  const handleSurveyNavigate = () => {
+    navigate('/survey');
+  };
 
    // ✅ 루틴 목록을 서버에서 불러오기
   useEffect(() => {
@@ -91,7 +104,22 @@ const RoutinePage = () => {
                     </span>
                   </div>
                   <p>⏱ {r.duration}분</p>
+                  {/* 🔧 이 부분만 수정 */}
+                  {Array.isArray(r.exercises) ? (
+                    <p>💪 {r.exercises.map((e) => e.name).join(', ')}</p>
+                  ) : (
+                    <p>💪 운동 없음</p>
+                  )}
+                  {r.description && r.description !== '루틴 설명을 입력해주세요' && (
+                    <p className="routine-description">{r.description}</p>
+                  )}
+                  
                   <p>💪 {r.summary || '운동없음'}</p>
+                  <button className="start-routine-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >루틴 시작하기</button>
                   <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
                 </div>
               ))}
