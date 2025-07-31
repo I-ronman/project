@@ -18,7 +18,7 @@ const PostureAnalysisPage = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [successCount, setSuccessCount] = useState(0);   // 운동 성공 횟수
   const [failCount, setFailCount] = useState(0);         // 운동 실패 횟수
-
+  const [viewKnee,setViewKnee] = useState(false);
   const navigate = useNavigate();
 
   const toggleFeedback = () => setIsFeedbackOn((prev) => !prev);
@@ -68,12 +68,16 @@ const PostureAnalysisPage = () => {
               </button>
             ))}
           </div>
-
+          <div className='posture-stats'>
+            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button' style={viewKnee?{backgroundColor:"gray"}:undefined}>무릎각도보기</button>
+            
+            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button'>무릎각도보기</button>
+          </div>
           <GuideVideoPlayer videoUrl={selectedVideo} />
         </div>
 
         <div className="posture-right">
-          <TrainingCam></TrainingCam>
+          <TrainingCam viewKnee = {viewKnee}></TrainingCam>
         </div>
       </div>
 

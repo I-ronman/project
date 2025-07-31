@@ -4,7 +4,7 @@ import Webcam from "react-webcam";
 import {io} from "socket.io-client"
 import { CountContext } from '../context/CountContext';
 
-function TrainingCam() {
+function TrainingCam({viewKnee}) {
   const wsRef = useRef(null);
   const webcamRef = React.useRef(null);
   const [imgSrc,setImgSrc] = useState("");
@@ -15,6 +15,11 @@ function TrainingCam() {
   height: 680,
   facingMode: "user"
   };
+  const viewKneeRef = useRef(viewKnee)
+
+  useEffect(() => {
+  viewKneeRef.current = viewKnee;
+  }, [viewKnee]);
   useEffect(()=>{
     wsRef.current = io.connect('http://localhost:525');
     wsRef.current.on("show",(data) => {
@@ -36,11 +41,11 @@ function TrainingCam() {
       const imgSrc= webcamRef.current.getScreenshot();
       console.log();
       const data = {
-        "image": imgSrc
-        
+        image: imgSrc,
+        viewKnee:viewKneeRef.current
       }
       if(data.image){
-        console.log("감?")
+        console.log(data.viewKnee)
         wsRef.current.emit("analyze",data)
       }
     },100);

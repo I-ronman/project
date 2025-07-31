@@ -1,29 +1,31 @@
-// project/IronmanView/src/pages/RoutinePage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/RoutinePage.css';
 import { useNavigate } from 'react-router-dom';
 import { useRoutine } from '../contexts/RoutineContext.jsx';
 import PageWrapper from '../layouts/PageWrapper';
+import axios from 'axios';
 
 const RoutinePage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('routine');
   const { savedRoutines, deleteRoutine } = useRoutine();
-  const isSurveyCompleted = localStorage.getItem('surveyCompleted') === 'true';
-  
-  // 임시 설문조사 초기화 버튼
-  const [refresh, setRefresh] = useState(false);
-  const handleSurveyReset = () => {
-    const currentStatus = localStorage.getItem('surveyCompleted') === 'true';
-    localStorage.setItem('surveyCompleted', (!currentStatus).toString());
-    setRefresh(prev => !prev);
-  }
+  const [routines, setRoutines] = useState([]);  // 🔧 추가
 
-  // 설문조사 페이지로 이동하기 위한 함수
-  const handleSurveyNavigate = () => {
-    navigate('/survey');
-  };
+   // ✅ 루틴 목록을 서버에서 불러오기
+  useEffect(() => {
+    const fetchRoutines = async () => {
+      try {
+        const response = await axios.get('http://localhost:329/web/api/routine/list', {
+          withCredentials: true,
+        });
+        setRoutines(response.data); // 서버에서 받은 루틴 목록
+      } catch (error) {
+        console.error('루틴 목록 불러오기 실패:', error);
+      }
+    };
 
+    fetchRoutines();
+  }, []);
 
   const handleRoutineClick = (routine) => {
     navigate('/routinedetail', { state: { routine } });
@@ -74,30 +76,23 @@ const RoutinePage = () => {
             </div>
 
             <div className="routine-card-list">
-              {savedRoutines.map((r, index) => (
-                <div key={index} className="routine-card" onClick={() => handleRoutineClick(r)}>
+              {routines.map((r, index) => (
+                <div key={index} className="routine-card">
                   <div className="routine-card-header">
-                    <h2 className="routine-name">{r.name}</h2>
+                    <h2>{r.title}</h2>
                     <span
                       className="delete-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteRoutine(r.name);
+                        handleDeleteRoutine(r.title);
                       }}
                     >
                       X
                     </span>
                   </div>
                   <p>⏱ {r.duration}분</p>
-                  <p>💪 {r.exercises.map((e) => e.name).join(', ')}</p>
-                  {r.description && r.description !== '루틴 설명을 입력해주세요' && (
-                    <p className="routine-description">{r.description}</p>
-                  )}
-                  <button className="start-routine-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >루틴 시작하기</button>
+                  <p>💪 {r.summary || '운동없음'}</p>
+                  <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
                 </div>
               ))}
 

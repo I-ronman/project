@@ -1,5 +1,4 @@
-// project/IronmanView/src/pages/LoginPage.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../styles/Auth.css'
@@ -11,13 +10,29 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [pw, setPw] = useState('')
 
+  useEffect(() => {
+  axios.get('http://localhost:329/web/login/check', { withCredentials: true })
+    .then(res => {
+      if (res.data.loggedIn) {
+        // 로그인 유지 처리
+      } else {
+        // 로그인 안 되어 있음 처리
+      }
+    })
+    .catch(err => {
+      console.error('세션 확인 실패', err);
+    });
+}, []);
+
+
   const handleLogin = async () => {
     try {
       await axios.post('http://localhost:329/web/login', {
         email,
         pw
       }, {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true
       }).then((res) => {
         console.log(res.data);
         // 로그인 성공 시 리디렉션
