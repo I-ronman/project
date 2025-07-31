@@ -26,7 +26,7 @@ public class OAuth2Controller {
 
         // ✅ 로그인 성공 후 프론트로 이동
 
-        response.sendRedirect("http://localhost:5173/signup");
+        response.sendRedirect("http://localhost:5173/main");
         System.out.println("👉 oauthSuccess() 실행됨");
 
     }

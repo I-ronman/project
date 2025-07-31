@@ -45,10 +45,9 @@ function TrainingCam({viewKnee}) {
         viewKnee:viewKneeRef.current
       }
       if(data.image){
-        console.log(data.viewKnee)
         wsRef.current.emit("analyze",data)
       }
-    },100);
+    },120);
     sendImage
     // wsRef.current.emit("analyze",webcamRef.current.getScreenshot())
     return () => {

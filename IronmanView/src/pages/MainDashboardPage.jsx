@@ -5,10 +5,25 @@ import logoImage from '../assets/logo.png';
 import defaultProfile from '../images/default_profile.jpg';
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
+import axios from 'axios';
 
 const MainDashboardPage = () => {
+
+  useEffect(() => {
+  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+    .then(res => {
+      const { name, email } = res.data;
+      setUser(prev => ({ ...prev, name, email }));
+    })
+    .catch(err => {
+      console.error('세션 사용자 정보 불러오기 실패', err);
+      navigate('/login');
+    });
+}, []);
+  
+
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const displayName = user?.name || '홍길동';
 
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(new Date()));

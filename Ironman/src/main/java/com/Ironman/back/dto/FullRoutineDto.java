@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class FullRoutineDto {
-    private String title;
+	private Long routineId;
+	private String email;
+	private String title;
     private String summary;
-    private List<ExerciseDto> exercises;
+    private Integer exerciseTime;
+    private List<RoutineExerciseDto> exercises;
 }

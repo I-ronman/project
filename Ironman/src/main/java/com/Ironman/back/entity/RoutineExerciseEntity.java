@@ -22,24 +22,27 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RoutineExerciseEntity {
 
-		@Id
+	 @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long routineExerciseId;
 
 	    @ManyToOne(fetch = FetchType.LAZY)
 	    @JoinColumn(name = "routine_id", nullable = false)
-	    private RoutineEntity routine;  // 연관관계 매핑
+	    private RoutineEntity routine;
 	    
-	    @Column(name = "exercise_id", nullable = true)
-	    private Long exerciseId;
+	    @ManyToOne(fetch = FetchType.LAZY)
+	    @JoinColumn(name = "exercise_id", nullable = false)
+	    private ExerciseEntity exercise;
 	    
 	    @Column(nullable = true)
 	    private Integer sets;
+
 	    @Column(nullable = true)
 	    private Integer reps;
+
 	    @Column(nullable = true)
 	    private Integer exerciseTime;
 
-	    @Column(name = "`order`") // 예약어 처리
+	    @Column(name = "`order`")
 	    private Integer order;
 }
