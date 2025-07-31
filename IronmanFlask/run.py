@@ -111,7 +111,7 @@ def analyze(data):
         
         if viewKnee:
             cv2.line(frame,(to_pixel(lm[31])[0],0),to_pixel(lm[31]),(0,255,255),2)
-            draw_angle_arc(frame,h,w,base_line,lm[27],lm[25],knee_over_foot,40,(0,255,0))
+            draw_angle_arc(frame,h,w,lm[25],lm[31],base_line,knee_over_foot,40,(0,255,0))
             cv2.line(frame,(0,to_pixel(lm[27])[1]),to_pixel(lm[27]),(0,255,0),2)
         # 엉덩이 뒤로 빠진 정도 구하는 각도 로직3
         base_line.x = lm[23].x
