@@ -64,7 +64,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
-  );
+  ); 
 };
 
 function App() {
