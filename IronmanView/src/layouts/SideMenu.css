@@ -1,13 +1,30 @@
 .side-menu {
   position: absolute;
-  top: 60px;
-  left: 0;
+  top: 40px;
+  left: -20px;
   width: 200px;
-  background-color: #222;
+   background-color: #040b14; /* 어두운 네이비 느낌 */
   color: white;
   padding: 20px;
-  z-index: 1000;
+  z-index: 999;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  border-radius: 8px;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 18px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.arrow {
+  font-size: 16px;
 }

@@ -116,11 +116,7 @@ const MainDashboardPage = () => {
 
   return (
     <div className="main-container dark-background">
-      <div className="header">
-        <img src={logoImage} alt="로고" className="logo-fixed" onClick={() => navigate('/main')} />
-        <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
-      </div>
-
+      
       <div className="profile-card dark-card clickable-card" onClick={() => navigate('/mypage')}>
         <div className="profile-info">
           <img src={user.profileImage} alt="프로필" className="profile-img" />

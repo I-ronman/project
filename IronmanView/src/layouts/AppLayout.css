@@ -168,6 +168,6 @@ html, body, #root {
   font-size: 18px;
   color: #ccc;
   border-bottom: 1px solid #333;
-  text-align: left;
+  text-align: center;
   box-sizing: border-box;
 }
