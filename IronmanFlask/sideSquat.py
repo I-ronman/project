@@ -32,6 +32,7 @@ proper_upper_body_tilt = True
 
 view_upper_body_slope = False
 view_leg_hip_angle = False
+view_knee_line = False
 while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -50,23 +51,36 @@ while cap.isOpened():
             l_leg_ang = get_angle(lm[27],lm[25],lm[23])
             l_hip_ang = get_angle(lm[25],lm[23],lm[11])
             data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
+            
+            key = cv2.waitKey(5)
+            if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
+            if key == ord("2"): view_leg_hip_angle = True if view_leg_hip_angle == False else  False
+            if key == ord("3"): view_knee_line = True if view_knee_line == False else  False
 
             # 무릎 나간 각도 구하는 로직
             base_line.y = lm[25].y
             base_line.x = lm[31].x
             knee_over_foot = get_angle(base_line,lm[31],lm[25])
+            if view_knee_line:
+                cv2.line(frame,(to_pixel(lm[31])[0],0),to_pixel(lm[31]),(0,255,255),2)
+                draw_angle_arc(frame,h,w,lm[25],lm[27],base_line,knee_over_foot,40,(0,255,0))
             
             # 엉덩이 뒤로 빠진 정도 구하는 각도 로직
             base_line.y = lm[23].y
             hip_back = get_angle(base_line,lm[31],lm[23])
-
+            
             # 상체 기울기가 앞으로 너무 많이 쏠리진 않았는지
             base_line.x = lm[11].x
-            
             upper_body_angle = get_angle(base_line,lm[23],lm[11])
+            if view_upper_body_slope:
+                cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
+                draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
             print(f"{data}굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}",f"upper_body : {upper_body_angle}")
             #data,getDistance(lm[23], lm[25]),sit,stand,f"굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}
-            
+        
+            if view_leg_hip_angle:
+                draw_angle_arc(frame,h,w,lm[25],lm[23],lm[11],l_hip_ang,40,(0,255,0))
+                draw_angle_arc(frame,h,w,lm[23],lm[25],lm[27],l_leg_ang,40,(0,255,0))
             
 
             if upper_body_angle < 35: proper_upper_body_tilt = False
@@ -97,16 +111,7 @@ while cap.isOpened():
             # cv2.putText(frame, f"{int(r_hip_ang)} ", to_pixel(lm[24]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
             # cv2.putText(frame, f"{int(l_hip_ang)} ", to_pixel(lm[23]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
             # cv2.putText(frame, f"count {good_cnt} ", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
-            key = cv2.waitKey(5)
-            if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
-            if key == ord("2"): view_leg_hip_angle = True if view_leg_hip_angle == False else  False
-        
-        if view_upper_body_slope:
-            cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
-            draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
-        if view_leg_hip_angle:
-            draw_angle_arc(frame,h,w,lm[25],lm[23],lm[11],l_hip_ang,40,(0,255,0))  
-            draw_angle_arc(frame,h,w,lm[23],lm[25],lm[27],l_leg_ang,40,(0,255,0))  
+
         mp_draw.draw_landmarks(
             frame,
             result.pose_landmarks,

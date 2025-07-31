@@ -41,10 +41,10 @@ def draw_angle_arc(img,h,w, a, b, c,ang, radius=40, color=(255, 255, 0)):
     end = end % 360
 
     # 방향에 따라 sweep angle 조절
-    sweep = (end - start)
-    if sweep > 180:
-        start, end = end, start
-        sweep = 360 - sweep
+    sweep = (end - start) %360
+    # if sweep > 180:
+    #     start, end = end, start
+    #     sweep = 360 - sweep
     b = to_pixel(b,h,w)
 
     # 타원(호) 그리기

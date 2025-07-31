@@ -1,14 +1,20 @@
 // project/IronmanView/src/components/TrainingCam.jsx
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Webcam from "react-webcam";
 import {io} from "socket.io-client"
+import { CountContext } from '../context/CountContext';
 
 function TrainingCam() {
   const wsRef = useRef(null);
   const webcamRef = React.useRef(null);
   const [imgSrc,setImgSrc] = useState("");
+  const {setSuccessCount,setFailCount} = useContext(CountContext);
   <webcamRef ref={webcamRef}></webcamRef>
-
+  const videoConstraints = {
+  width: 1024,
+  height: 680,
+  facingMode: "user"
+  };
   useEffect(()=>{
     wsRef.current = io.connect('http://localhost:525');
     wsRef.current.on("show",(data) => {
@@ -20,14 +26,23 @@ function TrainingCam() {
       }
       
     })
-    
+    wsRef.current.on("goodCount",(data)=>{
+      setSuccessCount(data)
+    })
+    wsRef.current.on("badCount",(data)=>{
+      setFailCount(data)
+    })
     const sendImage = setInterval(()=>{
       const imgSrc= webcamRef.current.getScreenshot();
       console.log();
       const data = {
         "image": imgSrc
+        
       }
-      wsRef.current.emit("analyze",data)
+      if(data.image){
+        console.log("감?")
+        wsRef.current.emit("analyze",data)
+      }
     },100);
     sendImage
     // wsRef.current.emit("analyze",webcamRef.current.getScreenshot())
@@ -45,8 +60,8 @@ function TrainingCam() {
   return (
     
     <div>
-      <Webcam ref={webcamRef} style={{display:"disable"}}/>
       <img src={imgSrc} alt="" />
+      <Webcam ref={webcamRef} style={{ visibility: 'hidden', position: 'absolute'}} videoConstraints={videoConstraints}/>
     </div>
   )
 }

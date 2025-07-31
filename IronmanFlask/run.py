@@ -41,7 +41,9 @@ class base_line(object):
         self.y = y
      def get(self):
           return self.x,self.y
-     
+
+
+
 @socket_io.on('analyze')
 def analyze(data):
     global good_cnt
@@ -118,9 +120,11 @@ def analyze(data):
                 proper_upper_body_tilt = True
                 leg_upperbody_parallel = True
                 bad_cnt += 1
+                socket_io.emit("badCount",bad_cnt)
             else:  
                 good_cnt += 1
-        
+                socket_io.emit("goodCount",good_cnt)
+
 
         # cv2.putText(frame, f"{int(r_hip_ang)} ", to_pixel(lm[24]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
         # cv2.putText(frame, f"{int(l_hip_ang)} ", to_pixel(lm[23]), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,255), 2)
@@ -128,7 +132,7 @@ def analyze(data):
         key = cv2.waitKey(5)
         if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
         if key == ord("2"): view_leg_hip_angle = True if view_leg_hip_angle == False else  False
-    
+
     if view_upper_body_slope:
         cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
         draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
@@ -153,8 +157,8 @@ def analyze(data):
 
     _, buffer = cv2.imencode('.jpg', frame)
     sendImg = base64.b64encode(buffer).decode("utf-8")
-    data = {"sendImg":sendImg,"goodCount":good_cnt,"badCount":bad_cnt}
-    socket_io.emit("show",)
+    data = {"sendImg":sendImg}
+    socket_io.emit("show",data)
 
 
 
