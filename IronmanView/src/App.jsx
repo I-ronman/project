@@ -25,6 +25,8 @@ import MainDashboardPage from './pages/MainDashboardPage';
 import AppLayout from './layouts/AppLayout';
 import BoardPage from './pages/BoardPage';
 import PostDetailPage from './pages/PostDetailPage';
+import PostureDetailPage from './pages/PostureDetailPage';
+import PostureFeedbackPage from './pages/PostureFeedbackPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -62,6 +64,8 @@ const AppRoutes = () => {
         <Route path="main" element={<MainDashboardPage />} />
         <Route path="board" element={<BoardPage />} />
         <Route path="post/:id" element={<PostDetailPage />} /> 
+        <Route path="/posture-detail" element={<PostureDetailPage />} />
+        <Route path="/posture-feedback" element={<PostureFeedbackPage />} />
       </Route>
       <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
