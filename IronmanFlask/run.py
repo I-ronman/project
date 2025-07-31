@@ -7,7 +7,6 @@ import numpy as np
 import mediapipe as mp
 from calcData import get_angle,draw_angle_arc
 import socketio
-import threading
 
 
 good_cnt = 0
@@ -23,6 +22,7 @@ before_upper_body_ang = 35
 before_leg_ang = 55
 before_knee_over = 30
 before_hip_back = 50
+diff_angle = 0
 
 leg_upperbody_parallel = True
 stand = False
@@ -31,6 +31,7 @@ correct_hip_position = True
 correct_knee = True
 proper_upper_body_tilt = True
 center_of_gravity = True
+
 
 view_center_of_gravity = False
 view_upper_body_slope = False
@@ -41,7 +42,6 @@ bad_pose = False
 app = Flask(__name__)
 # socket_io = SocketIO(app,cors_allowed_origins="http://192.168.219.89:5173")
 socket_io = SocketIO(app,cors_allowed_origins="http://localhost:5173")
-ws_client = socketio.Client()
 
 class base_line(object):
      def __init__(self,x,y):
@@ -49,23 +49,16 @@ class base_line(object):
         self.y = y
      def get(self):
           return self.x,self.y
+     
 
-def init_socket_connection():
-    global is_connected
-    try:
-        ws_client.connect('http://localhost:5001')
-        is_connected = True
-        print("✅ WebSocket 연결됨")
-    except Exception as e:
-        print("❌ 연결 실패:", e)
-
-@app.before_first_request
-def start_socket():
-    threading.Thread(target=init_socket_connection).start()
+# @app._got_first_request
+# def start_socket():
+#     threading.Thread(target=init_socket_connection).start()
 
 
 @socket_io.on('analyze')
 def analyze(data):
+    print("데이터 받음")
     global good_cnt
     global bad_cnt
     global leg_upperbody_parallel
@@ -82,6 +75,8 @@ def analyze(data):
     global before_leg_ang
     global before_upper_body_ang
     global before_knee_over
+    global before_hip_back
+    global diff_angle
     viewKnee = data["viewKnee"]
     image_data = data["image"]
     # print(image_data)
@@ -98,6 +93,7 @@ def analyze(data):
     #     cv2.line(frame, to_pixel(a), to_pixel(b), color, 2)
         
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    
     result = pose.process(frame_rgb)
 
     if result.pose_landmarks:
@@ -188,34 +184,34 @@ def analyze(data):
         if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
         if key == ord("2"): view_leg_hip_angle = True if view_leg_hip_angle == False else  False
 
-    mp_draw.draw_landmarks(
-        frame,
-        result.pose_landmarks,
-        mp_pose.POSE_CONNECTIONS,
-        mp_draw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
-        mp_draw.DrawingSpec(color=(255,0,0), thickness=2),
-    )
+        mp_draw.draw_landmarks(
+            frame,
+            result.pose_landmarks,
+            mp_pose.POSE_CONNECTIONS,
+            mp_draw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
+            mp_draw.DrawingSpec(color=(255,0,0), thickness=2),
+        )
+            
         
-    
 
 
 
 
 
+        
+        if bad_pose:
+            # socket_io.emit("short_feed",sendImg)
+            # socket_io.emit("report",["badPose",sendImg])
+            bad_pose = False
+        elif diff_angle < 1 and l_leg_ang < 55:
+            if before_leg_ang >= l_leg_ang:
+                before_leg_ang = l_leg_ang
+            else:
+                before_leg_ang = 55
+                # socket_io.emit("report",sendImg)
+        # data = ["bestPose",sendImg]
     _, buffer = cv2.imencode('.jpg', frame)
     sendImg = base64.b64encode(buffer).decode("utf-8")
-    if bad_pose:
-
-        ws_client.emit("short_feed",sendImg)
-        ws_client.emit("badPose",sendImg)
-        bad_pose = False
-    elif diff_angle < 1 and l_leg_ang < 55:
-        if before_leg_ang >= l_leg_ang:
-            before_leg_ang = l_leg_ang
-        else:
-            before_leg_ang = 55
-            ws_client.emit("bestPose",sendImg)
-    
     data = {"sendImg":sendImg}
     socket_io.emit("show",data)
 
