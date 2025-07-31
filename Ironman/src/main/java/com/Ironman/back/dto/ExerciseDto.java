@@ -1,19 +1,30 @@
 package com.Ironman.back.dto;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.Ironman.back.entity.ExerciseEntity;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ExerciseDto {
-    private String exerciseId;
-    private Integer sets;
-    private Integer reps;
-    private Integer exerciseTime;
-    private Integer order;
+    private Long exerciseId;
+    private String exerciseName;
+    private Integer expectedCalorie;
+
+    public static ExerciseDto fromEntity(ExerciseEntity entity) {
+        return ExerciseDto.builder()
+                .exerciseId(entity.getExerciseId())
+                .exerciseName(entity.getExerciseName())
+                .expectedCalorie(entity.getExpectedCalorie())
+                .build();
+    }
+
+    public ExerciseEntity toEntity() {
+        return ExerciseEntity.builder()
+                .exerciseId(exerciseId)
+                .exerciseName(exerciseName)
+                .expectedCalorie(expectedCalorie)
+                .build();
+    }
 }

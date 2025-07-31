@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import SideMenu from './SideMenu';
+import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 const Header = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const {user, logout } = useContext(AuthContext);
+  const profileImgSrc = user?.profileImage || './images/default_profile.jpg';
+  
   const handleMove = (path) => {
     navigate(path);
     setIsMenuOpen(false); // 메뉴 닫기
   };
+
+  const handleLogout = async () => {
+    try{
+      await axios.post('http://localhost:329/web/logout',{},{
+        withCredentials: true
+      });
+    } catch (err){
+      console.error("백엔드 로그아웃 실패", err);
+    }
+    logout();
+    navigate('/login');
+  }
   
   return (
     <header className="header">
@@ -53,9 +69,11 @@ const Header = () => {
 
       {/* 오른쪽: 로그아웃 + 프로필 */}
       <div className="header-right">
-        <button className="logout-btn" onClick={() => navigate('/login')}>로그아웃</button>
+        <button className="logout-btn" onClick={handleLogout}>
+          로그아웃
+        </button>
         <img
-          src="/images/default_profile.jpg"
+          src={profileImgSrc}
           alt="프로필"
           className="profile-img"
           onClick={() => navigate('/mypage')}
