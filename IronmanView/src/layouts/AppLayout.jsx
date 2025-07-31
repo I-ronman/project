@@ -8,7 +8,7 @@ import Header from './Header';
 
 const AppLayout = () => {
   const location = useLocation();
-  const hideHeaderPaths = ['/login', '/signup', '/onboarding']
+  const hideHeaderPaths = ['/login', '/signup', '/onboarding', '/survey']
   
   const description = getPageDescription(location.pathname);
 
@@ -36,13 +36,23 @@ const AppLayout = () => {
 const getPageDescription = (path) => {
   switch (path) {
     case '/routine':
-      return '오늘의 루틴을 확인하고 시작하세요';
-    case '/survey':
-      return '설문조사로 운동 목표를 설정하세요';
-    case '/training':
-      return '운동을 시작해보세요';
-    case '/search':
-      return '운동을 선택해 루틴을 구성하세요';
+      return '운동하기';
+    case '/schedulepage':
+      return '스케쥴';
+    case '/statistics':
+      return '통계';
+    case '/chatbot':
+      return '챗봇';
+    case '/board':
+      return '커뮤니티';
+    case '/settings':
+      return '환경 설정';
+    case '/routinedetail':
+      return '루틴 수정';
+    case '/mypage':
+      return '마이페이지';
+    case '/profile-edit':
+      return '프로필 수정';
     default:
       return '';
   }

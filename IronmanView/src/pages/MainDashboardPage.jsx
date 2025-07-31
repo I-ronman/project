@@ -52,6 +52,17 @@ const MainDashboardPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
 
+  const [posts, setPosts] = useState([
+    {
+      title: "오늘 첫 운동 완료했어요!",
+      content: "스트레칭부터 유산소까지 알차게 했습니다. 여러분도 힘내세요!",
+    },
+    {
+      title: "질문이 있어요",
+      content: "하체 루틴을 바꿔보려고 하는데 추천 있을까요?",
+    },
+  ]);
+
   useEffect(() => {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
@@ -89,7 +100,7 @@ const MainDashboardPage = () => {
   };
 
   function getWeekStart(date) {
-    const day = date.getDay(); // 일요일: 0
+    const day = date.getDay();
     const diff = date.getDate() - day;
     return new Date(date.setDate(diff));
   }
@@ -116,17 +127,11 @@ const MainDashboardPage = () => {
   const completedDays = weekData.filter((d) => d.exercised).length;
   const totalDays = weekData.length;
   const percentage = Math.round((completedDays / totalDays) * 100);
-
-  // 📌 년도, 월 표시용
   const yearMonthLabel = `${currentWeekStart.getFullYear()}년 ${currentWeekStart.getMonth() + 1}월`;
 
   return (
     <div className="main-container dark-background">
-      <div className="header">
-        <img src={logoImage} alt="로고" className="logo-fixed" onClick={() => navigate('/main')} />
-        <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
-      </div>
-
+      
       <div className="profile-card dark-card clickable-card" onClick={() => navigate('/mypage')}>
         <div className="profile-info">
           <img src={user.profileImage} alt="프로필" className="profile-img" />
@@ -189,7 +194,6 @@ const MainDashboardPage = () => {
             <span>{yearMonthLabel} 주간 목표</span>
             <span className="arrow" onClick={() => changeWeek(1)}>▶</span>
           </div>
-
           <div className="weekly-goal">{completedDays}/{totalDays}</div>
           <div
             className="circular-progress"
@@ -199,7 +203,6 @@ const MainDashboardPage = () => {
           >
             <div className="circular-progress-text">{percentage}%</div>
           </div>
-
           <div className="calendar-body">
             {weekData.map((day, idx) => (
               <div
@@ -211,7 +214,6 @@ const MainDashboardPage = () => {
               </div>
             ))}
           </div>
-
           <div className="legend">
             <div><span className="legend-box green" /> 운동 완료</div>
             <div><span className="legend-box blue" /> 루틴 있음</div>
@@ -227,6 +229,27 @@ const MainDashboardPage = () => {
             <li>🥉 짜파게티</li>
           </ol>
           <p className="my-rank">255등 / 전체</p>
+        </div>
+
+        {/* 게시판 카드 추가 */}
+        <div className="board-card dark-card clickable-card" onClick={() => navigate('/board')}>
+          <p className="board-title">📌 커뮤니티 게시판</p>
+          {posts.length === 0 ? (
+            <div className="board-empty">
+              <p>아직 게시글이 없습니다.</p>
+              <p><strong>첫 게시글</strong>을 올려보세요!</p>
+            </div>
+          ) : (
+            <div className="board-preview">
+              {posts.slice(0, 2).map((post, index) => (
+                <div key={index} className="post-preview">
+                  <h4>{post.title}</h4>
+                  <p>{post.content.slice(0, 40)}...</p>
+                </div>
+              ))}
+              <p className="view-more">더보기 →</p>
+            </div>
+          )}
         </div>
       </div>
 

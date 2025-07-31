@@ -137,6 +137,11 @@ const RoutinePage = () => {
                   </div>
                   <p>⏱ {r.exerciseTime}분</p>
                   <p>💪 {r.summary || '운동없음'}</p>
+                  <button className="start-routine-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >루틴 시작하기</button>
                   <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
                 </div>
               ))}

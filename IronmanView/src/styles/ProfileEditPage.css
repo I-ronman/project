@@ -16,8 +16,9 @@
     gap: 20px;
     width: 100%;
     max-width: 500px;
-    margin: 0 auto;       /* 가운데 정렬 */
+    margin:  auto;       /* 가운데 정렬 */
     box-sizing: border-box;
+    margin-top: 10px;
   }
   
   .edit-profile-section {
