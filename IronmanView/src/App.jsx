@@ -57,7 +57,7 @@ const AppRoutes = () => {
         <Route path="search" element={<ExerciseSearch />} />
         <Route path="mypage" element={<MyPage />} />
         <Route path="profile-edit" element={<ProfileEditPage />} />
-        <Route path="settings" element={<EnvironmentSettingPage />} />  
+        <Route path="settings" element={<EnvironmentSettingPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
         <Route path="workoutresult" element={<WorkoutResultPage />} />
         <Route path="ranking" element={<RankingPage />} />
@@ -69,7 +69,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
-  );
+  ); 
 };
 
 function App() {

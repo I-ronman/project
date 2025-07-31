@@ -42,11 +42,7 @@ function ChatBotPage() {
   return (
     <PageWrapper>
       <div className="chat-container">
-        <div className="chat-header">
-          <img src="/src/assets/logo.png" alt="로고" className="chat-logo" />
-          <h3>챗 봇</h3>
-          <button className="chat-exit" onClick={() => navigate('/main')}>나가기</button>
-        </div>
+        
 
         <div className="chat-body">
           {messages.map((msg, idx) => (

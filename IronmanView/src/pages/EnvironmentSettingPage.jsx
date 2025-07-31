@@ -11,7 +11,6 @@ const EnvironmentSettingPage = () => {
   return (
     <PageWrapper>
       <div className='env-wrapper'>
-        <h2 className="env-title">환경 설정</h2>
 
         <div className="env-setting">
           <span>음성 안내</span>

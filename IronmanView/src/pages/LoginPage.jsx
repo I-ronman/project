@@ -37,7 +37,7 @@ function LoginPage() {
         console.log(res.data);
         // 로그인 성공 시 리디렉션
       if (res.data && res.data.email) {
-        navigate('/')  // 나중에 홈페이지로 연결
+        navigate('/main')  // 나중에 홈페이지로 연결
       } else {
         alert('아이디 또는 비밀번호가 올바르지 않습니다.')
       }

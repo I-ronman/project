@@ -76,7 +76,11 @@ function SurveyPage() {
     )}
 
     <header className="survey-header">
-      <span className="survey-back-button" onClick={prevStep}>←</span>
+      {step === 0 ? (
+        <span className="survey-back-button" onClick={()=>navigate('/main')}>←</span>
+      ):(
+        <span className="survey-back-button" onClick={prevStep}>←</span>
+      )}
       <span className="header-title">설문 조사</span>
       <span className="right-label">이모티콘</span>
     </header>
