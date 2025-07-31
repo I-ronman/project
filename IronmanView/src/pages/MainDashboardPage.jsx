@@ -124,7 +124,7 @@ const MainDashboardPage = () => {
         </div>
         <div className="notification-icon" onClick={(e) => { e.stopPropagation(); handleNotificationClick(); }}>
           🔔
-          {user.unreadNotifications > 0 && (
+          {user && user.unreadNotifications > 0 && (
             <span className="badge">{user.unreadNotifications}</span>
           )}
           {showNotifications && (

@@ -46,7 +46,7 @@ function LoginPage() {
         login({
           name: res.data.name,
           email: res.data.email,
-          
+          profileImage: null,
         })
         navigate('/main')  // 나중에 홈페이지로 연결
       } else {
