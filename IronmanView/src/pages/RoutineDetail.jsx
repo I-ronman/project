@@ -97,6 +97,7 @@ const RoutineDetail = () => {
   const handleSave = async () => {
   const routineData = {
     title: routineName,
+    description: routineDescription,
     summary: '루틴 설명', // 현재 고정값, 나중에 추가 입력 받으면 수정
     exercises: exerciseList
       .filter((e) => e.name !== '운동 선택')

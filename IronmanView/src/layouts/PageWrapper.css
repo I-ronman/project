@@ -2,7 +2,7 @@
   width: 100%; /* ✅ right-content 안에서 전체를 채움 */
   height: 100%;
   padding: 0;
-  padding-top: 30px;
+  padding-top: 0;
   box-sizing: border-box;
   background: rgba(0, 0, 0, 0.596);
   color: white;

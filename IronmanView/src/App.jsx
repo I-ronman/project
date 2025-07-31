@@ -25,6 +25,8 @@ import MainDashboardPage from './pages/MainDashboardPage';
 import AppLayout from './layouts/AppLayout';
 import BoardPage from './pages/BoardPage';
 import PostDetailPage from './pages/PostDetailPage';
+import PostureDetailPage from './pages/PostureDetailPage';
+import PostureFeedbackPage from './pages/PostureFeedbackPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -55,17 +57,19 @@ const AppRoutes = () => {
         <Route path="search" element={<ExerciseSearch />} />
         <Route path="mypage" element={<MyPage />} />
         <Route path="profile-edit" element={<ProfileEditPage />} />
-        <Route path="settings" element={<EnvironmentSettingPage />} />  
+        <Route path="settings" element={<EnvironmentSettingPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
         <Route path="workoutresult" element={<WorkoutResultPage />} />
         <Route path="ranking" element={<RankingPage />} />
         <Route path="main" element={<MainDashboardPage />} />
         <Route path="board" element={<BoardPage />} />
         <Route path="post/:id" element={<PostDetailPage />} /> 
+        <Route path="/posture-detail" element={<PostureDetailPage />} />
+        <Route path="/posture-feedback" element={<PostureFeedbackPage />} />
       </Route>
       <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
-  );
+  ); 
 };
 
 function App() {

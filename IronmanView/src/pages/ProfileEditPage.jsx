@@ -52,7 +52,7 @@ const ProfileEditPage = () => {
   return (
     <PageWrapper>
       <div className="edit-container">
-        <h2 className="edit-title">프로필 수정</h2>
+        
 
         <div className="edit-profile-section">
           <label htmlFor="profileImage" className="profile-image-label">
