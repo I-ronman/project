@@ -392,3 +392,65 @@
   margin: 5px 0;
   word-break: keep-all;
 }
+/* 📌 기존 스타일은 유지한 채 추가만 해주세요 */
+
+.board-card {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #1f1f1f;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+.board-card:hover {
+  transform: translateY(-3px);
+}
+
+.board-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.board-empty {
+  padding: 10px;
+  text-align: center;
+  color: #bbb;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.board-empty strong {
+  color: #ffdf58;
+}
+
+.board-preview .post-preview {
+  background-color: #2a2a2a;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.board-preview .post-preview h4 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.board-preview .post-preview p {
+  margin: 6px 0 0;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.board-preview .view-more {
+  text-align: right;
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
