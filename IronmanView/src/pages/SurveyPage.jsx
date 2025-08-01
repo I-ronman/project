@@ -22,15 +22,18 @@ function SurveyPage() {
   const [step, setStep] = useState(0);
   const totalSteps = 11;
   const navigate = useNavigate();
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [goalWeight, setGoalWeight] = useState(weight);
-  const [activity, setActivity] = useState('');
-  const [pushupLevel, setPushupLevel] = useState('');
-  const [plankTime, setPlankTime] = useState('');
-  const [squatLevel, setSquatLevel] = useState('');
-  const [flexibility, setFlexibility] = useState('');
-  const [workoutFrequency, setWorkoutFrequency] = useState('');
+
+  const [surveyData, setSurveyData] = useState({
+    height: '',
+    weight: '',
+    goalWeight: '',
+    activityLevel: '',
+    pushUp: '',
+    plank: '',
+    squat: '',
+    pliability: '',
+    workoutFrequency: ''
+  });
 
   const nextStep = () => {
     if (step < totalSteps - 1) setStep(step + 1);
@@ -42,25 +45,54 @@ function SurveyPage() {
 
   const stepComponents = [
     <StepIntro nextStep={nextStep} />,
-    <Step1 height={height} setHeight={setHeight} nextStep={nextStep} />,
-    <Step2 height={height} weight={weight} setWeight={setWeight} nextStep={nextStep} />,
-    <Step3 weight={weight} goalWeight={goalWeight} setGoalWeight={setGoalWeight} nextStep={nextStep} />,
-    <Step4 activity={activity} setActivity={setActivity} nextStep={nextStep} />,
-    <Step5 pushupLevel={pushupLevel} setPushupLevel={setPushupLevel} nextStep={nextStep} />,
-    <Step6 plankTime={plankTime} setPlankTime={setPlankTime} nextStep={nextStep} />,
-    <Step7 squatLevel={squatLevel} setSquatLevel={setSquatLevel} nextStep={nextStep} />,
-    <Step8 flexibility={flexibility} setFlexibility={setFlexibility} nextStep={nextStep} />,
-    <Step9 workoutFrequency={workoutFrequency} setWorkoutFrequency={setWorkoutFrequency} nextStep={nextStep} />,
+    <Step1
+      height={surveyData.height}
+      setHeight={(val) => setSurveyData(prev => ({ ...prev, height: val }))}
+      nextStep={nextStep}
+    />,
+    <Step2
+      weight={surveyData.weight}
+      setWeight={(val) => setSurveyData(prev => ({ ...prev, weight: val }))}
+      nextStep={nextStep}
+    />,
+    <Step3
+      weight={surveyData.weight}
+      goalWeight={surveyData.goalWeight}
+      setGoalWeight={(val) => setSurveyData(prev => ({ ...prev, goalWeight: val }))}
+      nextStep={nextStep}
+    />,
+    <Step4
+      activity={surveyData.activityLevel}
+      setActivity={(val) => setSurveyData(prev => ({ ...prev, activityLevel: val }))}
+      nextStep={nextStep}
+    />,
+    <Step5
+      pushupLevel={surveyData.pushUp}
+      setPushupLevel={(val) => setSurveyData(prev => ({ ...prev, pushUp: val }))}
+      nextStep={nextStep}
+    />,
+    <Step6
+      plankTime={surveyData.plank}
+      setPlankTime={(val) => setSurveyData(prev => ({ ...prev, plank: val }))}
+      nextStep={nextStep}
+    />,
+    <Step7
+      squatLevel={surveyData.squat}
+      setSquatLevel={(val) => setSurveyData(prev => ({ ...prev, squat: val }))}
+      nextStep={nextStep}
+    />,
+    <Step8
+      flexibility={surveyData.pliability}
+      setFlexibility={(val) => setSurveyData(prev => ({ ...prev, pliability: val }))}
+      nextStep={nextStep}
+    />,
+    <Step9
+      workoutFrequency={surveyData.workoutFrequency}
+      setWorkoutFrequency={(val) => setSurveyData(prev => ({ ...prev, workoutFrequency: val }))}
+      nextStep={nextStep}
+    />,
     <StepFinal
-      height={height}
-      weight={weight}
-      goalWeight={goalWeight}
-      activity={activity}
-      pushupLevel={pushupLevel}
-      plankTime={plankTime}
-      squatLevel={squatLevel}
-      flexibility={flexibility}
-      workoutFrequency={workoutFrequency}
+      surveyData={surveyData}
     />
   ];
 

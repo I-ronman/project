@@ -24,7 +24,6 @@ const MainDashboardPage = () => {
 
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
-  const displayName = user?.name || '홍길동';
 
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(new Date()));
   const [calendarData, setCalendarData] = useState([
@@ -134,7 +133,7 @@ const MainDashboardPage = () => {
           <img src={user?.profileImage || './images/default_profile.jpg'} alt="프로필" className="profile-img" />
           <div className="profile-texts">
             <p className="welcome-text">어서오세요!</p>
-            <p className="username-text">{displayName} 님</p>
+            <p className="username-text">{user?.name || '홍길동'} 님</p>
           </div>
         </div>
         <div className="notification-icon" onClick={(e) => { e.stopPropagation(); handleNotificationClick(); }}>

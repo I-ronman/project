@@ -57,9 +57,8 @@ public class LoginController {
 	    if (user == null) {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
 	    }
-	    return ResponseEntity.ok(Map.of("name", user.getName(), "email", user.getEmail()));
+	    return ResponseEntity.ok(UserDto.from(user));
 	}
 
-	
-	
+
 }

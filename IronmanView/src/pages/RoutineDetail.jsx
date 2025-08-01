@@ -13,11 +13,12 @@ const RoutineDetail = () => {
 
   const [routineDescription, setRoutineDescription] = useState('');
 
-  const [routineName, setRoutineName] = useState(location.state?.routine?.name || '루틴 A');
+  const [routineName, setRoutineName] = useState('');
   const [exerciseList, setExerciseList] = useState([
     {
-      name: '운동 선택',
+    name: '운동 선택',
     part: '',
+    exerciseId: null,
     sets: 3,
     reps: 10,
     exerciseTime: 60,  // 기본값 60초
@@ -26,7 +27,8 @@ const RoutineDetail = () => {
     },
 ]);
 
-
+ // 만약 루틴을 통해 들어왔을 경우(처음에만), 루틴의 정보대로 리스트를 매핑
+ // 처음으로 루틴을 만들러 들어왔을 경우, 루틴 정보 매핑은 생략하고 그냥 운동 선택만 추가
  useEffect(() => {
   const routine = location.state?.routine;
   if (routine?.exercises?.length > 0) {
@@ -55,6 +57,8 @@ const RoutineDetail = () => {
   }
 }, []);  // ✅ 최초 진입 시만 실행
 
+// ExerciseSearch 에서 선택한 운동을 받은 후에, 해당 index에 있는 운동을 덮어쓴다.
+// 다시 운동 선택 카드가 맨 끝에 없으면 추가
 useEffect(() => {
   const { updatedExercise, index } = location.state || {};
 
@@ -63,6 +67,7 @@ useEffect(() => {
       const updatedList = [...prevList];
       updatedList[index] = {
         ...updatedList[index],
+        exerciseId: updatedExercise.exerciseId,
         name: updatedExercise.name,
         part: updatedExercise.part,
         description: `${updatedExercise.part} 부위를 강화합니다.`,
@@ -92,15 +97,15 @@ useEffect(() => {
   }
 }, [location.state]);
 
-
+  // 백엔드로 루틴 저장 전송
   const handleSave = async () => {
   const routineData = {
      title: routineName,
-  summary: routineDescription,
-  exercises: exerciseList
-    .filter((e) => e.name !== '운동 선택')
+     summary: routineDescription,
+     exercises: exerciseList
+    .filter((e) => e.name !== '운동 선택' && e.exerciseId != null)
     .map((e) => ({
-      exerciseId: e.id,
+      exerciseId: e.exerciseId,
       part: e.part,
       sets: e.sets,
       reps: e.reps,
@@ -123,6 +128,7 @@ useEffect(() => {
   }
 };
 
+  // 루틴 페이지로 돌아가기 기능
   const handleBack = () => {
     const confirmBack = window.confirm('변경 사항이 저장되지 않습니다. 루틴 목록으로 돌아가시겠습니까?');
     if (confirmBack) {
@@ -130,6 +136,7 @@ useEffect(() => {
     }
   };
 
+  // 운동 카드 클릭 시 운동 검색으로 이동
   const handleCardClick = (index) => {
   navigate('/search', {
     state: {
@@ -240,6 +247,7 @@ useEffect(() => {
     setExerciseList([...exerciseList, {
       name: '운동 선택',
       part: '',
+      exerciseId: null,
       sets: 3,
       reps: 10,
       exerciseTime: 1,

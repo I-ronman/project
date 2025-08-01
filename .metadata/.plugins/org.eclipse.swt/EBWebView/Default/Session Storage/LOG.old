@@ -1,3 +1,9 @@
-2025/07/30-11:57:10.884 4e28 Reusing MANIFEST C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Session Storage/MANIFEST-000001
-2025/07/30-11:57:10.885 4e28 Recovering log #3
-2025/07/30-11:57:10.887 4e28 Reusing old log C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Session Storage/000003.log 
+<<<<<<< HEAD
+2025/08/01-15:35:46.166 2240 Reusing MANIFEST C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Session Storage/MANIFEST-000001
+2025/08/01-15:35:46.167 2240 Recovering log #3
+2025/08/01-15:35:46.170 2240 Reusing old log C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Session Storage/000003.log 
+=======
+2025/08/01-14:29:18.837 24a0 Reusing MANIFEST C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Session Storage/MANIFEST-000001
+2025/08/01-14:29:18.838 24a0 Recovering log #3
+2025/08/01-14:29:18.840 24a0 Reusing old log C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Session Storage/000003.log 
+>>>>>>> 582c27c5542a16ea099b6ea7d01642cc0758f0e0
