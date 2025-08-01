@@ -23,6 +23,24 @@
   font-size: 18px;
   letter-spacing: 1px;
   cursor: pointer;
+  padding: 8px 10px;
+  color: white;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.menu-item::after {
+  content: "";
+  position: absolute;
+  left: 0px;       /* 선의 시작 위치 */
+  right: 50px;      /* 선의 끝 위치 */
+  bottom: 0;
+  height: 1px;
+  background-color: #777;
+}
+
+.menu-item:last-child::after {
+  border-bottom: none; /* 마지막 항목엔 선 없도록 */
 }
 
 .arrow {

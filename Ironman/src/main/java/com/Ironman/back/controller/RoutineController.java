@@ -25,6 +25,7 @@ import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpSession;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/routine")
@@ -37,7 +38,8 @@ public class RoutineController {
     @PostMapping("/add")
     public ResponseEntity<?> addRoutine(@RequestBody FullRoutineDto dto, HttpSession session) {
     	 UserEntity user = (UserEntity) session.getAttribute("user");
-    	    if (user == null) {
+    	    System.out.println("세션 유저: "+user);
+    	 	if (user == null) {
     	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
     	    }
 

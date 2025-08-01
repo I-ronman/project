@@ -13,10 +13,10 @@ const ExerciseSearch = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
 
   const dummyExercises = [
-    { name: '벤치 프레스', part: '가슴' },
-    { name: '덤벨 벤치 프레스', part: '가슴' },
-    { name: '덤벨 풀오버', part: '가슴' },
-    { name: '펙덱 플라이', part: '가슴' },
+    { id: 1, name: '벤치 프레스', part: '가슴' },
+    { id: 2, name: '덤벨 벤치 프레스', part: '가슴' },
+    { id: 3, name: '덤벨 풀오버', part: '가슴' },
+    { id: 4, name: '펙덱 플라이', part: '가슴' },
   ];
 
   const filteredExercises = dummyExercises.filter((exercise) =>

@@ -60,6 +60,5 @@ public class LoginController {
 	    return ResponseEntity.ok(Map.of("name", user.getName(), "email", user.getEmail()));
 	}
 
-	
-	
+
 }

@@ -58,6 +58,9 @@ const Header = () => {
             <div className="menu-item" onClick={() => handleMove('/survey')}>
               <span>설문조사</span>
             </div>
+            <div className="menu-item" onClick={() => handleMove('/mypage')}>
+              <span>마이 페이지</span>
+            </div>
           </div>
         )}
       </div>
