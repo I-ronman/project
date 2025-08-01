@@ -32,12 +32,14 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // ⬅ 추가!
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/oauth/**", "/css/**", "/js/**", "/images/**", "/email/**",      //  이메일 인증 관련 요청 허용
-                        "/signup","/login","/api/routine/add", "/api/routine/list","/login/check"     ).permitAll() // 비로그인 허용 경로
+                        "/signup","/login","/api/routine/add", "/api/routine/list",
+                        "/login/check","/login/user","/api/routine/**"    ).permitAll() // 비로그인 허용 경로
                 .anyRequest().authenticated() // 나머지는 인증 필요
             )
             .formLogin(form -> form.disable())            
-            .oauth2Login(oauth2 -> oauth2.disable());
-            
+            .oauth2Login(oauth2 -> oauth2
+            .defaultSuccessUrl("/oauth/success", true)
+           ); 
 
         return http.build();
     }

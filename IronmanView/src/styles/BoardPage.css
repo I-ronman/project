@@ -1,28 +1,112 @@
+/* project/IronmanView/src/styles/BoardPage.css */
+
 .board-container {
-    max-width: 430px;
-    margin: 0 auto;
-    background: #1e1e1e;
-    padding: 20px;
-    color: #fff;
-  }
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  color: white;
+}
+
+.board-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* 포스트 리스트 전체 */
+.board-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 개별 포스트 카드 */
+.post-card {
+  background-color: #222;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  max-width: 100%; /* 검정 배경 내에서만 보이도록 */
+  overflow: hidden;
+}
+
+.post-card:hover {
+  transform: scale(1.02);
+}
+
+.post-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  object-fit: cover;
+}
+
+.post-content {
+  font-size: 16px;
+  word-break: break-word;
+}
+
+/* 게시글 작성 고정 버튼 */
+.floating-write-button {
+  position: fixed;
+  bottom: 24px;
+
+  /* 💡 전체 화면의 정중앙에 있는 530px 오른쪽 영역에 정확히 붙이기 */
+  left: 50%;
+  transform: translateX(400px); /* 800px / 2 + 약간 여유 */
   
-  .post-list li {
-    background: #2a2a2a;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    cursor: pointer;
+  background-color: #FBD157;
+  color: #000;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+
+.floating-write-button:hover {
+  background-color: #ffd43b;
+}
+
+.write-label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+@media screen and (max-width: 530px) {
+  .floating-write-button {
+    right: 20px;
   }
-  
-  .post-list li:hover {
-    background: #333;
-  }
-  
-  .post-detail-container {
-    max-width: 430px;
-    margin: 0 auto;
-    background: #1e1e1e;
-    padding: 20px;
-    color: #fff;
-  }
-  
+}
+.post-actions-inline {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-btn, .delete-btn {
+  background-color: transparent;
+  border: 1px solid #fbd157;
+  color: #fbd157;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  background-color: #fbd157;
+  color: #1c1c1c;
+}
+

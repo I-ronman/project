@@ -4,18 +4,17 @@ import os
 import base64
 from flask import Flask
 from flask_socketio import SocketIO
-import socketio
 import threading
-
+from flask_cors import CORS
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 
 client = openai.OpenAI(api_key=openai_api_key)
 
 app = Flask(__name__)
+CORS(app, resources={r'*': {'origins': 'https://localhost:5173'}})
 # socket_io = SocketIO(app,cors_allowed_origins="http://192.168.219.89:5173")
-socket_io = SocketIO(app,cors_allowed_origins="http://localhost:525")
-ws_client = socketio.Client()
+
 
 def encode_image_to_base64(image_path):
     """이미지를 base64로 인코딩하여 Data URL 형식으로 반환"""
@@ -54,19 +53,25 @@ def analyze_pose_with_image(img, question):
 
     return response.choices[0].message.content
 
+@app.route("/short_feed")
+def short_feed(img):
+    question = "이 운동 자세를 보고 자세에서 가장 큰 문제점이 무엇인지 판단하고 지적한 다음 어떻게 개선해야할지 한두마디 정도로 짧게 피드백해줘"
+    result = analyze_pose_with_image(img,question)
+    print("\nGPT 자세 분석 결과:")
+    return {"img":img,"result":result}
 
-
-
-
-@socket_io.on("bestPose")
+@app.route("report")
 def analysis(data):
     question = "이 운동 자세에 대해서 평가해줘."
     
-    result = analyze_pose_with_image(data, question)
+    result = analyze_pose_with_image(data[1], question)
     print("\nGPT 자세 분석 결과:")
     print(result)
-    sendData = {"result":result,"img":data}
-    ws_client.emit("bestPose",sendData)
-
+    sendData = {"result":result,"img":data[1]}
+    # if data[0] == "bestPose":
+    #     ws_client.emit("bestPose",sendData)
+    # else:
+    #     ws_client.emit("badPose",sendData)
+    return {"data":data,"result":result}
 if __name__ == '__main__':
-    socket_io.run(app, debug=True, port=5001)
+    app.run(app, debug=True, port=456)

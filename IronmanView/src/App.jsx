@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { RoutineProvider } from './contexts/RoutineContext';
+import { RoutineProvider } from './context/RoutineContext';
 
 import HomePage from './pages/HomePage';
 import Training from './components/TrainingCam';
@@ -27,6 +27,8 @@ import BoardPage from './pages/BoardPage';
 import PostDetailPage from './pages/PostDetailPage';
 import PostureDetailPage from './pages/PostureDetailPage';
 import PostureFeedbackPage from './pages/PostureFeedbackPage';
+import BoardWritePage from './pages/BoardWritePage';
+import EditPostPage from './pages/EditPostPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -66,6 +68,8 @@ const AppRoutes = () => {
         <Route path="post/:id" element={<PostDetailPage />} /> 
         <Route path="/posture-detail" element={<PostureDetailPage />} />
         <Route path="/posture-feedback" element={<PostureFeedbackPage />} />
+        <Route path="/write" element={<BoardWritePage />} />
+        <Route path="edit/:id" element={<EditPostPage />} />
       </Route>
       <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
