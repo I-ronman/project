@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const StepFinal = ({
   height,
@@ -28,26 +29,23 @@ const StepFinal = ({
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/survey', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:329/web/api/survey', surveyData, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(surveyData),
+        withCredentials: true, // 세션 기반 인증 시 필요
       });
 
-      if (response.ok) {
-
+      if (response.status === 200) {
         localStorage.setItem('surveyCompleted', 'true');
-        navigate('/routine')
-        // navigate('/recommend'); 성공 시 추천 페이지로 이동
+        navigate('/routine');
       } else {
         alert('설문 전송 실패');
       }
     } catch (error) {
       console.error('에러 발생:', error);
       alert('서버와 연결할 수 없습니다.');
-    } finally{
+    } finally {
       navigate('/chatbot');
     }
   };

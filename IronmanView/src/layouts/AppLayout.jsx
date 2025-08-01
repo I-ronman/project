@@ -2,7 +2,7 @@ import './AppLayout.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa'
 
 const AppLayout = () => {
   const location = useLocation();

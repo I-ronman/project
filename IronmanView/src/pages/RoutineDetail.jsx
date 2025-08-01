@@ -103,7 +103,7 @@ useEffect(() => {
      title: routineName,
      summary: routineDescription,
      exercises: exerciseList
-    .filter((e) => e.name !== '운동 선택' && e.id)
+    .filter((e) => e.name !== '운동 선택' && e.exerciseId != null)
     .map((e) => ({
       exerciseId: e.exerciseId,
       part: e.part,

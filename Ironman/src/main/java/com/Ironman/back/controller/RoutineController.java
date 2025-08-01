@@ -38,11 +38,10 @@ public class RoutineController {
     @PostMapping("/add")
     public ResponseEntity<?> addRoutine(@RequestBody FullRoutineDto dto, HttpSession session) {
     	 UserEntity user = (UserEntity) session.getAttribute("user");
-    	    System.out.println("세션 유저: "+user);
     	 	if (user == null) {
     	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
     	    }
-
+    	 	
     	    String email = user.getEmail();
     	    routineService.saveFullRoutine(dto, email);
     	    return ResponseEntity.ok("루틴 저장 완료");
