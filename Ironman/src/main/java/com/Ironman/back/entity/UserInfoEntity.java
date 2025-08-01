@@ -25,8 +25,8 @@ public class UserInfoEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private Integer height;
-    private Integer weight;
+    private float height;
+    private float weight;
     private String activityLevel;
     private String pushUp;
     private String plank;
