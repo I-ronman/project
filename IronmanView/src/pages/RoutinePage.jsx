@@ -135,8 +135,10 @@ const RoutinePage = () => {
                       X
                     </span>
                   </div>
-                  <p>⏱ {r.exerciseTime}분</p>
-                  <p>💪 {r.summary || '운동없음'}</p>
+                  <p>⏱ {r.exerciseTime < 60
+                        ? `${r.exerciseTime}초`
+                        : `${(r.exerciseTime / 60)}분`}</p>
+                  <p>💪 {r.exercises.length > 0 ? r.exercises[0].exerciseName : '운동없음'}</p>
                   <button className="start-routine-btn"
                     onClick={(e) => {
                       e.stopPropagation();
