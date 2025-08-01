@@ -14,9 +14,9 @@ const ExerciseSearch = () => {
 
   const dummyExercises = [
     { exerciseId: 1, name: '벤치 프레스', part: '가슴' },
-    { exerciseId: 1, name: '덤벨 벤치 프레스', part: '가슴' },
-    { exerciseId: 1, name: '덤벨 풀오버', part: '가슴' },
-    { exerciseId: 1,name: '펙덱 플라이', part: '가슴' },
+    { exerciseId: 2, name: '덤벨 벤치 프레스', part: '가슴' },
+    { exerciseId: 3, name: '덤벨 풀오버', part: '가슴' },
+    { exerciseId: 4,name: '펙덱 플라이', part: '가슴' },
   ];
 
   const filteredExercises = dummyExercises.filter((exercise) =>

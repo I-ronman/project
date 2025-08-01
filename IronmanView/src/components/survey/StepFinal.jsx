@@ -1,54 +1,29 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const StepFinal = ({
-  height,
-  weight,
-  goalWeight,
-  activity,
-  pushupLevel,
-  plankTime,
-  squatLevel,
-  flexibility,
-  workoutFrequency,
-}) => {
+const StepFinal = ({ surveyData }) => {
   const navigate = useNavigate();
 
   const handleFinish = async () => {
-    const surveyData = {
-      height,
-      weight,
-      goalWeight,
-      activity,
-      pushupLevel,
-      plankTime,
-      squatLevel,
-      flexibility,
-      workoutFrequency,
-    };
-
     try {
-      const response = await fetch('http://localhost:8080/api/survey', {
+      const response = await fetch('http://localhost:329/web/api/survey', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // 세션 유지 시 필요
         body: JSON.stringify(surveyData),
       });
 
       if (response.ok) {
-
         localStorage.setItem('surveyCompleted', 'true');
-        navigate('/routine')
-        // navigate('/recommend'); 성공 시 추천 페이지로 이동
+        navigate('/routine');
       } else {
         alert('설문 전송 실패');
       }
     } catch (error) {
       console.error('에러 발생:', error);
       alert('서버와 연결할 수 없습니다.');
-    } finally{
-      navigate('/chatbot');
     }
   };
 

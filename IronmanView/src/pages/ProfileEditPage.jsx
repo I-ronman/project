@@ -1,17 +1,33 @@
 // project/IronmanView/src/pages/ProfileEditPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../styles/ProfileEditPage.css';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../layouts/PageWrapper';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 const ProfileEditPage = () => {
+ 
+  useEffect(() => {
+  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+    .then(res => {
+      const { name, email, birthdate, gender  } = res.data;
+      setUser(prev => ({ ...prev, name, email, birthdate, gender }));
+    })
+    .catch(err => {
+      console.error('세션 사용자 정보 불러오기 실패', err);
+      navigate('/login');
+    });
+}, []);
+ 
   const navigate = useNavigate();
-
+  const {user, setUser} = useContext(AuthContext);
+  
   // 초기 사용자 정보 (예시)
   const [userInfo, setUserInfo] = useState({
     profileImage: '/default_profile.jpg',
-    name: '홍길동',
-    gender: '여성',
+    name: '',
+    gender: '',
     height: '',
     weight: '',
     goalWeight: '',
@@ -67,8 +83,8 @@ const ProfileEditPage = () => {
           />
 
           <div className="profile-basic-info">
-            <p className="read-only-text">이름: {userInfo.name}</p>
-            <p className="read-only-text">성별: {userInfo.gender}</p>
+            <p className="read-only-text">이름: {user.name}</p>
+            <p className="read-only-text">성별: {user.gender === 'M' ? '남성' : user.gender === 'F'? '여성' : '미설정'}</p>
           </div>
         </div>
 

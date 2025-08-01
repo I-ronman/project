@@ -1,10 +1,11 @@
 // components/survey/Step1.jsx
 import React, { useState } from 'react';
 import './Step1.css';
+import axios from 'axios';
 
 const Step1 = ({ height, setHeight, nextStep }) => {
   const handleChange = (e) => {
-    const value = e.target.value.replace(/\D/, ''); // 숫자만 입력
+    const value = e.target.value.replace(/\D/g, ''); // 숫자만 입력
     setHeight(value);
   };
 
