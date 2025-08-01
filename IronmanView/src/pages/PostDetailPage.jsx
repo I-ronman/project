@@ -118,6 +118,6 @@ const PostDetailPage = () => {
       </div>
     </div>
   );
-};
+};  
 
 export default PostDetailPage;

@@ -53,7 +53,7 @@ const Header = () => {
 
       {/* 오른쪽: 로그아웃 + 프로필 */}
       <div className="header-right">
-        <button className="logout-btn" onClick={() => navigate('/login')}>로그아웃</button>
+        <button className="logout-btn" onClick={() => navigate('/')}>로그아웃</button>
         <img
           src="/images/default_profile.jpg"
           alt="프로필"
