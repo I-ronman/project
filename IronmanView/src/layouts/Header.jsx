@@ -67,7 +67,11 @@ const Header = () => {
 
       {/* 가운데: 로고 */}
       <div className="header-center" onClick={() => navigate('/main')}>
-        I언맨
+        <img
+          src="/images/ironman_logo.png"
+          alt="Ironman 로고"
+          className="logo_img"
+        />
       </div>
 
       {/* 오른쪽: 로그아웃 + 프로필 */}

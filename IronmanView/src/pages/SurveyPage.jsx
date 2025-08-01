@@ -51,6 +51,7 @@ function SurveyPage() {
       nextStep={nextStep}
     />,
     <Step2
+      height={surveyData.height}
       weight={surveyData.weight}
       setWeight={(val) => setSurveyData(prev => ({ ...prev, weight: val }))}
       nextStep={nextStep}
