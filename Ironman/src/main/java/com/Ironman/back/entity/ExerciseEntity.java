@@ -21,4 +21,7 @@ public class ExerciseEntity {
 
     @Column(name = "expected_calorie", nullable = true)
     private Integer expectedCalorie;
+    
+    @Column(name = "exercise_summary", nullable = true)
+    private String exerciseSummary;
 }

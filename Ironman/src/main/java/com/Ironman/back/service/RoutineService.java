@@ -42,19 +42,24 @@ public class RoutineService {
         // 2. 운동 목록 저장
      // 2. 운동 목록 저장 (ExerciseEntity 참조)
         List<RoutineExerciseEntity> exercises = dto.getExercises().stream()
-                .map(exDto -> {
-                    ExerciseEntity exercise = exerciseRepository.findById(exDto.getExerciseId())
-                            .orElseThrow(() -> new IllegalArgumentException("운동 ID가 잘못되었습니다: " + exDto.getExerciseId()));
+        		.map(exDto -> {
+        		    if (exDto.getExerciseId() == null) {
+        		        throw new IllegalArgumentException("운동 ID가 null입니다. 클라이언트에서 exerciseId를 포함하여 전송해야 합니다.");
+        		    }
 
-                    return RoutineExerciseEntity.builder()
-                            .routine(routine)
-                            .exercise(exercise) // ✅ 연관 엔티티 주입
-                            .sets(exDto.getSets())
-                            .reps(exDto.getReps())
-                            .exerciseTime(exDto.getExerciseTime())
-                            .order(exDto.getOrder())
-                            .build();
-                })
+        		    ExerciseEntity exercise = exerciseRepository.findById(exDto.getExerciseId())
+        		        .orElseThrow(() -> new IllegalArgumentException("운동 ID가 잘못되었습니다: " + exDto.getExerciseId()));
+
+        		    return RoutineExerciseEntity.builder()
+        		        .routine(routine)
+        		        .exercise(exercise)
+        		        .sets(exDto.getSets())
+        		        .reps(exDto.getReps())
+        		        .exerciseTime(exDto.getExerciseTime())
+        		        .order(exDto.getOrder())
+        		        .build();
+        		})
+
                 .collect(Collectors.toList());
 
 
