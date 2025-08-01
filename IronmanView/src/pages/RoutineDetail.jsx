@@ -13,13 +13,12 @@ const RoutineDetail = () => {
 
   const [routineDescription, setRoutineDescription] = useState('');
 
-  const [routineName, setRoutineName] = useState(location.state?.routine?.name || '루틴 A');
-  
-  // exerciseList 변수를 정의해놓은 곳
+  const [routineName, setRoutineName] = useState('');
   const [exerciseList, setExerciseList] = useState([
     {
-      name: '운동 선택',
+    name: '운동 선택',
     part: '',
+    exerciseId: null,
     sets: 3,
     reps: 10,
     exerciseTime: 60,  // 기본값 60초
@@ -68,7 +67,7 @@ useEffect(() => {
       const updatedList = [...prevList];
       updatedList[index] = {
         ...updatedList[index],
-        id: updatedExercise.id,
+        exerciseId: updatedExercise.exerciseId,
         name: updatedExercise.name,
         part: updatedExercise.part,
         description: `${updatedExercise.part} 부위를 강화합니다.`,
@@ -106,7 +105,7 @@ useEffect(() => {
      exercises: exerciseList
     .filter((e) => e.name !== '운동 선택' && e.id)
     .map((e) => ({
-      exerciseId: e.id,
+      exerciseId: e.exerciseId,
       part: e.part,
       sets: e.sets,
       reps: e.reps,
@@ -248,6 +247,7 @@ useEffect(() => {
     setExerciseList([...exerciseList, {
       name: '운동 선택',
       part: '',
+      exerciseId: null,
       sets: 3,
       reps: 10,
       exerciseTime: 1,

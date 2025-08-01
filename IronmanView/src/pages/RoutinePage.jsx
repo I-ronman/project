@@ -33,7 +33,7 @@ const RoutinePage = () => {
   // 초기화 로직이 있다면 여기에 작성
 };
 
-  // 루틴을 선택했을 때, 루틴을 수정할 수 있게 하는 메서드
+
   const handleRoutineClick = (routine) => {
   navigate('/routinedetail', {
     state: {
@@ -52,7 +52,6 @@ const RoutinePage = () => {
   });
 };
 
-  // 루틴 삭제 메서드
   const handleDeleteRoutine = async (routineId) => {
   const confirmed = window.confirm('정말 이 루틴을 삭제하시겠습니까?');
   if (!confirmed) return;
@@ -69,7 +68,7 @@ const RoutinePage = () => {
   }
 };
 
-  // 루틴을 더할 때 메서드
+
   const handleAddRoutine = () => {
   const newRoutine = {
     name: `루틴 ${String.fromCharCode(65 + savedRoutines.length)}`,
@@ -89,7 +88,7 @@ const RoutinePage = () => {
   navigate('/routinedetail', { state: { routine: newRoutine } });
 };
 
-  
+
   const handleChatbotNavigate = () => {
     navigate('/chatbot', { state: { from: '/routine' } });
   };
@@ -136,8 +135,10 @@ const RoutinePage = () => {
                       X
                     </span>
                   </div>
-                  <p>⏱ {r.exerciseTime}분</p>
-                  <p>💪 {r.summary || '운동없음'}</p>
+                  <p>⏱ {r.exerciseTime < 60
+                        ? `${r.exerciseTime}초`
+                        : `${(r.exerciseTime / 60)}분`}</p>
+                  <p>💪 {r.exercises.length > 0 ? r.exercises[0].exerciseName : '운동없음'}</p>
                   <button className="start-routine-btn"
                     onClick={(e) => {
                       e.stopPropagation();

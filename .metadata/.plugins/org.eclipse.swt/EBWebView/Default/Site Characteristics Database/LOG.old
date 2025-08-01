@@ -1,3 +1,9 @@
-2025/07/31-18:56:46.059 4c28 Reusing MANIFEST C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001
-2025/07/31-18:56:46.064 4c28 Recovering log #3
-2025/07/31-18:56:46.064 4c28 Reusing old log C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log 
+<<<<<<< HEAD
+2025/08/01-07:49:57.695 3df8 Reusing MANIFEST C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001
+2025/08/01-07:49:57.701 3df8 Recovering log #3
+2025/08/01-07:49:57.702 3df8 Reusing old log C:\Users\smhrd\Desktop\restored-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log 
+=======
+2025/08/01-09:11:34.800 4b8c Reusing MANIFEST C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001
+2025/08/01-09:11:34.807 4b8c Recovering log #3
+2025/08/01-09:11:34.807 4b8c Reusing old log C:\Users\smhrd\projectHPT\project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log 
+>>>>>>> 1721778a20d3bbfcf510ed8d524404b5bc67176c
