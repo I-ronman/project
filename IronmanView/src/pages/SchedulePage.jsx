@@ -1,13 +1,16 @@
 // project/IronmanView/src/pages/SchedulePage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/SchedulePage.css';
 import defaultProfile from '../images/default_profile.jpg';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../layouts/PageWrapper';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 const SchedulePage = () => {
+
   const [date, setDate] = useState(new Date());
   const [routineData, setRoutineData] = useState({});
   const navigate = useNavigate();
@@ -15,6 +18,7 @@ const SchedulePage = () => {
   const selectedKey = date.toISOString().split('T')[0];
   const selectedRoutine = routineData[selectedKey];
   const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
+  const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     const saved = localStorage.getItem(`routine_${selectedKey}`);
@@ -26,12 +30,25 @@ const SchedulePage = () => {
     }
   }, [date]);
 
+   useEffect(() => {
+  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+    .then(res => {
+      const { name, email } = res.data;
+      setUser(prev => ({ ...prev, name, email }));
+    })
+    .catch(err => {
+      console.error('세션 사용자 정보 불러오기 실패', err);
+      navigate('/login');
+    });
+}, []);
+  
+
   return (
     <PageWrapper>
       <div className="schedule-page">
         <div className="profile-section">
           <div className="profile-left">
-            <p className="profile-name">홍길동</p>
+            <p className="profile-name">{user?.name || '홍길동'}</p>
             <p className="profile-detail">Age: ??</p>
             <p className="profile-detail">75 Kg | 1.65 M</p>
           </div>

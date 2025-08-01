@@ -1,43 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
 
-const StepFinal = ({
-  height,
-  weight,
-  goalWeight,
-  activity,
-  pushupLevel,
-  plankTime,
-  squatLevel,
-  flexibility,
-  workoutFrequency,
-}) => {
+const StepFinal = ({ surveyData }) => {
   const navigate = useNavigate();
+  const {completeSurvey} = useContext(AuthContext);
 
   const handleFinish = async () => {
-    const surveyData = {
-      height,
-      weight,
-      goalWeight,
-      activity,
-      pushupLevel,
-      plankTime,
-      squatLevel,
-      flexibility,
-      workoutFrequency,
-    };
-
     try {
-      const response = await axios.post('http://localhost:329/web/api/survey', surveyData, {
+      const response = await fetch('http://localhost:329/web/api/survey', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        withCredentials: true, // 세션 기반 인증 시 필요
+        credentials: 'include', // 세션 유지 시 필요
+        body: JSON.stringify(surveyData),
       });
 
-      if (response.status === 200) {
-        localStorage.setItem('surveyCompleted', 'true');
+      if (response.ok) {
+        completeSurvey();
         navigate('/routine');
       } else {
         alert('설문 전송 실패');
@@ -45,8 +27,6 @@ const StepFinal = ({
     } catch (error) {
       console.error('에러 발생:', error);
       alert('서버와 연결할 수 없습니다.');
-    } finally {
-      navigate('/chatbot');
     }
   };
 

@@ -1,13 +1,15 @@
 // project/IronmanView/src/pages/MyPage.jsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import '../styles/MyPage.css';
 import defaultProfileImage from '../images/default_profile.jpg';
 import SurveyBlurOverlay from '../components/SurveyBlurOverlay';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../layouts/PageWrapper';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
-const MyPage = ({ user, hasSurvey = false }) => {
+const MyPage = () => {
   const [showBodyInfo, setShowBodyInfo] = useState(false);
   const navigate = useNavigate();
 
@@ -38,6 +40,20 @@ const MyPage = ({ user, hasSurvey = false }) => {
 
   const progressRef = useRef(null);
   const bodyRef = useRef(null);
+  const { user, setUser } = useContext(AuthContext);
+
+   useEffect(() => {
+  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+    .then(res => {
+      const { name, email, birthdate, gender  } = res.data;
+      setUser(prev => ({ ...prev, name, email, birthdate, gender }));
+    })
+    .catch(err => {
+      console.error('세션 사용자 정보 불러오기 실패', err);
+      navigate('/login');
+    });
+}, []);
+
 
   return (
     <PageWrapper>
@@ -49,7 +65,7 @@ const MyPage = ({ user, hasSurvey = false }) => {
             className="profile-image"
           />
           <div className="profile-name">{user?.name || '홍길동'}</div>
-          <div>성별: {user?.gender || '남성'} | 생년: {user?.birth || '1995년생'}</div>
+          <div>성별: {user.gender === 'M' ? '남성' : user.gender === 'F'? '여성' : '미설정'} | 생년: {user?.birthdate || '1995년생'}</div>
           <div>{user?.email || 'test@example.com'}</div>
           <button className="profile-edit-btn" onClick={() => navigate('/profile-edit')}>
             프로필 수정
