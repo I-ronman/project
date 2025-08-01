@@ -1,11 +1,11 @@
+// project/IronmanView/src/pages/PostDetailPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // 백엔드 연동 고려
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/PostDetailPage.css';
 
 const PostDetailPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const [post, setPost] = useState(null);
   const [liked, setLiked] = useState(false);
@@ -15,11 +15,11 @@ const PostDetailPage = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        // 실제 백엔드 연동 시:
+        // 추후 실제 백엔드 연동용 API
         // const response = await axios.get(`/api/posts/${id}`);
         // setPost(response.data);
         // setComments(response.data.comments || []);
-        // setLiked(response.data.liked);  // ← 사용자별 좋아요 여부
+        // setLiked(response.data.liked);
 
         const dummy = {
           id: 1,
@@ -51,7 +51,6 @@ const PostDetailPage = () => {
     setPost(prev => ({ ...prev, likes: updatedLikes }));
 
     try {
-      // 실제 서버 연동
       // await axios.patch(`/api/posts/${id}/like`, { action: liked ? 'unlike' : 'like' });
     } catch (err) {
       console.error('좋아요 상태 변경 실패:', err);
@@ -76,8 +75,6 @@ const PostDetailPage = () => {
 
   return (
     <div className="detail-wrapper">
-      <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로가기</button>
-
       <div className="post-detail-card">
         <h3>{post.author}님의 게시글</h3>
 
