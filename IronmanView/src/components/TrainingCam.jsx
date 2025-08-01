@@ -4,11 +4,12 @@ import Webcam from "react-webcam";
 import {io} from "socket.io-client"
 import { CountContext } from '../context/CountContext';
 
-function TrainingCam({viewKnee}) {
+function TrainingCam({viewKnee,viewLegHip}) {
   const wsRef = useRef(null);
   const webcamRef = React.useRef(null);
   const [imgSrc,setImgSrc] = useState("");
   const {setSuccessCount,setFailCount} = useContext(CountContext);
+
   <webcamRef ref={webcamRef}></webcamRef>
   const videoConstraints = {
   width: 1024,
@@ -16,10 +17,12 @@ function TrainingCam({viewKnee}) {
   facingMode: "user"
   };
   const viewKneeRef = useRef(viewKnee)
+  const viewLegHipRef = useRef(viewLegHip)
 
   useEffect(() => {
   viewKneeRef.current = viewKnee;
-  }, [viewKnee]);
+  viewLegHipRef.current = viewLegHip
+  }, [viewKnee,viewLegHip]);
   useEffect(()=>{
     wsRef.current = io.connect('http://localhost:525');
     wsRef.current.on("show",(data) => {
@@ -31,6 +34,9 @@ function TrainingCam({viewKnee}) {
       }
       
     })
+    wsRef.current.on("report",(data)=>{
+      console.log(data)
+    })
     wsRef.current.on("goodCount",(data)=>{
       setSuccessCount(data)
     })
@@ -39,16 +45,16 @@ function TrainingCam({viewKnee}) {
     })
     const sendImage = setInterval(()=>{
       const imgSrc= webcamRef.current.getScreenshot();
-      console.log();
       const data = {
         image: imgSrc,
-        viewKnee:viewKneeRef.current
+        viewKnee:viewKneeRef.current,
+        viewLegHip:viewLegHipRef.current
       }
       if(data.image){
         wsRef.current.emit("analyze",data)
       }
-    },120);
-    sendImage
+    },100);
+    
     // wsRef.current.emit("analyze",webcamRef.current.getScreenshot())
     return () => {
       wsRef.current.disconnect();

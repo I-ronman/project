@@ -19,6 +19,10 @@ const PostureAnalysisPage = () => {
   const [successCount, setSuccessCount] = useState(0);   // 운동 성공 횟수
   const [failCount, setFailCount] = useState(0);         // 운동 실패 횟수
   const [viewKnee,setViewKnee] = useState(false);
+  const [imgSrc,setImgSrc] = useState("");
+  const [badPose,setBadPose] = useState(false)
+  const [goodPose,setGoodPose] = useState(false)
+  const [viewLegHip,setViewLegHip] = useState(false)
   const navigate = useNavigate();
 
   const toggleFeedback = () => setIsFeedbackOn((prev) => !prev);
@@ -39,7 +43,7 @@ const PostureAnalysisPage = () => {
 
 
   return (
-      <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount}}>
+    <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount,setBadPose,setGoodPose}}>
     <PageWrapper>
 
       <div className="posture-container">
@@ -69,15 +73,17 @@ const PostureAnalysisPage = () => {
             ))}
           </div>
           <div className='posture-stats'>
-            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button' style={viewKnee?{backgroundColor:"gray"}:undefined}>무릎각도보기</button>
+            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button' style={viewKnee?{backgroundColor:"gray"}:undefined}>무릎 발끝 수직선 체크</button>
             
-            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button'>무릎각도보기</button>
+            <button className="stat-box" onClick={()=>{viewLegHip?setViewLegHip(false):setViewLegHip(true)
+              console.log(viewLegHip)
+            }} type='button' style={viewLegHip?{backgroundColor:"gray"}:undefined}>무릎 허리 각도보기</button>
           </div>
           <GuideVideoPlayer videoUrl={selectedVideo} />
         </div>
 
         <div className="posture-right">
-          <TrainingCam viewKnee = {viewKnee}></TrainingCam>
+          <TrainingCam viewKnee = {viewKnee} viewLegHip = {viewLegHip} ></TrainingCam>
         </div>
       </div>
 

@@ -73,8 +73,8 @@ while cap.isOpened():
                 draw_angle_arc(frame,h,w,lm[25],lm[31],base_line,knee_over_foot,40,(0,255,0))
                 cv2.line(frame,(0,to_pixel(lm[27])[1]),to_pixel(lm[27]),(0,255,0),2)
             # 엉덩이 뒤로 빠진 정도 구하는 각도 로직3
-            base_line.x = lm[23].x
-            base_line.y = lm[27].y
+            base_line.x = lm[27].x
+            base_line.y = lm[23].y
             hip_back = get_angle(base_line,lm[27],lm[23])
             
             # 상체 기울기가 앞으로 너무 많이 쏠리진 않았는지
@@ -84,7 +84,7 @@ while cap.isOpened():
             if view_upper_body_slope:
                 cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 2)
                 draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
-            # print(f"{data}굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}",f"upper_body : {upper_body_angle}")
+            print(f"{data}굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}",f"upper_body : {upper_body_angle}")
             #data,getDistance(lm[23], lm[25]),sit,stand,f"굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}
             if view_leg_hip_angle:
                 draw_angle_arc(frame,h,w,lm[11],lm[23],lm[25],l_hip_ang,40,(0,255,0))
@@ -102,8 +102,6 @@ while cap.isOpened():
 
             if lm[31].x < lm[25].x and knee_over_foot < 35: correct_knee = False
        
-            if hip_back > 50 :correct_hip_position = False
-
             if l_leg_ang <= 55 and l_hip_ang <= 55 : sit = True
             
             if l_leg_ang - 20 > l_hip_ang or l_hip_ang> l_leg_ang + 20: leg_upperbody_parallel = False
@@ -113,7 +111,7 @@ while cap.isOpened():
             if  sit and stand:
                 sit = False
                 stand = False
-                if not correct_knee or not correct_hip_position or not proper_upper_body_tilt or not leg_upperbody_parallel or not center_of_gravity:
+                if not correct_knee or not proper_upper_body_tilt or not leg_upperbody_parallel or not center_of_gravity:
                     correct_knee = True
                     correct_hip_position = True
                     proper_upper_body_tilt = True
@@ -141,6 +139,6 @@ while cap.isOpened():
         cv2.imshow('Capture', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):  # q를 누르면 종료
             break
-            
+        
 cap.release()
 cv2.destroyAllWindows()
