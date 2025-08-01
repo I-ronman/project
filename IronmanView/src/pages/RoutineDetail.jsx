@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/RoutineDetail.css';
-import { useRoutine } from '../contexts/RoutineContext.jsx';
+import { useRoutine } from '../context/RoutineContext.jsx';
 import PageWrapper from '../layouts/PageWrapper';
 import axios from 'axios';
 
