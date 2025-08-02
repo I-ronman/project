@@ -56,7 +56,7 @@ while cap.isOpened():
             l_hip_ang = get_angle(lm[25],lm[23],lm[11])
             diff_angle =abs(l_leg_ang - l_hip_ang)
             
-            data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
+            data = {"diff":diff_angle,"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
             
             key = cv2.waitKey(5)
             if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
@@ -100,11 +100,11 @@ while cap.isOpened():
 
             if upper_body_angle < 35: proper_upper_body_tilt = False
 
-            if lm[31].x < lm[25].x and knee_over_foot < 35: correct_knee = False
+            if lm[25].x < lm[31].x and knee_over_foot > 35: correct_knee = False
        
             if l_leg_ang <= 55 and l_hip_ang <= 55 : sit = True
             
-            if l_leg_ang - 20 > l_hip_ang or l_hip_ang> l_leg_ang + 20: leg_upperbody_parallel = False
+            if diff_angle > 20: leg_upperbody_parallel = False
 
             if sit and l_leg_ang >= 170 and l_hip_ang >= 168: stand = True
                  
@@ -112,6 +112,7 @@ while cap.isOpened():
                 sit = False
                 stand = False
                 if not correct_knee or not proper_upper_body_tilt or not leg_upperbody_parallel or not center_of_gravity:
+                    print(correct_knee,proper_upper_body_tilt,leg_upperbody_parallel,center_of_gravity)
                     correct_knee = True
                     correct_hip_position = True
                     proper_upper_body_tilt = True

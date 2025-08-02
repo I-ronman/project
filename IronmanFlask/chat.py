@@ -139,12 +139,12 @@ def short_feed(img):
 def analysis(data):
     question = "이 운동 자세에 대해서 평가해줘."
     
-    result = analyze_pose_with_image(data[1], question)
+    result = analyze_pose_with_image(data, question)
     print("\nGPT 자세 분석 결과:")
     print(result)
-    sendData = {"result":result,"img":data[1]}
+    sendData = {"result":result,"img":data}
 
-    return {"data":data,"result":result}
+    return sendData
 
 if __name__ == '__main__':
     app.run( debug=True, port=456)
