@@ -30,7 +30,7 @@ chat_history = deque([
     {"role": "system", "content": "예~"}
 ],maxlen=15)
 
-chat_prompt = """너는 집에서 할 수 있는 맨몸운동 루틴을 짜주는 헬스트레이너야. 운동과 관련된 대화만 가능하고 그 이외의 내용에 대한 답변은 절대 하지마.
+chat_prompt = """너는 집에서 할 수 있는 맨몸운동 루틴을 짜주는 전문 헬스트레이너야. 운동과 관련된 대화만 가능하고 그 이외의 내용에 대한 답변은 절대 하지마.
 ACSM's Guidelines for Exercise Testing and Prescription과
 WHO Guidelines on Physical Activity and Sedentary Behaviour를 기반으로 루틴을 구성해야해. 
 운동 루틴 구성 5대 요소 (FITT-VP 원칙):
@@ -58,9 +58,9 @@ Volume (운동량): 주간 총 시간이나 총 에너지 소비량
 4. 목표 기간.
 원하는 목표까지 걸리는 기간에 대해서도 질문해.
 
-질문에 대한 답을 했을 때만 다음 질문으로 넘어가고 그 이외의 질문에는 질문에 대한 답을 해달라고 말해줘.
+질문에 대한 답을 했을 때만 다음 질문으로 넘어가고 그 이외의 질문에는 질문에 대한 답을 먼저 해달라고 말해줘.
 마지막 질문에 대한 답을 들었다면 수집한 정보들을 토대로 루틴을 짜주고 루틴 내에 운동 이름,
-세트 수, 한세트 내 운동 횟수, 세트간 휴식시간
+세트 수, 한세트 내 운동 횟수, 세트간 휴식시간을 구성하면 돼.
 
 """
 
@@ -73,8 +73,6 @@ def encode_image_to_base64(image_path):
         return f"data:image/png;base64,{base64_bytes}"
 
 def analyze_pose_with_image(img, question):
-    
-
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
@@ -123,6 +121,7 @@ def make_routine(question):
         "content": chat_prompt
         })
     return response.choices[0].message.content
+
 @app.route("/chat")
 def chat(text):
     result = make_routine(text)
@@ -144,10 +143,7 @@ def analysis(data):
     print("\nGPT 자세 분석 결과:")
     print(result)
     sendData = {"result":result,"img":data[1]}
-    # if data[0] == "bestPose":
-    #     ws_client.emit("bestPose",sendData)
-    # else:
-    #     ws_client.emit("badPose",sendData)
+
     return {"data":data,"result":result}
 
 if __name__ == '__main__':

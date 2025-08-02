@@ -34,7 +34,6 @@ center_of_gravity = True
 
 view_center_of_gravity = False
 view_upper_body_slope = False
-view_leg_hip_angle = False
 view_knee_line = False
 
 bad_pose = False
@@ -65,7 +64,6 @@ def analyze(data):
     global correct_knee
     global proper_upper_body_tilt
     global view_upper_body_slope
-    global view_leg_hip_angle
     global center_of_gravity
     global view_center_of_gravity
     global bad_pose
@@ -96,16 +94,33 @@ def analyze(data):
     if result.pose_landmarks:
         lm = result.pose_landmarks.landmark
         
+        # 상체 정강이 평행한지
         l_leg_ang = get_angle(lm[27],lm[25],lm[23])
         l_hip_ang = get_angle(lm[25],lm[23],lm[11])
         diff_angle =abs(l_leg_ang - l_hip_ang)
-        data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
+        if view_leg_hip_angle:
+                draw_angle_arc(frame,h,w,lm[11],lm[23],lm[25],l_hip_ang,40,(0,255,0))
+                draw_angle_arc(frame,h,w,lm[23],lm[25],lm[27],l_leg_ang,40,(0,255,0))
+        if diff_angle > 20: 
+            leg_upperbody_parallel = False
+            view_leg_hip_angle = True
+            bad_pose = True
+            print(bad_pose)
+        # data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
     
         # 무릎 나간 각도 구하는 로직
         base_line.y = lm[25].y
         base_line.x = lm[31].x
         knee_over_foot = get_angle(base_line,lm[27],lm[25])
-        print(knee_over_foot)
+        if lm[31].x < lm[25].x and knee_over_foot > 30: 
+            correct_knee = False
+            if knee_over_foot >= before_knee_over:
+                before_knee_over = knee_over_foot
+            else:
+                before_knee_over = 30
+                bad_pose = True
+                print(bad_pose)
+            viewKnee = True
          
         if viewKnee:
             cv2.line(frame,(to_pixel(lm[31])[0],0),to_pixel(lm[31]),(0,255,255),2)
@@ -115,27 +130,16 @@ def analyze(data):
         # 어깨위치 무게중심에 있는지
         if lm[31].x > lm[11].x or lm[29].x < lm[11].x:
                 center_of_gravity = False
-                bad_pose
+                bad_pose = True
+                print(bad_pose)
+        if view_center_of_gravity:
+            cv2.line(frame,to_pixel(lm[31]),(to_pixel(lm[31])[0],0),(0,255,0),2)
+            cv2.line(frame,to_pixel(lm[29]),(to_pixel(lm[29])[0],0),(0,255,0),2)
+
         # 상체 기울기가 앞으로 너무 많이 쏠리진 않았는지
         base_line.x = lm[11].x
         base_line.y = lm[23].y
         upper_body_angle = get_angle(base_line,lm[23],lm[11])
-        if view_upper_body_slope:
-            cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
-            draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
-
-        # print(f"{data}굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}",f"upper_body : {upper_body_angle}")
-        #data,getDistance(lm[23], lm[25]),sit,stand,f"굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}
-        
-        if view_leg_hip_angle:
-                draw_angle_arc(frame,h,w,lm[11],lm[23],lm[25],l_hip_ang,40,(0,255,0))
-                draw_angle_arc(frame,h,w,lm[23],lm[25],lm[27],l_leg_ang,40,(0,255,0))
-
-        if view_center_of_gravity:
-            cv2.line(frame,to_pixel(lm[31]),(to_pixel(lm[31])[0],0),(0,255,0),2)
-            cv2.line(frame,to_pixel(lm[29]),(to_pixel(lm[29])[0],0),(0,255,0),2)
-        
-
         if upper_body_angle < 35: 
             proper_upper_body_tilt = False
             # view_upper_body_slope = True
@@ -144,23 +148,15 @@ def analyze(data):
             else:
                 before_upper_body_ang = 35
                 bad_pose = True
-            
-        if lm[31].x < lm[25].x and knee_over_foot > 30: 
-            correct_knee = False
-            if knee_over_foot >= before_knee_over:
-                before_knee_over = knee_over_foot
-            else:
-                before_knee_over = 30
-                bad_pose = True
-            viewKnee = True
-        
+                print(bad_pose)
+        if view_upper_body_slope:
+            cv2.line(frame,(0,to_pixel(base_line)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
+            draw_angle_arc(frame,h,w,base_line,lm[23],lm[11],upper_body_angle,40,(0,255,0)) 
 
+        # print(f"{data}굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}",f"upper_body : {upper_body_angle}")
+        #data,getDistance(lm[23], lm[25]),sit,stand,f"굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}
+        
         if l_leg_ang <= 78 and l_hip_ang <= 75 : sit = True
-        
-        if l_leg_ang - 20 > l_hip_ang or l_hip_ang> l_leg_ang + 20: 
-            leg_upperbody_parallel = False
-            view_leg_hip_angle = True
-
         if sit and l_leg_ang >= 170 and l_hip_ang >= 168: stand = True
                 
         if  sit and stand:
@@ -173,9 +169,11 @@ def analyze(data):
                 leg_upperbody_parallel = True
                 center_of_gravity = True
                 bad_cnt += 1
+                print("bad:",bad_cnt)
                 socket_io.emit("badCount",bad_cnt)
             else:  
                 good_cnt += 1
+                print("good",good_cnt)
                 socket_io.emit("goodCount",good_cnt)
 
     
@@ -197,16 +195,18 @@ def analyze(data):
         _, buffer = cv2.imencode('.jpg', frame)
         sendImg = base64.b64encode(buffer).decode("utf-8")
         if bad_pose:
-            # socket_io.emit("short_feed",sendImg)
-            # socket_io.emit("report",["badPose",sendImg])
+            socket_io.emit("short_feed",sendImg)
+            socket_io.emit("report",["badPose",sendImg])
             bad_pose = False
         elif diff_angle < 1 and l_leg_ang < 55:
             if before_leg_ang >= l_leg_ang:
                 before_leg_ang = l_leg_ang
             else:
                 before_leg_ang = 55
-                # data = ["bestPose",sendImg]
-                # socket_io.emit("report",sendImg)
+                data = ["bestPose",sendImg]
+                socket_io.emit("report",data)
+
+                
     _, buffer = cv2.imencode('.jpg', frame)
     sendImg = base64.b64encode(buffer).decode("utf-8")
     data = {"sendImg":sendImg}
