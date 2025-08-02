@@ -7,9 +7,11 @@ import GuideVideoPlayer from '../components/posture/GuideVideoPlayer';
 import VideoFeed from '../components/posture/VideoFeed';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
-import TrainingCam from '../components/TrainingCam';
+import TrainingCamTest from '../components/TrainingCamTest';
 import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
+import TrainingCam from '../components/TrainingCam';
+
 
 
 const PostureAnalysisPage = () => {
@@ -79,6 +81,7 @@ const PostureAnalysisPage = () => {
               console.log(viewLegHip)
             }} type='button' style={viewLegHip?{backgroundColor:"gray"}:undefined}>무릎 허리 각도보기</button>
           </div>
+          <img src={reportImg} alt="" />
           <GuideVideoPlayer videoUrl={selectedVideo} />
         </div>
 

@@ -39,6 +39,7 @@ function TrainingCam({viewKnee,viewLegHip}) {
     })
     wsRef.current.on("report",(data)=>{
       console.log(data)
+      setReportImg(`data:image/jpeg;base64,${data[1]}`)
     })
     wsRef.current.on("goodCount",(data)=>{
       setSuccessCount(data)
