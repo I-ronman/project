@@ -13,10 +13,10 @@ const ExerciseSearch = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
 
   const dummyExercises = [
-    { exerciseId: 1, name: '벤치 프레스', part: '가슴' },
-    { exerciseId: 1, name: '덤벨 벤치 프레스', part: '가슴' },
-    { exerciseId: 1, name: '덤벨 풀오버', part: '가슴' },
-    { exerciseId: 1, name: '펙덱 플라이', part: '가슴' },
+    { exerciseId: 1, name: '벤치 프레스', part: '상체' },
+    { exerciseId: 2, name: '덤벨 벤치 프레스', part: '상체' },
+    { exerciseId: 3, name: '덤벨 풀오버', part: '상체' },
+    { exerciseId: 4, name: '펙덱 플라이', part: '상체' },
   ];
 
   const filteredExercises = dummyExercises.filter((exercise) =>
@@ -29,7 +29,7 @@ const ExerciseSearch = () => {
   };
 
   const handleSave = () => {
-    if (selectedExercise) {
+    if (selectedExercise) { 
       if (index !== null) {
         // RoutineDetail에서 왔을 경우
         navigate('/routinedetail', {
@@ -90,9 +90,9 @@ const ExerciseSearch = () => {
         ))}
       </div>
 
-      <div className="button-row">
-        <button className="back-button" onClick={handleBack}>돌아가기</button>
-        <button className="save-button" onClick={handleSave} disabled={!selectedExercise}>저장</button>
+      <div className="exercise-button-row">
+        <button className="exercise-back-button" onClick={handleBack}>돌아가기</button>
+        <button className="exercise-save-button" onClick={handleSave} disabled={!selectedExercise}>저장</button>
       </div>
     </PageWrapper>
   );
