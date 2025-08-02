@@ -8,7 +8,7 @@ function TrainingCam({viewKnee,viewLegHip}) {
   const wsRef = useRef(null);
   const webcamRef = React.useRef(null);
   const [imgSrc,setImgSrc] = useState("");
-  const {setSuccessCount,setFailCount} = useContext(CountContext);
+  const {setSuccessCount,setFailCount,setReportImg} = useContext(CountContext);
 
   <webcamRef ref={webcamRef}></webcamRef>
   const videoConstraints = {
@@ -34,6 +34,9 @@ function TrainingCam({viewKnee,viewLegHip}) {
       }
       
     })
+    wsRef.current.on("short_feed",(data)=>{
+      console.log("숏피드")
+    })
     wsRef.current.on("report",(data)=>{
       console.log(data)
     })
@@ -55,23 +58,43 @@ function TrainingCam({viewKnee,viewLegHip}) {
       }
     },100);
     
+    
     // wsRef.current.emit("analyze",webcamRef.current.getScreenshot())
     return () => {
       wsRef.current.disconnect();
     };
   },[]);
-  
-  
-  // if (event.data) {
-  //       const base64ImageData = 'data:image/jpg;base64,' + event.data;
-  //       setCctvData(base64ImageData);
-  //     }
+  const handleUserMedia = () => {
+    const stream = webcamRef.current?.video?.srcObject;
+    console.log('stream:', stream);
+
+    if (stream) {
+      const [track] = stream.getVideoTracks();
+      const capabilities = track.getCapabilities();
+      console.log('zoom capabilities:', capabilities.zoom);
+
+      if (capabilities.zoom) {
+        track
+          .applyConstraints({
+            advanced: [{ zoom: capabilities.zoom.min }]
+          })
+          .then(() => {
+            console.log('✅ 줌아웃 적용 완료');
+          })
+          .catch((err) => {
+            console.error('❌ 줌 설정 실패:', err);
+          });
+      } else {
+        console.warn('❌ 카메라가 줌 기능을 지원하지 않음');
+      }
+    }
+  }
 
   return (
     
     <div>
       <img src={imgSrc} alt="" />
-      <Webcam ref={webcamRef} style={{ visibility: 'hidden', position: 'absolute'}} videoConstraints={videoConstraints}/>
+      <Webcam ref={webcamRef} onUserMedia={handleUserMedia} style={{ visibility: 'hidden', position: 'absolute'}} videoConstraints={videoConstraints}/>
     </div>
   )
 }

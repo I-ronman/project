@@ -19,7 +19,7 @@ const PostureAnalysisPage = () => {
   const [successCount, setSuccessCount] = useState(0);   // 운동 성공 횟수
   const [failCount, setFailCount] = useState(0);         // 운동 실패 횟수
   const [viewKnee,setViewKnee] = useState(false);
-  const [imgSrc,setImgSrc] = useState("");
+  const [reportImg ,setReportImg] = useState("");
   const [badPose,setBadPose] = useState(false)
   const [goodPose,setGoodPose] = useState(false)
   const [viewLegHip,setViewLegHip] = useState(false)
@@ -43,7 +43,7 @@ const PostureAnalysisPage = () => {
 
 
   return (
-    <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount,setBadPose,setGoodPose}}>
+    <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount,setBadPose,setGoodPose,setReportImg}}>
     <PageWrapper>
 
       <div className="posture-container">
