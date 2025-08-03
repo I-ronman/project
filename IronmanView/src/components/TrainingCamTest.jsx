@@ -30,6 +30,7 @@ function TrainingCam({ viewKnee, viewLegHip }) {
     });
 
     wsRef.current.on("short_feed", (data) => {
+      
       console.log("숏피드")
     });
 

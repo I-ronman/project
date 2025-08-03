@@ -7,7 +7,7 @@ import numpy as np
 import mediapipe as mp
 from calcData import get_angle,draw_angle_arc
 import socketio
-from drawSquat import draw
+from draw import draw_squat
 from encoding import encoding,decoding
 
 
@@ -204,7 +204,7 @@ def analyze(data):
         if key == ord("1"): view_upper_body_slope = True if view_upper_body_slope == False else  False
         if key == ord("2"): view_leg_hip_angle = True if view_leg_hip_angle == False else  False
 
-        draw(frame,h,w,lm[11],lm[23],lm[25],lm[27],lm[31],lm[29])
+        draw_squat(frame,h,w,lm[11],lm[23],lm[25],lm[27],lm[31],lm[29])
             
         
         if bad_pose:

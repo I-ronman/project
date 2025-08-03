@@ -5,7 +5,7 @@ from calcData import get_angle,draw_angle_arc
 import math
 class base_line(object):
      def __init__(self,x,y):
-        self.x = x,
+        self.x = x
         self.y = y
      def get(self):
           return self.x,self.y
