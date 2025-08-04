@@ -77,7 +77,6 @@ const ProfileEditPage = () => {
     setUserInfo(prev => ({ ...prev, [name]: value }));
   };
 
-<<<<<<< HEAD
   
   const handleSave = async () => {
     const cleanedData = Object.fromEntries(
@@ -95,13 +94,6 @@ const ProfileEditPage = () => {
   }
 };
 
-=======
-  // 5) 저장
-  const handleSave = () => {
-    console.log('수정된 정보 저장:', userInfo);
-    navigate('/mypage');
-  };
->>>>>>> d4e5c1739ddd9750ba78c470e6f94b009e5a4209
 
   return (
     <PageWrapper>
