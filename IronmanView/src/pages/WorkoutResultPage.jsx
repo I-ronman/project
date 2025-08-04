@@ -16,6 +16,7 @@ const WorkoutResultPage = () => {
   const navigate = useNavigate();
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const radarData = [
     { subject: '상체 근력', value: 60 },
@@ -30,6 +31,11 @@ const WorkoutResultPage = () => {
   const mistakeCount = 9;
 
   const handleFeedbackSubmit = async () => {
+    if (!selectedFeedback) {
+      setErrorMsg('※ 선택 후 완료해주세요.');
+      return;
+    }
+
     try {
       await axios.post(
         'http://localhost:329/web/feedback',
@@ -40,7 +46,13 @@ const WorkoutResultPage = () => {
         },
         { withCredentials: true }
       );
-      navigate('/main');
+
+      // ✅ 약간의 delay 이후 navigate (렌더 타이밍 보장)
+      setIsModalOpen(false);
+      setTimeout(() => {
+        navigate('/main');
+      }, 100); // 약간의 지연 후 이동
+
     } catch (err) {
       console.error('피드백 전송 실패', err);
     }
@@ -90,25 +102,36 @@ const WorkoutResultPage = () => {
           <div className="feedback-modal-overlay">
             <div className="feedback-modal">
               <div className="modal-header">
-                <span className="modal-title">이번 루틴은 어땠나요?</span>
-                <button className="modal-close" onClick={() => navigate('/main')}>×</button>
+                <span className="modal-title" style={{ color: '#111' }}>
+                  이번 루틴은 어땠나요?
+                </span>
+                <button className="modal-close" onClick={() => setIsModalOpen(false)}>×</button>
               </div>
+
               <div className="modal-options">
-                {['쉬웠다', '적당', '힘듦'].map(option => (
+                {['쉬웠다', '적당', '힘듦'].map((option) => (
                   <div
                     key={option}
                     className={`modal-option ${selectedFeedback === option ? 'selected' : ''}`}
-                    onClick={() => setSelectedFeedback(option)}
+                    onClick={() => {
+                      setSelectedFeedback(option);
+                      setErrorMsg('');
+                    }}
                   >
                     {option}
                   </div>
                 ))}
               </div>
-              {selectedFeedback && (
-                <button className="modal-submit" onClick={handleFeedbackSubmit}>
-                  완료
-                </button>
+
+              {errorMsg && (
+                <div className="modal-error">
+                  {errorMsg}
+                </div>
               )}
+
+              <button className="modal-submit" onClick={handleFeedbackSubmit} >
+                완료
+              </button>
             </div>
           </div>
         )}

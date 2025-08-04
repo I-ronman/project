@@ -1,4 +1,4 @@
-/*project/IronmanView/src/styles/MyPage.css*/
+/* ─── 래퍼 & 컨테이너 ─── */
 .mypage-wrapper {
   background-color: #000;
   min-height: 100vh;
@@ -6,131 +6,148 @@
   color: #fff;
   display: flex;
   justify-content: center;
-  align-items: start;
-  max-width: 500%;
-  width: 90%;
+  align-items: flex-start;
 }
-
 .mypage-container {
   background-color: #222;
   border-radius: 16px;
   padding: 20px;
-  max-width: 450px;
-  width: 90%;
+  width: 450px;        /* 고정 폭 유지 */
+  max-width: 90%;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
+/* ─── 프로필 카드 ─── */
 .profile-card {
-  text-align: center;
-  padding: 20px 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #333;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
 }
-
+.profile-avatar {
+  flex-shrink: 0;
+}
 .profile-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
   object-fit: cover;
-  margin-bottom: 12px;
   border: 3px solid #fff;
 }
-
-.profile-name {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 4px;
+.profile-info {
+  flex: 1;
+  margin-left: 16px;
+  display: flex;
+  flex-direction: column;
 }
-
+.profile-name {
+  font-size: 24px;
+  color: #fff;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profile-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 14px;
+  color: #ccc;
+  margin: 8px 0;
+}
+.profile-details span {
+  white-space: nowrap;
+}
+.profile-email {
+  font-size: 14px;
+  color: #bbb;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .profile-edit-btn {
-  margin-top: 10px;
-  padding: 6px 12px;
-  border: none;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 14px;
+  font-size: 14px;
   background-color: #fbd157;
   color: #000;
-  font-weight: bold;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 
+/* ─── 요약 정보 ─── */
 .summary-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
   gap: 12px;
-  text-align: center;
 }
-
 .summary-box {
   background-color: #333;
   padding: 14px 10px;
   border-radius: 10px;
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
 }
-
 .summary-value {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 6px;
 }
-
 .summary-label {
   font-size: 14px;
   color: #ccc;
 }
 
+/* ─── 연속 운동 일수 ─── */
 .progress-card {
   background-color: #333;
   padding: 15px;
-  margin-top: 20px;
   border-radius: 12px;
+  margin-top: 20px;
 }
-
 .progress-title {
   font-weight: bold;
-  margin-bottom: 10px;
 }
-
 .streak {
   font-size: 18px;
   font-weight: bold;
+  margin: 8px 0;
 }
-
 .dot-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
 }
-
 .dot {
   width: 12px;
   height: 12px;
   background-color: #555;
   border-radius: 50%;
 }
-
 .dot.active {
   background-color: #fbd157;
 }
 
+/* ─── 진행률 / 신체 정보 섹션 ─── */
 .progress-section,
 .body-info-section {
   background-color: #333;
   border-radius: 12px;
   margin: 20px auto;
   padding: 20px;
-  position: relative;
   width: 90%;
   max-width: 500px;
-
-  /* ✅ 가운데 정렬을 위한 설정 */
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 .bar-outline {
   width: 100%;
   background-color: #555;
@@ -139,19 +156,16 @@
   margin-top: 10px;
   overflow: hidden;
 }
-
 .bar-fill {
   height: 100%;
   background-color: #fbd157;
 }
-
 .day-box-row {
   display: flex;
   justify-content: space-between;
   margin-top: 16px;
   width: 100%;
 }
-
 .day-box {
   width: 36px;
   height: 36px;
@@ -162,36 +176,29 @@
   justify-content: center;
   align-items: center;
 }
-
 .day-box.today {
   border: 2px solid #fbd157;
   background-color: transparent;
-  color: #fff;
   font-weight: bold;
 }
-
 .day-box.recorded {
   background-color: #88c0d0;
   color: #000;
 }
-
 .calendar-container {
   margin-top: 20px;
   width: 100%;
 }
-
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
   margin-top: 6px;
 }
-
 .calendar-day {
   text-align: center;
   font-weight: bold;
 }
-
 .calendar-date {
   height: 32px;
   border-radius: 4px;
@@ -200,37 +207,31 @@
   justify-content: center;
   align-items: center;
 }
-
 .calendar-date.highlight {
   background-color: #88c0d0;
   color: #000;
 }
-
 .calendar-date.today-border {
   border: 2px solid #fbd157;
   background-color: transparent;
   color: #fff;
 }
-
 .toggle-btn {
-  background-color: transparent;
+  background: transparent;
   color: #fbd157;
   font-size: 20px;
   border: none;
   cursor: pointer;
-  margin: 12px auto 0;
-  display: block;
-  position: relative;
-  z-index: 10;
+  margin-top: 12px;
 }
 
+/* ─── 신체 정보 블러 처리 ─── */
 .body-info-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
-
 .edit-btn {
   background-color: #fbd157;
   color: #000;
@@ -238,19 +239,15 @@
   padding: 6px 12px;
   border-radius: 6px;
   font-weight: bold;
-  cursor: pointer;
 }
-
 .body-info-card {
-  margin-top: 16px;
   background-color: #444;
   padding: 16px;
   border-radius: 8px;
+  width: 100%;
   position: relative;
   z-index: 1;
-  width: 100%;
 }
-
 .blurred {
   filter: blur(3px);
   pointer-events: none;
@@ -258,43 +255,31 @@
   z-index: 0;
 }
 
-.slide-fade-enter {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.slide-fade-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: all 0.4s ease-in-out;
-}
-
-.slide-fade-exit {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.slide-fade-exit-active {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.4s ease-in-out;
-}
-
-.settings-box {
+/* ─── 설정 버튼 ─── */
+.settings-container {
   margin-top: 24px;
-  padding: 16px;
-  background-color: #333;
-  border-radius: 12px;
-  text-align: center;
 }
-
 .settings-btn {
   background-color: #fbd157;
   color: #000;
-  font-weight: bold;
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   width: 100%;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ─── 슬라이드 페이드 애니메이션 ─── */
+.slide-fade-enter {
+  opacity: 0; transform: translateY(20px);
+}
+.slide-fade-enter-active {
+  opacity: 1; transform: translateY(0); transition: all 0.4s ease-in-out;
+}
+.slide-fade-exit {
+  opacity: 1; transform: translateY(0);
+}
+.slide-fade-exit-active {
+  opacity: 0; transform: translateY(-20px); transition: all 0.4s ease-in-out;
 }

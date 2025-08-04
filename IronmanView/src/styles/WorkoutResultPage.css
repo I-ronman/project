@@ -57,6 +57,7 @@
   color: #e63946;
 }
 
+/* 메인 액션 버튼 */
 .action-button {
   margin-top: 1rem;
   background: white;
@@ -144,6 +145,7 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   border: 1.5px solid transparent;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .modal-option:hover {
@@ -154,6 +156,7 @@
   background-color: #3399ff;
   color: white;
   border-color: #3399ff;
+  box-shadow: 0 0 6px rgba(51, 153, 255, 0.5);
 }
 
 /* 완료 버튼 */
@@ -173,4 +176,12 @@
 
 .modal-submit:hover {
   background-color: #ffe08c;
+}
+
+/* 에러 문구 (선택 안했을 때) */
+.modal-error {
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: red;
+  font-weight: 500;
 }
