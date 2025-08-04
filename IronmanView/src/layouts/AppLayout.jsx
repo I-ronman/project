@@ -75,6 +75,10 @@ const getPageDescription = (path) => {
       return '메인화면';
     case '/write':
       return '게시글 작성하기'
+    case '/workoutresult':
+      return '운동 결과'
+    case '/posture-feedback':
+      return '자세확인 페이지'
     default:
       if (path.startsWith('/edit/')) return '게시글 수정페이지';
       return '';

@@ -1,37 +1,37 @@
 // project/IronmanView/src/components/statistics/DonutChart.jsx
 import React from 'react';
-import { PieChart, Pie, Cell } from 'recharts';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
-const COLORS = ['#ff7675', '#74b9ff', '#55efc4'];
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const DonutChart = ({ data }) => {
-  const chartData = data.map(item => ({
-    name: item.name,
-    value: item.percentage
-  }));
+  const labels = data.map(item => item.label);
+  const values = data.map(item => item.value);
+
+  const colors = ['#f87171', '#60a5fa', '#4ade80', '#c084fc', '#fb923c', '#14b8a6'];
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        data: values,
+        backgroundColor: colors.slice(0, values.length),
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    cutout: '70%',
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#fff' } },
+    },
+  };
 
   return (
-    <div className="donut-chart">
-      <PieChart width={180} height={180}>
-        <Pie
-          data={chartData}
-          innerRadius={60}
-          outerRadius={80}
-          dataKey="value"
-        >
-          {chartData.map((entry, idx) => (
-            <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
-      <div className="legend">
-        {chartData.map((item, idx) => (
-          <div key={idx} className="legend-item">
-            <span style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
-            {item.name}
-          </div>
-        ))}
-      </div>
+    <div style={{ width: 180, height: 180 }}>
+      <Pie data={chartData} options={options} />
     </div>
   );
 };

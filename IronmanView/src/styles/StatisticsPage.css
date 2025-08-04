@@ -1,100 +1,104 @@
-/*project/IronmanView/src/styles/StatisticsPage.css*/
 .statistics-container {
-    max-width: 500px;
-    width: 90%;
-    margin: 0 auto;
-    background: rgb(0, 0, 0);
-    padding: 1rem;
-  }
-  
-  .statistics-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .stats-logo {
-    height: 30px;
-  }
-  
-  .settings-icon {
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .section-title {
-    margin: 1rem 0 0.5rem;
-    font-size: 1.2rem;
-  }
-  
-  .date-selector {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-  
-  .date-btn {
-    flex: 1;
-    padding: 0.5rem;
-    background: #eee;
-    border: none;
-    border-radius: 5px;
-    margin: 0 2px;
-    font-size: 0.9rem;
-  }
-  
-  .date-btn.active {
-    background: #fbd157;
-    font-weight: bold;
-  }
-  
-  .chart-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .donut-chart {
-    position: relative;
-  }
-  
-  .legend {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 0.5rem;
-  }
-  
-  .legend-item {
-    font-size: 0.8rem;
-  }
-  
-  .legend-item span {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-right: 5px;
-    border-radius: 50%;
-  }
-  
-  .error-box {
-    background: #f0f0f0;
-    padding: 0.7rem;
-    font-size: 0.85rem;
-    border-radius: 10px;
-    text-align: center;
-    color: black;
-  }
-  
-  .weekly-chart {
-    margin-top: 2rem;
-  }
-  
-  .no-data-box {
-    text-align: center;
-    font-size: 1rem;
-    padding: 2rem;
-    background-color: #f8f8f8;
-    border-radius: 10px;
-  }
-  
+  max-width: 500px;
+  width: 90%;
+  margin: 0 auto;
+  background: rgb(0, 0, 0);
+  padding: 1rem;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.section-title {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.date-selector {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.date-btn {
+  flex: 1;
+  padding: 0.5rem;
+  background: #eee;
+  border: none;
+  border-radius: 5px;
+  margin: 0 2px;
+  font-size: 0.9rem;
+}
+
+.date-btn.active {
+  background: #fbd157;
+  font-weight: bold;
+}
+
+.chart-error-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.donut-chart {
+  width: 50%;
+  max-width: 180px;
+}
+
+.error-box {
+  flex: 1;
+  max-width: 180px;
+  margin-left: 1rem;
+  background: #f0f0f0;
+  padding: 0.7rem;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  text-align: center;
+  color: black;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+  color: white;
+}
+
+.legend-item {
+  font-size: 0.8rem;
+  margin: 2px 6px;
+}
+
+.legend-item span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+.weekly-chart {
+  margin-top: 2rem;
+}
+
+.weekly-chart h3 {
+  color: white;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.no-data-box {
+  text-align: center;
+  font-size: 1rem;
+  padding: 2rem;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  color: black;
+}

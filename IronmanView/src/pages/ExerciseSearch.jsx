@@ -17,6 +17,11 @@ const ExerciseSearch = () => {
     { exerciseId: 2, name: '덤벨 벤치 프레스', part: '상체' },
     { exerciseId: 3, name: '덤벨 풀오버', part: '상체' },
     { exerciseId: 4, name: '펙덱 플라이', part: '상체' },
+    { exerciseId: 5, name: '스쿼트', part: '하체' },
+    { exerciseId: 6, name: '런지', part: '하체' },
+    { exerciseId: 7, name: '윗몸 일으키기', part: '코어' },
+    { exerciseId: 8, name: '버드독', part: '코어' },
+    { exerciseId: 9, name: '사이드 레그 레이즈', part: '코어' },
   ];
 
   const filteredExercises = dummyExercises.filter((exercise) =>
