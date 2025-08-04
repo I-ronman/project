@@ -8,6 +8,20 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 const ProfileEditPage = () => {
+ 
+  useEffect(() => {
+  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+    .then(res => {
+      const { name, email, birthdate, gender  } = res.data;
+      setUser(prev => ({ ...prev, name, email, birthdate, gender }));
+      
+    })
+    .catch(err => {
+      console.error('세션 사용자 정보 불러오기 실패', err);
+      navigate('/login');
+    });
+}, []);
+ 
   const navigate = useNavigate();
   const { user, setUser, surveyDone } = useContext(AuthContext);
 
@@ -63,11 +77,23 @@ const ProfileEditPage = () => {
     setUserInfo(prev => ({ ...prev, [name]: value }));
   };
 
-  // 5) 저장
-  const handleSave = () => {
-    console.log('수정된 정보 저장:', userInfo);
+  
+  const handleSave = async () => {
+    const cleanedData = Object.fromEntries(
+    Object.entries(userInfo).filter(([_, value]) => value !== '')
+  );  
+    try {
+    await axios.post('http://localhost:329/web/api/survey', cleanedData, {
+      withCredentials: true  // 세션 사용 시 필수
+    });
+    console.log('설문 수정 완료:', userInfo);
     navigate('/mypage');
-  };
+  } catch (err) {
+    console.error('설문 수정 실패:', err);
+    alert('정보 수정 중 오류가 발생했습니다.');
+  }
+};
+
 
   return (
     <PageWrapper>

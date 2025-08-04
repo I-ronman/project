@@ -1,17 +1,23 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { io } from "socket.io-client"
+// project/IronmanView/src/components/TrainingCamTest.jsx
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { io } from 'socket.io-client';
 import { CountContext } from '../context/CountContext';
-import axios from 'axios';
 
-function TrainingCam({ viewKnee, viewLegHip }) {
+function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
   const wsRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
-  const { setSuccessCount, setFailCount, setReportImg } = useContext(CountContext);
 
-  const viewKneeRef = useRef(viewKnee)
-  const viewLegHipRef = useRef(viewLegHip)
+  const {
+    setSuccessCount,
+    setFailCount,
+    setReportImg,
+    setCapturedList
+  } = useContext(CountContext);
+
+  const viewKneeRef = useRef(viewKnee);
+  const viewLegHipRef = useRef(viewLegHip);
 
   useEffect(() => {
     viewKneeRef.current = viewKnee;
@@ -23,35 +29,33 @@ function TrainingCam({ viewKnee, viewLegHip }) {
 
     wsRef.current.on("show", (data) => {
       try {
-        setImgSrc(`data:image/jpeg;base64,${data.sendImg}`)
+        setImgSrc(`data:image/jpeg;base64,${data.sendImg}`);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     });
 
-    wsRef.current.on("short_feed", (data) => {
-      
-      console.log("숏피드")
+    wsRef.current.on("short_feed", () => {
+      console.log("숏피드");
     });
 
     wsRef.current.on("report", (data) => {
-      console.log(data)
-      setReportImg(`data:image/jpeg;base64,${data[1]}`)
-      axios.post("localhost:456",data)
-      .then((res)=>{
-        if(data[0] == "badpose"){
-          res.result
-          res.img
-        }
-      })
+      const poseType = data[0];
+      const base64Img = `data:image/jpeg;base64,${data[1]}`;
+
+      const normalized = poseType.toLowerCase();
+      const issue = (normalized.includes('good') || normalized.includes('best')) ? '1' : '0';
+
+      setReportImg(base64Img); // 미리보기 용도
+      setCapturedList(prev => [...prev, { img: base64Img, issue }]);
     });
 
     wsRef.current.on("goodCount", (data) => {
-      setSuccessCount(data)
+      setSuccessCount(data);
     });
 
     wsRef.current.on("badCount", (data) => {
-      setFailCount(data)
+      setFailCount(data);
     });
 
     const sendImage = setInterval(() => {
@@ -91,12 +95,13 @@ function TrainingCam({ viewKnee, viewLegHip }) {
         ref={videoRef}
         src="/videos/sidesquat.mp4"
         onLoadedMetadata={() => videoRef.current.play()}
+        onEnded={onVideoEnd}
         muted
         style={{ display: "none" }}
       />
       <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
-  )
+  );
 }
 
-export default TrainingCam
+export default TrainingCamTest;

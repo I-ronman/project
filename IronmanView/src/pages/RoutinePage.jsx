@@ -83,11 +83,15 @@ const RoutinePage = () => {
 };
 
 
-  const handleChatbotNavigate = () => {
-    navigate('/chatbot', { state: { from: '/routine' } });
-  };
+const handleChatbotNavigate = () => {
+  navigate('/chatbot', { state: { from: '/routine' } });
+};
 
-  return (
+const handleStartRoutine = (routine) => {
+navigate('/postureanalysis', { state: { routine } });
+};
+ 
+return (
     <PageWrapper>
       <div className="routine-container">
         <div className="routine-tab">
@@ -134,7 +138,7 @@ const RoutinePage = () => {
                   <p>💪 {r.exercises.length > 0 ? r.exercises[0].exerciseName : '운동없음'}</p>
                   <button className="start-routine-btn"
                     onClick={(e) => {
-                      e.stopPropagation();
+                      handleStartRoutine(r);
                     }}
                   >루틴 시작하기</button>
                   <div className="routine-card-click-layer" onClick={() => handleRoutineClick(r)} />
