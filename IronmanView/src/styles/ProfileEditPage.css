@@ -1,142 +1,175 @@
 /* project/IronmanView/src/styles/ProfileEditPage.css */
 
-.profile-edit-wrapper {
-    max-width: 430px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
-  
-  .edit-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-    max-width: 500px;
-    margin:  auto;       /* 가운데 정렬 */
-    box-sizing: border-box;
-    margin-top: 10px;
-  }
-  
-  .edit-profile-section {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    width: 80%;
-    max-width: 500px;
-  }
-  
-  .profile-photo-section img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ddd;
-  }
-  
-  .profile-photo-section input[type="file"] {
-    font-size: 14px;
-  }
-  
-  .profile-basic-info {
-    width: 100%;
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.05);
-    max-width: 430px;
-    color: #000;
-  }
-  
-  .profile-basic-info div {
-    margin-bottom: 10px;
-  }
-  
-  .profile-basic-info label {
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .profile-basic-info input {
-    width: 100%;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
-    color: #555;
-  }
-  
-  .profile-basic-info input[disabled] {
-    background-color: #e0e0e0;
-    color: #999;
-  }
-  
-  .profile-body-info {
-    position: relative;
-    width: 100%;
-    background: #f1f1f1;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.05);
-    margin-bottom: 30px;
-  }
-  
-  .profile-body-info.blur {
-    filter: blur(3px);
-    pointer-events: none;
-  }
-  
-  .profile-body-info label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 6px;
-    font-weight: bold;
-  }
-  
-  .profile-body-info input {
-    width: 100%;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-bottom: 12px;
-  }
-  
-  .blur-overlay-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255,255,255,0.9);
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #555;
-    text-align: center;
-    z-index: 10;
-  }
-  
-  .save-button {
-    width: 100%;
-    background-color: #FBD157;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 16px;
-    color: #333;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .save-button:hover {
-    background-color: #f8c93a;
-  }
-  
+/* 1) 페이지 상단 여백 축소 */
+.profile-edit-container {
+  margin: 32px auto 0;    /* 헤더 바로 아래에 붙도록 줄임 */
+  max-width: 480px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* ── 프로필 헤더 카드 ── */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #222;                    /* 신체정보 카드와 동일한 다크 배경 */
+  padding: 16px;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+/* 프로필 이미지 컨테이너 (120×120) */
+.profile-header .image-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* 이미지와 오버레이를 컨테이너에 꽉 채우기 */
+.profile-header .profile-img,
+.profile-header .image-hover-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+/* 실제 프로필 이미지 */
+.profile-header .profile-img {
+  object-fit: cover;
+  border: 2px solid #444;              /* 다크 배경에 어울리게 테두리 색 변경 */
+  cursor: pointer;
+}
+
+/* 호버 시 뜨는 “사진 변경하기” 오버레이 */
+.profile-header .image-hover-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.profile-header .image-container:hover .image-hover-overlay {
+  opacity: 1;
+}
+
+/* 기본정보 카드: 다크 배경에 맞춰 텍스트 색상 조정 */
+.profile-header .basic-info-card {
+  flex: 1;
+  background: transparent;              /* 카드 배경은 헤더 카드가 담당 */
+  padding: 0;
+  box-shadow: none;
+}
+.profile-header .basic-info-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #fff;                          /* 다크 배경에 대비되는 흰색 텍스트 */
+}
+
+/* ── 신체정보 카드 ── */
+.body-info-card {
+  margin-top: 32px;
+  padding: 24px;
+  background: #222;
+  color: #fff;
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+.body-info-card.blurred {
+  filter: blur(4px);
+  pointer-events: none;
+}
+.body-info-card h3 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* ── 입력 그룹 ── */
+.field-group {
+  margin-bottom: 20px;
+}
+.field-group label,
+.field-group legend {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.field-group input[type="number"] {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #333;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+/* ── 라디오 그룹 ── */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #111;
+  box-sizing: border-box;
+}
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.radio-group input {
+  accent-color: #FBD157;
+}
+
+/* ── 설문 미완료 오버레이 ── */
+.overlay-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.9);
+  padding: 14px 24px;
+  border-radius: 8px;
+  color: #333;
+  font-weight: 700;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* ── 저장 버튼 ── */
+.save-button {
+  display: block;
+  width: 100%;
+  margin-top: 32px;
+  padding: 14px 0;
+  background: #FBD157;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+.save-button:hover {
+  background: #e6b845;
+}
