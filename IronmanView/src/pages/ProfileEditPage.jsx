@@ -65,10 +65,23 @@ const ProfileEditPage = () => {
     }));
   };
 
-  const handleSave = () => {
-    console.log('수정된 정보 저장:', userInfo);
-    navigate('/mypage'); // 저장 후 마이페이지로 이동
-  };
+  
+  const handleSave = async () => {
+    const cleanedData = Object.fromEntries(
+    Object.entries(userInfo).filter(([_, value]) => value !== '')
+  );  
+    try {
+    await axios.post('http://localhost:329/web/api/survey', cleanedData, {
+      withCredentials: true  // 세션 사용 시 필수
+    });
+    console.log('설문 수정 완료:', userInfo);
+    navigate('/mypage');
+  } catch (err) {
+    console.error('설문 수정 실패:', err);
+    alert('정보 수정 중 오류가 발생했습니다.');
+  }
+};
+
 
   return (
     <PageWrapper>

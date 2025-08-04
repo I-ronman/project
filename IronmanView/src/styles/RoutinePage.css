@@ -327,3 +327,25 @@
 .start-routine-btn:hover {
   background-color: #666;
 }
+
+.routine-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.routine-card-click-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* 기본 */
+}
+
+.start-routine-btn {
+  position: relative;
+  z-index: 2;
+}
+.delete-btn {
+  position: relative;
+  z-index: 2;
+}

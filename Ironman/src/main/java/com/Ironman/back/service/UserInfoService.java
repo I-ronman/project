@@ -18,14 +18,15 @@ public class UserInfoService {
         UserInfoEntity userInfo = userInfoRepository.findByEmail(email)
             .orElse(UserInfoEntity.builder().email(email).build());
 
-        userInfo.setHeight(dto.getHeight());
-        userInfo.setWeight(dto.getWeight());
-        userInfo.setActivityLevel(dto.getActivityLevel());
-        userInfo.setPushUp(dto.getPushUp());
-        userInfo.setPlank(dto.getPlank());
-        userInfo.setSquat(dto.getSquat());
-        userInfo.setPliability(dto.getPliability());
-
+        if (dto.getHeight() != null) userInfo.setHeight(dto.getHeight());
+        if (dto.getWeight() != null) userInfo.setWeight(dto.getWeight());
+        if (dto.getGoalWeight() != null) userInfo.setGoalWeight(dto.getGoalWeight());
+        if (dto.getPushUp() != null) userInfo.setPushUp(dto.getPushUp());
+        if (dto.getPlank() != null) userInfo.setPlank(dto.getPlank());
+        if (dto.getSquat() != null) userInfo.setSquat(dto.getSquat());
+        if (dto.getPliability() != null) userInfo.setPliability(dto.getPliability());
+        if (dto.getWorkoutFrequency() != null) userInfo.setWorkoutFrequency(dto.getWorkoutFrequency());
+        if (dto.getActivityLevel() != null) userInfo.setActivityLevel(dto.getActivityLevel());
         userInfoRepository.save(userInfo);
     }
 }
