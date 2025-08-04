@@ -55,7 +55,6 @@
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  
 }
 
 .exercise-item.selected {
@@ -76,18 +75,18 @@
   color: #ccc;
 }
 
-.button-row {
+/* 버튼 영역 */
+.exercise-button-row {
   display: flex;
   justify-content: space-between;
-  margin: 0 auto 40px;
-  margin-bottom: 40px;
-  padding:0;
-  width: 50%;
-  
+  gap: 12px;
+  width: 90%;
+  max-width: 500px;
+  margin: 40px auto;
 }
 
-.back-button,
-.save-button {
+.exercise-back-button,
+.exercise-save-button {
   flex: 1;
   padding: 12px 0;
   font-size: 14px;
@@ -95,31 +94,29 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  margin:0;
 }
 
-.back-button {
+.exercise-back-button {
   background-color: white;
   color: black;
-  margin-right: 10px;
 }
 
-.save-button {
+.exercise-save-button {
   background-color: #ccff00;
   color: black;
 }
 
-.save-button:disabled {
+.exercise-save-button:disabled {
   background-color: #999;
   cursor: not-allowed;
 }
 
-.back-button:hover {
-  background-color: #e61616; /* 회색 버튼 hover 시 */
+.exercise-back-button:hover {
+  background-color: #e61616;
   color: white;
 }
 
-.save-button:hover {
-  background-color: #a5cc00; /* 노란 버튼 hover 시 */
+.exercise-save-button:hover {
+  background-color: #a5cc00;
   color: white;
 }

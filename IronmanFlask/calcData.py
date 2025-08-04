@@ -43,8 +43,8 @@ def draw_angle_arc(img,h,w, a, b, c,ang, radius=40, color=(255, 255, 0)):
     if sweep < 180:
         if start > end:
             start,end = (start-360),end
-    print(sweep)
-    print(start,end)
+    # print(sweep)
+    # print(start,end)
     # 중심 좌표를 픽셀 좌표로 변환
     center = to_pixel(b, h, w)
     overLay = img.copy()

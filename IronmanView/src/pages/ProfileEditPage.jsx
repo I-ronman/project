@@ -13,6 +13,7 @@ const ProfileEditPage = () => {
     .then(res => {
       const { name, email, birthdate, gender  } = res.data;
       setUser(prev => ({ ...prev, name, email, birthdate, gender }));
+      
     })
     .catch(err => {
       console.error('세션 사용자 정보 불러오기 실패', err);
@@ -21,7 +22,7 @@ const ProfileEditPage = () => {
 }, []);
  
   const navigate = useNavigate();
-  const {user, setUser} = useContext(AuthContext);
+  const {user, setUser, surveyDone} = useContext(AuthContext);
   
   // 초기 사용자 정보 (예시)
   const [userInfo, setUserInfo] = useState({
@@ -40,6 +41,10 @@ const ProfileEditPage = () => {
 
   const [hasSurvey, setHasSurvey] = useState(false); // 설문 여부 플래그
   const [previewImage, setPreviewImage] = useState(userInfo.profileImage);
+
+  useEffect(()=>{
+    setHasSurvey(surveyDone);
+  },[surveyDone]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

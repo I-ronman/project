@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
 
 const StepFinal = ({ surveyData }) => {
   const navigate = useNavigate();
+  const {completeSurvey} = useContext(AuthContext);
 
   const handleFinish = async () => {
     try {
@@ -16,7 +19,7 @@ const StepFinal = ({ surveyData }) => {
       });
 
       if (response.ok) {
-        localStorage.setItem('surveyCompleted', 'true');
+        completeSurvey();
         navigate('/routine');
       } else {
         alert('설문 전송 실패');

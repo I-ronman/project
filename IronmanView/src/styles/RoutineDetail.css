@@ -1,4 +1,5 @@
-/*project/IronmanView/src/styles/RoutineDetail.css*/
+/* project/IronmanView/src/styles/RoutineDetail.css */
+
 .routine-detail-wrapper {
   background: black;
   min-height: 100vh;
@@ -21,8 +22,8 @@
 .routine-detail-header {
   display: flex;
   flex-direction: column;
-  align-items: center; /* 수평 가운데 정렬 */
-  gap: 12px; /* 요소 간 간격 */
+  align-items: center;
+  gap: 12px;
   margin-bottom: 10px;
 }
 
@@ -46,6 +47,7 @@
 }
 
 .ex-card {
+  position: relative;
   background: #222;
   border-radius: 12px;
   padding: 14px;
@@ -58,8 +60,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  width: 100%;           /* 부모 기준 너비 꽉 채우기 */
-  justify-content: space-between;  /* 왼쪽 이미지 - 오른쪽 텍스트 분리 */
+  width: 100%;
 }
 
 .ex-info img {
@@ -68,11 +69,12 @@
   object-fit: cover;
   border-radius: 6px;
 }
+
 .ex-text {
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* ← 오른쪽 정렬 */
-  text-align: right;     /* ← 텍스트도 오른쪽 정렬 */
+  align-items: flex-start;
+  text-align: left;
 }
 
 .ex-name {
@@ -85,24 +87,17 @@
   color: #aaa;
 }
 
-.save-btn {
-  margin-top: 24px;
-  background: #d7fb07;
-  border: none;
-  padding: 14px;
-  border-radius: 10px;
-  color: black;
-  font-weight: bold;
-  font-size: 16px;
-}
-.button-row {
+/* 버튼 그룹 영역 */
+.routine-button-row {
   display: flex;
   justify-content: space-between;
   margin-top: 24px;
   gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
-.button-row button {
+.routine-button-row button {
   flex: 1;
   padding: 12px;
   font-size: 16px;
@@ -112,16 +107,48 @@
   cursor: pointer;
 }
 
-.back-button {
+/* 개별 버튼 스타일 */
+.routine-add-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.routine-add-button:hover {
+  background-color: #45c146;
+  color: white;
+}
+
+.routine-back-button {
   background-color: #fff;
   color: black;
   border: 1px solid #ccc;
 }
 
-.save-button {
-  background-color: #d7fb07;
+.routine-back-button:hover {
+  background-color: #e61616;
+  color: white;
+}
+
+.routine-save-button {
+  background-color: #ccff00;
   color: black;
 }
+
+.routine-save-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.routine-save-button:disabled:hover {
+  background-color: #bbb;
+  color: #666;
+}
+
+.routine-save-button:hover:not(:disabled) {
+  background-color: #a5cc00;
+  color: white;
+}
+
 .routine-name-input {
   font-size: 20px;
   font-weight: bold;
@@ -130,9 +157,8 @@
   color: white;
   text-align: center;
   width: 100%;
-  margin-bottom: 8px;
+  margin: 10px 0 8px;
   outline: none;
-  margin-top: 10px;
 }
 
 .routine-description-input {
@@ -146,16 +172,15 @@
   background-color: #333;
   color: white;
   font-size: 14px;
-
 }
 
 .ex-options {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  gap: 8px;
   margin-top: 10px;
-  width: 100%;
-  flex-wrap: wrap;
+  width: 90%;
+  flex-wrap: nowrap;
 }
 
 .ex-options label {
@@ -164,12 +189,14 @@
   align-items: flex-start;
   font-size: 13px;
   color: #eee;
-  flex: 1; /* 균등 분배 */
-  min-width: 90px;
+  flex: 1;
+  min-width: 60px;
+  max-width: 90px;
 }
 
 .ex-options input {
   width: 100%;
+  max-width: 100%;
   padding: 4px 6px;
   font-size: 14px;
   border-radius: 6px;
@@ -179,12 +206,19 @@
   margin-top: 4px;
 }
 
-.add-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 8px 16px;
-  margin: 0 10px;
+.ex-remove-btn {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: none;
   border: none;
-  border-radius: 4px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
   cursor: pointer;
+  z-index: 10;
+}
+
+.ex-remove-btn:hover {
+  color: #ff4444;
 }

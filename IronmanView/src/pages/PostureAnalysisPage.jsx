@@ -7,9 +7,11 @@ import GuideVideoPlayer from '../components/posture/GuideVideoPlayer';
 import VideoFeed from '../components/posture/VideoFeed';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
-import TrainingCam from '../components/TrainingCam';
+import TrainingCamTest from '../components/TrainingCamTest';
 import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
+import TrainingCam from '../components/TrainingCam';
+
 
 
 const PostureAnalysisPage = () => {
@@ -19,6 +21,10 @@ const PostureAnalysisPage = () => {
   const [successCount, setSuccessCount] = useState(0);   // 운동 성공 횟수
   const [failCount, setFailCount] = useState(0);         // 운동 실패 횟수
   const [viewKnee,setViewKnee] = useState(false);
+  const [reportImg ,setReportImg] = useState("");
+  const [badPose,setBadPose] = useState(false)
+  const [goodPose,setGoodPose] = useState(false)
+  const [viewLegHip,setViewLegHip] = useState(false)
   const navigate = useNavigate();
 
   const toggleFeedback = () => setIsFeedbackOn((prev) => !prev);
@@ -39,7 +45,7 @@ const PostureAnalysisPage = () => {
 
 
   return (
-      <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount}}>
+    <CountContext.Provider value={{successCount,setSuccessCount,failCount,setFailCount,setBadPose,setGoodPose,setReportImg}}>
     <PageWrapper>
 
       <div className="posture-container">
@@ -69,15 +75,18 @@ const PostureAnalysisPage = () => {
             ))}
           </div>
           <div className='posture-stats'>
-            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button' style={viewKnee?{backgroundColor:"gray"}:undefined}>무릎각도보기</button>
+            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button' style={viewKnee?{backgroundColor:"gray"}:undefined}>무릎 발끝 수직선 체크</button>
             
-            <button className="stat-box" onClick={()=>{viewKnee?setViewKnee(false):setViewKnee(true)}} type='button'>무릎각도보기</button>
+            <button className="stat-box" onClick={()=>{viewLegHip?setViewLegHip(false):setViewLegHip(true)
+              console.log(viewLegHip)
+            }} type='button' style={viewLegHip?{backgroundColor:"gray"}:undefined}>무릎 허리 각도보기</button>
           </div>
+          <img src={reportImg} alt="" />
           <GuideVideoPlayer videoUrl={selectedVideo} />
         </div>
 
         <div className="posture-right">
-          <TrainingCam viewKnee = {viewKnee}></TrainingCam>
+          <TrainingCam viewKnee = {viewKnee} viewLegHip = {viewLegHip} ></TrainingCam>
         </div>
       </div>
 

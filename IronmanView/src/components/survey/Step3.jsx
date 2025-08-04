@@ -3,13 +3,15 @@ import './Step3.css';
 
 const Step3 = ({ weight, goalWeight, setGoalWeight, nextStep }) => {
   const parsedWeight = parseFloat(weight);
-  const [inputValue, setInputValue] = useState(parseFloat(goalWeight) || parsedWeight);
+  const [inputValue, setInputValue] = useState(goalWeight?.toString() || parsedWeight.toString());
 
   const handleChange = (e) => {
-    const value = parseFloat(e.target.value);
-    if (!isNaN(value)) {
-      setInputValue(value);
-      setGoalWeight(value);
+    const value = e.target.value;
+    setInputValue(value); // 문자열 상태로 유지
+
+    const parsed = parseFloat(value);
+    if (!isNaN(parsed)) {
+      setGoalWeight(parsed); // 유효한 숫자일 경우만 goalWeight 업데이트
     }
   };
 

@@ -28,12 +28,6 @@ const RoutinePage = () => {
     fetchRoutines();
   }, []);
 
-  const handleSurveyReset = () => {
-  console.log("설문 초기화");
-  // 초기화 로직이 있다면 여기에 작성
-};
-
-
   const handleRoutineClick = (routine) => {
   navigate('/routinedetail', {
     state: {
@@ -115,7 +109,6 @@ const RoutinePage = () => {
                 )}
                 <button className="survey-btn" onClick={() => navigate('/schedulepage')}>스케쥴 확인하기</button>
                 {/* ✅ 임시 초기화 버튼 */}
-                <button className="survey-btn" onClick={handleSurveyReset}>설문 토글</button>
             
               </div>
             </div>

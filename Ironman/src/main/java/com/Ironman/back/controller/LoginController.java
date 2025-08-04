@@ -60,6 +60,5 @@ public class LoginController {
 	    return ResponseEntity.ok(UserDto.from(user));
 	}
 
-	
-	
+
 }

@@ -40,6 +40,8 @@ const Header = () => {
 
         {isMenuOpen && (
           <div className="side-menu">
+            {/* 닫기 버튼 */}
+            <div className="close-btn" onClick={() => setIsMenuOpen(false)}>×</div>
             <div className="menu-item" onClick={() => handleMove('/routine')}>
               <span>운동하기</span>
             </div>
@@ -58,13 +60,20 @@ const Header = () => {
             <div className="menu-item" onClick={() => handleMove('/survey')}>
               <span>설문조사</span>
             </div>
+            <div className="menu-item" onClick={() => handleMove('/mypage')}>
+              <span>마이 페이지</span>
+            </div>
           </div>
         )}
       </div>
 
       {/* 가운데: 로고 */}
       <div className="header-center" onClick={() => navigate('/main')}>
-        I언맨
+        <img
+          src="/images/ironman_logo.png"
+          alt="Ironman 로고"
+          className="logo_img"
+        />
       </div>
 
       {/* 오른쪽: 로그아웃 + 프로필 */}
