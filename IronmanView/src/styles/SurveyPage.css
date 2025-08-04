@@ -55,6 +55,12 @@
   position: absolute;
   right: 20px;
   white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.right-label:hover {
+  transform: scale(1.05);
 }
 
 
