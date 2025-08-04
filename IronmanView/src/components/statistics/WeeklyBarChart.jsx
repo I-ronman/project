@@ -1,26 +1,62 @@
-// project/IronmanView/src/components/statistics/WeeklyBarChart.jsx
+// src/components/statistics/WeeklyBarChart.jsx
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-const COLORS = ['#ff7675', '#74b9ff', '#55efc4'];
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const WeeklyBarChart = ({ data }) => {
-  return (
-    <div className="weekly-chart">
-      <h3>주간 운동 히스토리</h3>
-      <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={data}>
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          {['스쿼트', '플랭크', '푸쉬업'].map((type, idx) => (
-            <Bar key={type} dataKey={type} stackId="a" fill={COLORS[idx % COLORS.length]} />
-          ))}
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
+const WeeklyBarChart = ({ stats, exerciseColors }) => {
+  if (!stats || stats.length === 0) return <div className="no-data-box">주간 데이터 없음</div>;
+
+  const labels = ['금', '토', '일', '월', '화', '수', '목'];
+
+  // 운동 이름 리스트 추출
+  const exerciseNames = Object.keys(exerciseColors);
+
+  // 데이터셋 구성
+  const datasets = exerciseNames.map((exercise) => ({
+    label: exercise,
+    data: stats.map((day) => day.chartData?.[exercise] || 0),
+    backgroundColor: exerciseColors[exercise] || 'gray',
+  }));
+
+  const data = {
+    labels,
+    datasets,
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: 'white',
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: 'white',
+        },
+      },
+      y: {
+        ticks: {
+          color: 'white',
+        },
+      },
+    },
+  };
+
+  return <Bar data={data} options={options} />;
 };
 
 export default WeeklyBarChart;

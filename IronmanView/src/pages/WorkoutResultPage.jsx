@@ -1,8 +1,7 @@
-// WorkoutResultPage.jsx
-
 import React, { useState } from 'react';
 import '../styles/WorkoutResultPage.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Radar,
   RadarChart,
@@ -16,6 +15,7 @@ import PageWrapper from '../layouts/PageWrapper';
 const WorkoutResultPage = () => {
   const navigate = useNavigate();
   const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const radarData = [
     { subject: '상체 근력', value: 60 },
@@ -29,34 +29,29 @@ const WorkoutResultPage = () => {
   const caloriesBurned = 321;
   const mistakeCount = 9;
 
-  const handleFeedbackClick = (feedback) => {
-    setSelectedFeedback(feedback);
-    // TODO: POST 요청 연동
+  const handleFeedbackSubmit = async () => {
+    try {
+      await axios.post(
+        'http://localhost:329/web/feedback',
+        {
+          feedback: selectedFeedback,
+          calories: caloriesBurned,
+          mistakes: mistakeCount,
+        },
+        { withCredentials: true }
+      );
+      navigate('/main');
+    } catch (err) {
+      console.error('피드백 전송 실패', err);
+    }
   };
 
   return (
     <PageWrapper>
       <div className="workout-result-container">
         <div className="result-card">
-          {/* 피드백 (모바일) */}
-          <div className="routine-feedback-mobile">
-            <p className="routine-title">이번 루틴은 어땠나요?</p>
-            <div className="routine-options">
-              {['쉬웠다', '적당', '힘듦'].map(option => (
-                <span
-                  key={option}
-                  className={`feedback-option ${selectedFeedback === option ? 'selected' : ''}`}
-                  onClick={() => handleFeedbackClick(option)}
-                >
-                  {option}
-                </span>
-              ))}
-            </div>
-          </div>
-
           <h2>오늘의 운동 결과</h2>
 
-          {/* 레이더 차트 */}
           <div className="radar-wrapper">
             <ResponsiveContainer width="100%" height={250}>
               <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
@@ -74,7 +69,6 @@ const WorkoutResultPage = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* 운동 정보 */}
           <div className="info-box calories">
             <span>소모 칼로리</span>
             <span>{caloriesBurned}kcal</span>
@@ -84,31 +78,40 @@ const WorkoutResultPage = () => {
             <span>{mistakeCount}회</span>
           </div>
 
-          {/* 버튼들 */}
           <button className="action-button" onClick={() => navigate('/posture-feedback')}>
             자세 확인하기
           </button>
-          <button className="action-button" onClick={() => navigate('/main')}>
+          <button className="action-button" onClick={() => setIsModalOpen(true)}>
             홈으로 돌아가기
           </button>
-          
         </div>
 
-        {/* 웹용 피드백 */}
-        <div className="routine-feedback-web">
-          <p className="routine-title">이번 루틴은<br />어땠나요?</p>
-          <div className="routine-options">
-            {['쉬웠다', '적당', '힘듦'].map(option => (
-              <span
-                key={option}
-                className={`feedback-option ${selectedFeedback === option ? 'selected' : ''}`}
-                onClick={() => handleFeedbackClick(option)}
-              >
-                {option}
-              </span>
-            ))}
+        {isModalOpen && (
+          <div className="feedback-modal-overlay">
+            <div className="feedback-modal">
+              <div className="modal-header">
+                <span className="modal-title">이번 루틴은 어땠나요?</span>
+                <button className="modal-close" onClick={() => navigate('/main')}>×</button>
+              </div>
+              <div className="modal-options">
+                {['쉬웠다', '적당', '힘듦'].map(option => (
+                  <div
+                    key={option}
+                    className={`modal-option ${selectedFeedback === option ? 'selected' : ''}`}
+                    onClick={() => setSelectedFeedback(option)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+              {selectedFeedback && (
+                <button className="modal-submit" onClick={handleFeedbackSubmit}>
+                  완료
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </PageWrapper>
   );

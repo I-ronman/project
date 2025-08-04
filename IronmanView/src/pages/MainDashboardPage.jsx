@@ -1,49 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/MainDashboardPage.css';
-import logoImage from '../assets/logo.png';
-import defaultProfile from '../images/default_profile.jpg';
 import { AuthContext } from '../context/AuthContext';
-import { useContext } from 'react';
 import axios from 'axios';
+import defaultProfile from '../images/default_profile.jpg'; // 필요 시 경로 수정
+
+// ✅ useState 위에 위치
+const getWeekStart = (date) => {
+  const day = date.getDay();
+  const diff = date.getDate() - day;
+  return new Date(date.setDate(diff));
+};
 
 const MainDashboardPage = () => {
-
-  useEffect(() => {
-  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
-    .then(res => {
-      const { name, email } = res.data;
-      setUser(prev => ({ ...prev, name, email }));
-    })
-    .catch(err => {
-      console.error('세션 사용자 정보 불러오기 실패', err);
-      navigate('/login');
-    });
-}, []);
-  
-
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
-
-  const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(new Date()));
-  const [calendarData, setCalendarData] = useState([
-    { date: '2025-07-21', exercised: false, hasRoutine: false },
-    { date: '2025-07-22', exercised: true, hasRoutine: true },
-    { date: '2025-07-23', exercised: false, hasRoutine: true },
-    { date: '2025-07-24', exercised: true, hasRoutine: true },
-    { date: '2025-07-25', exercised: false, hasRoutine: false },
-    { date: '2025-07-26', exercised: true, hasRoutine: false },
-    { date: '2025-07-27', exercised: false, hasRoutine: true },
-    { date: '2025-07-28', exercised: true, hasRoutine: true },
-    { date: '2025-07-29', exercised: false, hasRoutine: false },
-    { date: '2025-07-30', exercised: false, hasRoutine: false },
-    { date: '2025-07-31', exercised: true, hasRoutine: true },
-    { date: '2025-08-01', exercised: false, hasRoutine: false },
-  ]);
-
+  const [calendarData, setCalendarData] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
-
+  const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(new Date()));
   const [posts, setPosts] = useState([
     {
       title: "오늘 첫 운동 완료했어요!",
@@ -55,51 +30,41 @@ const MainDashboardPage = () => {
     },
   ]);
 
-  useEffect(()=> {
-    console.log("전역 로그인 유저 정보:", user);
-  }, [user]);
-
   useEffect(() => {
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    const todayRoutine = calendarData.find((d) => d.date === todayStr && d.hasRoutine);
-    if (todayRoutine) {
-      setNotifications([
-        {
-          time: '07:00',
-          message: `${todayStr}에 오늘의 루틴이 있습니다.`,
-          read: false,
-        },
-      ]);
-    }
+    axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+      .then(res => {
+        const { name, email, preferences = [], todayRoutine, hasSurvey, unreadNotifications = 0 } = res.data;
+        setUser(prev => ({ ...prev, name, email, preferences, todayRoutine, hasSurvey, unreadNotifications }));
+      })
+      .catch(() => navigate('/login'));
   }, []);
 
-  const handleLogout = () => navigate('/login');
-  const handleNotificationClick = () => {
-    setShowNotifications((prev) => !prev);
-    setUser((prev) => ({ ...prev, unreadNotifications: 0 }));
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  };
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    setCalendarData([
+      { date: today, exercised: true, hasRoutine: true },
+    ]);
+  }, []);
 
-  const goToRoutineStart = () => {
-    if (user.todayRoutine) {
-      navigate('/postureanalysis', { state: { routine: user.todayRoutine } });
+  useEffect(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const todayRoutine = calendarData.find(d => d.date === todayStr && d.hasRoutine);
+    if (todayRoutine) {
+      setNotifications([{ time: '07:00', message: `${todayStr}에 오늘의 루틴이 있습니다.`, read: false }]);
     }
-  };
+  }, [calendarData]);
 
-  const handleDateClick = () => navigate('/schedulepage');
+  const handleNotificationClick = () => {
+    setShowNotifications(prev => !prev);
+    setUser(prev => ({ ...prev, unreadNotifications: 0 }));
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
 
   const changeWeek = (offset) => {
     const newStart = new Date(currentWeekStart);
-    newStart.setDate(newStart.getDate() + offset * 7);
+    newStart.setDate(currentWeekStart.getDate() + offset * 7);
     setCurrentWeekStart(getWeekStart(newStart));
   };
-
-  function getWeekStart(date) {
-    const day = date.getDay();
-    const diff = date.getDate() - day;
-    return new Date(date.setDate(diff));
-  }
 
   const getWeekDates = () => {
     const weekDates = [];
@@ -116,21 +81,60 @@ const MainDashboardPage = () => {
     const dateStr = d.toISOString().split('T')[0];
     return {
       ...calendarData.find((c) => c.date === dateStr) || { date: dateStr, exercised: false, hasRoutine: false },
-      dayLabel: `${d.getDate()}일`
+      dayLabel: `${d.getDate()}일`,
     };
   });
 
-  const completedDays = weekData.filter((d) => d.exercised).length;
+  const completedDays = weekData.filter(d => d.exercised).length;
   const totalDays = weekData.length;
   const percentage = Math.round((completedDays / totalDays) * 100);
   const yearMonthLabel = `${currentWeekStart.getFullYear()}년 ${currentWeekStart.getMonth() + 1}월`;
 
+  const DASHBOARD_COMPONENTS = {
+    '운동 루틴 추천': (
+      <div className="dashboard-card dark-card clickable-card" onClick={() => navigate('/routine')} key="routine">
+        <p>루틴 짜기/추천받기</p>
+        <span>루틴을 직접 짜거나 추천받아 보세요.</span>
+      </div>
+    ),
+    '실시간 자세 교정': (
+      <div className="dashboard-card dark-card clickable-card" onClick={() => navigate('/postureanalysis')} key="posture">
+        <p>실시간 자세 교정</p>
+        <span>카메라를 통해 자세를 분석하고 피드백을 드려요.</span>
+      </div>
+    ),
+    '챗봇 서비스': (
+      <div className="dashboard-card dark-card clickable-card" onClick={() => navigate('/chatbot')} key="chatbot">
+        <p>AI 챗봇</p>
+        <span>운동 및 건강 관련 질문을 도와드려요.</span>
+      </div>
+    ),
+    '통계 보기': (
+      <div className="dashboard-card dark-card clickable-card" onClick={() => navigate('/statistics')} key="statistics">
+        <p>📊 통계 보기</p>
+        <span>이번 주 운동 결과를 확인해보세요.</span>
+      </div>
+    )
+  };
+
+  const orderedComponents = [];
+  const fallbackComponents = [];
+
+  Object.entries(DASHBOARD_COMPONENTS).forEach(([key, comp]) => {
+    if (user?.preferences?.includes(key)) {
+      orderedComponents.push(comp);
+    } else if (key === '통계 보기') {
+      orderedComponents.push(comp);
+    } else {
+      fallbackComponents.push(comp);
+    }
+  });
+
   return (
     <div className="main-container dark-background">
-      
       <div className="profile-card dark-card clickable-card" onClick={() => navigate('/mypage')}>
         <div className="profile-info">
-          <img src={user?.profileImage || './images/default_profile.jpg'} alt="프로필" className="profile-img" />
+          <img src={user?.profileImage || defaultProfile} alt="프로필" className="profile-img" />
           <div className="profile-texts">
             <p className="welcome-text">어서오세요!</p>
             <p className="username-text">{user?.name || '홍길동'} 님</p>
@@ -138,33 +142,26 @@ const MainDashboardPage = () => {
         </div>
         <div className="notification-icon" onClick={(e) => { e.stopPropagation(); handleNotificationClick(); }}>
           🔔
-          {user && user.unreadNotifications > 0 && (
-            <span className="badge">{user.unreadNotifications}</span>
-          )}
+          {user?.unreadNotifications > 0 && <span className="badge">{user.unreadNotifications}</span>}
           {showNotifications && (
             <div className="notification-dropdown">
-              {notifications.length === 0 ? (
-                <p>알림 없음</p>
-              ) : (
-                notifications.map((n, idx) => (
-                  <p key={idx}>⏰ {n.time} - {n.message}</p>
-                ))
-              )}
+              {notifications.length === 0 ? <p>알림 없음</p> :
+                notifications.map((n, idx) => <p key={idx}>⏰ {n.time} - {n.message}</p>)}
             </div>
           )}
         </div>
       </div>
 
-      <div className="routine-card dark-card clickable-card" onClick={goToRoutineStart}>
+      <div className="routine-card dark-card clickable-card" onClick={() => {
+        if (user?.todayRoutine) navigate('/postureanalysis', { state: { routine: user.todayRoutine } });
+      }}>
         <div className="routine-header">
-          <strong className="routine-title">오늘 루틴시작</strong>
-          {user.todayRoutine && <span className="routine-name">{user.todayRoutine.name}</span>}
+          <strong className="routine-title">오늘 루틴 시작</strong>
+          {user?.todayRoutine && <span className="routine-name">{user.todayRoutine.name}</span>}
         </div>
-        {user.todayRoutine && (
+        {user?.todayRoutine && (
           <div className="routine-detail">
-            {user.todayRoutine.steps.map((s, idx) => (
-              <p key={idx}>{s}</p>
-            ))}
+            {user.todayRoutine.steps.map((s, idx) => <p key={idx}>{s}</p>)}
             <p>총 소요 시간: {user.todayRoutine.totalTime}</p>
           </div>
         )}
@@ -172,16 +169,8 @@ const MainDashboardPage = () => {
 
       <div className="dashboard">
         <div className="dashboard-row">
-          <div className="dashboard-card dark-card clickable-card" onClick={() => navigate('/routine')}>
-            <p>루틴 짜기/추천받기</p>
-            <span>루틴을 직접 짜거나 추천받아 보세요.</span>
-          </div>
-          {!user.hasSurvey && (
-            <div className="dashboard-card dark-card clickable-card" onClick={() => navigate('/survey')}>
-              <p>맞춤 설정</p>
-              <span>루틴 추천을 위해 설문을 작성해주세요.</span>
-            </div>
-          )}
+          {orderedComponents}
+          {fallbackComponents}
         </div>
 
         <div className="calendar-card dark-card">
@@ -191,12 +180,9 @@ const MainDashboardPage = () => {
             <span className="arrow" onClick={() => changeWeek(1)}>▶</span>
           </div>
           <div className="weekly-goal">{completedDays}/{totalDays}</div>
-          <div
-            className="circular-progress"
-            style={{
-              background: `conic-gradient(#a5eb47 0% ${percentage}%, #333 ${percentage}% 100%)`
-            }}
-          >
+          <div className="circular-progress" style={{
+            background: `conic-gradient(#a5eb47 0% ${percentage}%, #333 ${percentage}% 100%)`
+          }}>
             <div className="circular-progress-text">{percentage}%</div>
           </div>
           <div className="calendar-body">
@@ -204,7 +190,7 @@ const MainDashboardPage = () => {
               <div
                 key={idx}
                 className={`calendar-day ${day.exercised ? 'exercised' : day.hasRoutine ? 'has-routine' : ''}`}
-                onClick={handleDateClick}
+                onClick={() => navigate('/schedulepage')}
               >
                 {day.dayLabel}
               </div>
@@ -227,7 +213,6 @@ const MainDashboardPage = () => {
           <p className="my-rank">255등 / 전체</p>
         </div>
 
-        {/* 게시판 카드 추가 */}
         <div className="board-card dark-card clickable-card" onClick={() => navigate('/board')}>
           <p className="board-title">📌 커뮤니티 게시판</p>
           {posts.length === 0 ? (
