@@ -1,10 +1,10 @@
 import { createContext} from "react";
 
 export const CountContext = createContext({
-  successCount: 0,
-  setSuccessCount: () => {},
-  failCount: 0,
-  setFailCount: () => {},
+  goodCount: 0,
+  setGoodCount: () => {},
+  badCount: 0,
+  setBadCount: () => {},
   setReportImg: () => {},
   setCapturedList: () => {},
 });
