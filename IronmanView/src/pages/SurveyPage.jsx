@@ -115,7 +115,16 @@ function SurveyPage() {
         <span className="survey-back-button" onClick={prevStep}>←</span>
       )}
       <span className="header-title">설문 조사</span>
-      <span className="right-label">이모티콘</span>
+      <img
+        src="/images/ironman_logo.png"
+        alt="메인으로"
+        className="right-label"
+        onClick={() => navigate('/main')}
+        style={{
+          height: '30px',
+          cursor: 'pointer',
+        }}
+      />
     </header>
 
     <div className="survey-content">

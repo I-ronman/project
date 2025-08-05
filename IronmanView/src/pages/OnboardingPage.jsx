@@ -13,7 +13,7 @@ const slides = [
       "운동 시작이 어려운 당신에게",
       "AI가 적합한 루틴을 추천해줘요."
     ],
-    image: "/images/explanation1.jpg"
+    image: "/images/empty.jpg"
   },
   {
     title: "내 자세가 정확한건가?",
@@ -23,7 +23,7 @@ const slides = [
       "카메라로 자세를 분석하고",
       "음성으로 교정 피드백을 드려요."
     ],
-    image: "/images/correction.jpg"
+    image: "/images/empty.jpg"
   },
   {
     title: "누군가 옆에서 도와주면 좋겠어",
@@ -33,7 +33,7 @@ const slides = [
       "혼자 운동이 힘든 당신을 위해",
       "AI가 실시간 코치처럼 도와줘요."
     ],
-    image: "/images/chat.jpg"
+    image: "/images/empty.jpg"
   },
   {
     title: "당신이 가장 자주 사용하고싶은 서비스는?",
@@ -64,7 +64,7 @@ const slides = [
         ]
       }
     ],
-    image: "/images/services.jpg"
+    image: "/images/empty.jpg"
   }
 ];
 

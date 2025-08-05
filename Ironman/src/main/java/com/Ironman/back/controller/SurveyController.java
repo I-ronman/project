@@ -33,7 +33,7 @@ public class SurveyController {
         }
 
         userInfoService.saveSurvey(user.getEmail(), dto);
-        return ResponseEntity.ok("설문/프로필 저장 완료");
+        return ResponseEntity.ok("설문 저장 또는 수정 완료");
     }
     
     

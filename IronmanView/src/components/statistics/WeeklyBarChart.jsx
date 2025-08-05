@@ -1,25 +1,32 @@
-// project/IronmanView/src/components/statistics/WeeklyBarChart.jsx
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
+} from 'recharts';
 
-const COLORS = ['#ff7675', '#74b9ff', '#55efc4'];
+const WeeklyBarChart = ({ stats, exerciseColors, dates }) => {
+  // dates 길이 = 7, stats도 7개라고 가정
+  const data = dates.map((d, idx) => {
+    const day = stats[idx]?.chartData || {};
+    return {
+      name: `${d.getDate()}일`,
+      ...day
+    };
+  });
 
-const WeeklyBarChart = ({ data }) => {
   return (
-    <div className="weekly-chart">
-      <h3>주간 운동 히스토리</h3>
-      <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={data}>
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          {['스쿼트', '플랭크', '푸쉬업'].map((type, idx) => (
-            <Bar key={type} dataKey={type} stackId="a" fill={COLORS[idx % COLORS.length]} />
-          ))}
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={data}>
+        <XAxis dataKey="name" />
+        <YAxis
+          label={{ value: '시간(hrs)', angle: -90, position: 'insideLeft', offset: 0 }}
+          allowDecimals={false}
+        />
+        <Tooltip formatter={val => `${val}시간`} />
+        {Object.entries(exerciseColors).map(([key, color]) => (
+          <Bar key={key} dataKey={key} stackId="a" fill={color} />
+        ))}
+      </BarChart>
+    </ResponsiveContainer>
   );
 };
 

@@ -43,7 +43,7 @@ const BoardPage = () => {
 
   return (
     <div className="board-container">
-      <h2 className="board-title">📌 커뮤니티 게시판(아이콘 나중에 수정하자)</h2>
+      <h2 className="board-title">📌 커뮤니티 게시판</h2>
 
       <div className="board-list">
         {posts.map(post => (

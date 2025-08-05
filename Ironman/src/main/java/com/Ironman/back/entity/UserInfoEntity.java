@@ -27,9 +27,15 @@ public class UserInfoEntity {
 
     private float height;
     private float weight;
+    
+    @Column(name = "activity_level")
     private String activityLevel;
     private String pushUp;
     private String plank;
     private String squat;
     private String pliability;
+    
+    @Column(name = "goal_weight")
+    private String goalWeight;
+    private String workoutFrequency;
 }
