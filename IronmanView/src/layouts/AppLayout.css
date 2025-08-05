@@ -64,7 +64,7 @@ html, body, #root {
 .right-panel {
   width: 30vw;
   min-width: 530px;
-  max-width: 530px;
+  max-width: none;
   height: 100vh;
   background-color: #121212;
   color: white;

@@ -349,3 +349,9 @@
   position: relative;
   z-index: 2;
 }
+
+.routine-summary {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 6px;
+}

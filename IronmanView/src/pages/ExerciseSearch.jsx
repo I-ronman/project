@@ -43,6 +43,7 @@ const ExerciseSearch = () => {
             index,
             routine: {
               name: location.state?.routine?.name || '루틴 A',
+              summary: location.state?.routine?.summary || '',  
               exercises: location.state?.routine?.exercises || [],
             },
           },

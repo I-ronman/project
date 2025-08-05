@@ -8,6 +8,8 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
 } from 'recharts';
 
+
+
 // ✅ 예시용 dummy 데이터
 const dummyData = {
   weeklyStats: [
@@ -170,7 +172,6 @@ const MainDashboardPage = () => {
 
   return (
     <div className="main-container dark-background">
-
       {/* 프로필 & 알림 */}
       <div className="profile-card dark-card clickable-card"
            onClick={() => navigate('/mypage')}
