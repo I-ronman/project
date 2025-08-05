@@ -15,8 +15,6 @@ const PostureAnalysisPage = () => {
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
   const [exerciseList, setExerciseList] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [successCount, setSuccessCount] = useState(0);
-  const [failCount, setFailCount] = useState(0);
   const [viewKnee, setViewKnee] = useState(false);
   const [viewLegHip, setViewLegHip] = useState(false);
   const [capturedList, setCapturedList] = useState([]);
@@ -24,6 +22,12 @@ const PostureAnalysisPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routine = location.state?.routine;
+  const [totalCount, setTotalCount] = useState(0);
+  const [goodCount, setGoodCount] = useState(0);
+  const [badCount, setBadCount] = useState(0);
+  const [selectedCapture, setSelectedCapture] = useState(null); // 선택한 이미지
+
+
 
   const toggleFeedback = () => setIsFeedbackOn((prev) => !prev);
 
@@ -71,10 +75,12 @@ const PostureAnalysisPage = () => {
 
   return (
     <CountContext.Provider value={{
-      successCount,
-      setSuccessCount,
-      failCount,
-      setFailCount,
+      totalCount,
+      setTotalCount,
+      goodCount,
+      setGoodCount,
+      badCount,
+      setBadCount,
       setReportImg,
       setCapturedList
     }}>
@@ -88,8 +94,9 @@ const PostureAnalysisPage = () => {
             </header>
 
             <div className="posture-stats">
-              <StatBox label="운동 횟수" count={successCount} />
-              <StatBox label="실패 횟수" count={failCount} />
+              <StatBox label="총 횟수" count={goodCount+badCount} />
+              <StatBox label="좋은 자세" count={goodCount} />
+              <StatBox label="나쁜 자세" count={badCount} />
             </div>
 
             <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
@@ -113,6 +120,29 @@ const PostureAnalysisPage = () => {
 
             <img src={reportImg} alt="자세 미리보기" />
             <GuideVideoPlayer videoUrl={selectedVideo} />
+
+                   {/* 캡처 이미지 미리보기 영역 */}
+            {selectedCapture && (
+              <div className="capture-preview">
+                <h4>📷 선택한 캡처 미리보기</h4>
+                <img src={selectedCapture} alt="선택된 캡처" className="preview-img" />
+                <button onClick={() => setSelectedCapture(null)}>닫기</button>
+              </div>
+            )}
+
+            {/* 썸네일 리스트 */}
+            <div className="capture-thumbnails">
+              {capturedList.map((entry, idx) => (
+                <img
+                  key={idx}
+                  src={entry.img}
+                  alt={`캡처 ${idx + 1}`}
+                  className="thumbnail-img"
+                  onClick={() => setSelectedCapture(entry.img)}
+                />
+              ))}
+            </div>
+
           </div>
 
           <div className="posture-right">
@@ -122,6 +152,7 @@ const PostureAnalysisPage = () => {
               onVideoEnd={handleVideoEnd} // ✅ 종료 시 저장
             />
           </div>
+          
         </div>
       </PageWrapper>
     </CountContext.Provider>

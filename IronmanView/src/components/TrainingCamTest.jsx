@@ -10,8 +10,8 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
   const [imgSrc, setImgSrc] = useState("");
 
   const {
-    setSuccessCount,
-    setFailCount,
+    setGoodCount,
+    setBadCount,
     setReportImg,
     setCapturedList
   } = useContext(CountContext);
@@ -50,12 +50,14 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
       setCapturedList(prev => [...prev, { img: base64Img, issue }]);
     });
 
+    
+
     wsRef.current.on("goodCount", (data) => {
-      setSuccessCount(data);
+      setGoodCount(data);
     });
 
     wsRef.current.on("badCount", (data) => {
-      setFailCount(data);
+      setBadCount(data);
     });
 
     const sendImage = setInterval(() => {
