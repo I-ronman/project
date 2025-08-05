@@ -29,6 +29,7 @@ import PostureDetailPage from './pages/PostureDetailPage';
 import PostureFeedbackPage from './pages/PostureFeedbackPage';
 import BoardWritePage from './pages/BoardWritePage';
 import EditPostPage from './pages/EditPostPage';
+import RecordsPage from './pages/RecordsPage';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -70,6 +71,7 @@ const AppRoutes = () => {
         <Route path="/posture-feedback" element={<PostureFeedbackPage />} />
         <Route path="/write" element={<BoardWritePage />} />
         <Route path="edit/:id" element={<EditPostPage />} />
+        <Route path="/records" element={<RecordsPage />} />
       </Route>
       <Route path="postureanalysis" element={<PostureAnalysisPage />} />
     </Routes>
