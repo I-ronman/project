@@ -30,22 +30,26 @@ const RoutinePage = () => {
   }, []);
 
   const handleRoutineClick = (routine) => {
-  navigate('/routinedetail', {
-    state: {
-      routine: {
-        name: routine.title,
-        summary: routine.summary,
-        exercises: routine.exercises.map((e) => ({
-          name: e.name,
-          part: e.part,
-          sets: e.sets,
-          reps: e.reps,
-          exerciseTime: e.exerciseTime,
-        })),
+  console.log('넘어가는 루틴', routine);
+    navigate('/routinedetail', {
+      state: {
+        routine: {
+          routineId: routine.routineId,
+          name: routine.title,
+          summary: routine.summary,
+          exercises: routine.exercises.map((e) => ({
+            name: e.exerciseName || e.name,
+            part: e.part || '',
+            sets: e.sets,
+            reps: e.reps,
+            exerciseTime: e.exerciseTime,
+            description: e.description || '',
+            image: e.image || '/images/sample-placeholder.png',
+          })),
+        },
       },
-    },
-  });
-};
+    });
+  };
 
   const handleDeleteRoutine = async (routineId) => {
   const confirmed = window.confirm('정말 이 루틴을 삭제하시겠습니까?');
