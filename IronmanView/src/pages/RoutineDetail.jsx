@@ -117,18 +117,6 @@ const RoutineDetail = () => {
     }
   }, [location.state]);
 
-  useEffect(() => {
-    const state = location.state;
-
-    // 루틴 생성 시 새로고침 (단 한 번만)
-    if (state && state.routine && !state.updatedExercise && state.index === undefined) {
-      console.log('🔁 루틴 생성 - 강제 새로고침');
-      navigate(location.pathname, { replace: true, state: {} }); // 먼저 state 초기화
-      window.location.reload(); // 그리고 새로고침
-    }
-  }, []);
-
-
   // 백엔드로 루틴 저장 전송
   const handleSave = async () => {
     const routineData = {
