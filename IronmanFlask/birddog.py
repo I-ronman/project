@@ -30,6 +30,11 @@ twist = False
 r_beeline = False
 l_beeline = False
 
+def check_support(down,support_arm,support_leg):
+    if down and (not support_arm or not support_leg):
+        return False
+    else: return True
+
 def arm_leg_up(up,down,shoulder_ang,hip_ang,leg_ang):
     """ 좌우 번갈을 때 한쪽 팔 반대쪽 다리가 올라갔는지 판단."""
     arr = np.array([hip_ang,shoulder_ang])
@@ -71,10 +76,13 @@ def twist_body(twist,r_shoulder,l_shoulder,r_hip,l_hip):
     else: True
 
 
+
 r_up = False
 l_up = False
 r_down = True
 l_down = True
+
+bad_pose = False
 
 while cap.isOpened():
         ret, frame = cap.read()
@@ -101,12 +109,6 @@ while cap.isOpened():
             l_arm_ang = get_angle(lm[11],lm[13],lm[15])
             test = {"오른어깨":r_shoulder_ang,"왼다리":l_leg_ang,"왼엉덩이":l_hip_ang,"왼어깨":l_shoulder_ang,"오른엉덩이":r_hip_ang,"오른다리":r_leg_ang}
             print(test)
-            l_support_arm = perpendicular(lm[11],lm[15])
-            r_support_arm = perpendicular(lm[12],lm[16])
-            l_support_knee = perpendicular(lm[23],lm[25])
-            r_support_knee = perpendicular(lm[24],lm[26])
-            support = [l_support_arm,l_support_knee,r_support_arm,r_support_knee]
-
             
 
             # print(f"왼손 지지 {l_support_arm} 오른손 지지 {r_support_arm} 왼다리 지지{l_support_knee} 오른다리 지지 {r_support_knee}")
@@ -125,6 +127,16 @@ while cap.isOpened():
                 r_hip_ang,
                 r_leg_ang
             )
+            l_support_arm = perpendicular(lm[11],lm[15])
+            r_support_arm = perpendicular(lm[12],lm[16])
+            l_support_knee = perpendicular(lm[23],lm[25])
+            r_support_knee = perpendicular(lm[24],lm[26])
+            
+            support = check_support(r_down,r_support_arm,l_support_knee) and check_support(l_down,l_support_arm,r_support_knee)
+
+
+            bad_pose = not support
+
             r_beeline = beeline(
                 r_up,
                 r_beeline,
@@ -149,6 +161,7 @@ while cap.isOpened():
                 l_up = False
                 if twist and not all(support):
                     bad_cnt += 1
+                    
                     print("나쁜 횟수",bad_cnt)
                 else:
                     good_cnt += 1

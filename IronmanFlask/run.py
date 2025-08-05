@@ -9,6 +9,8 @@ from calcData import get_angle,draw_angle_arc
 import socketio
 from draw import draw_squat
 from encoding import encoding,decoding
+from squat import SquatAnalyzer
+
 
 
 good_cnt = 0
@@ -16,9 +18,7 @@ bad_cnt = 0
 turn = 0
 send_turn = 0
 
-mp_pose = mp.solutions.pose
-mp_draw = mp.solutions.drawing_utils
-pose = mp_pose.Pose()
+
 
 before_upper_body_ang = 35
 before_leg_ang = 55
@@ -44,12 +44,6 @@ app = Flask(__name__)
 # socket_io = SocketIO(app,cors_allowed_origins="http://192.168.219.89:5173")
 socket_io = SocketIO(app,cors_allowed_origins="http://localhost:5173")
 
-class base_line(object):
-     def __init__(self,xp,yp):
-        self.x = xp.x
-        self.y = yp.y
-     def get(self):
-          return self.x,self.y
      
 
 # @app._got_first_request
