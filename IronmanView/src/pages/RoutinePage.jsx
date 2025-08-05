@@ -121,7 +121,7 @@ return (
               {routines.map((r, index) => (
                 <div key={index} className="routine-card">
                   <div className="routine-card-header">
-                    <h2>{r.title}</h2>
+                    <h2>{r.title || r.name}</h2>
                     <span
                       className="delete-btn"
                       onClick={(e) => {
@@ -132,10 +132,15 @@ return (
                       X
                     </span>
                   </div>
+                  {r.summary && <p className="routine-summary">{r.summary}</p>}
                   <p>⏱ {r.exerciseTime < 60
                         ? `${r.exerciseTime}초`
                         : `${(r.exerciseTime / 60)}분`}</p>
-                  <p>💪 {r.exercises.length > 0 ? r.exercises[0].exerciseName : '운동없음'}</p>
+                  <p>
+                    💪 {r.exercises.length > 0 
+                          ? r.exercises.map((ex, idx) => ex.exerciseName).join(', ')
+                          : '운동없음'}
+                  </p>
                   <button className="start-routine-btn"
                     onClick={(e) => {
                       handleStartRoutine(r);

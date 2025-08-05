@@ -1,3 +1,4 @@
+// project/IronmanView/src/pages/MainDashboardPage.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/MainDashboardPage.css';
@@ -30,8 +31,7 @@ const MainDashboardPage = () => {
   const navigate = useNavigate();
   const { user, setUser, surveyDone } = useContext(AuthContext);
 
-  // ——————————————————————————————
-  // 프로필·알림·게시글 상태
+  // — 프로필·알림·게시글 상태
   const [calendarData, setCalendarData] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -48,7 +48,7 @@ const MainDashboardPage = () => {
         setUser(prev => ({ ...prev, name, email, preferences, todayRoutine, hasSurvey, unreadNotifications }));
       })
       .catch(() => navigate('/login'));
-  }, []);
+  }, [navigate, setUser]);
 
   // 오늘 캘린더 데이터 (더미)
   useEffect(() => {
@@ -70,8 +70,7 @@ const MainDashboardPage = () => {
     setNotifications(ns => ns.map(n => ({ ...n, read: true })));
   };
 
-  // ——————————————————————————————
-  // 1) 통계 차트용: 오늘 기준 고정 7일
+  // — 통계 차트용: 오늘 기준 고정 7일
   const statWeekDates = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + (i - 3));
@@ -82,8 +81,7 @@ const MainDashboardPage = () => {
     ...dummyData.weeklyStats[idx]?.chartData
   }));
 
-  // ——————————————————————————————
-  // 2) 주간 목표 캘린더용: 화살표로 이동
+  // — 주간 목표 캘린더용: 화살표로 이동
   const [calendarCenterDate, setCalendarCenterDate] = useState(new Date());
   const changeWeek = offset => {
     const d = new Date(calendarCenterDate);
@@ -107,8 +105,7 @@ const MainDashboardPage = () => {
   const percentage = Math.round((completedDays / totalDays) * 100);
   const yearMonthLabel = `${calendarCenterDate.getFullYear()}년 ${calendarCenterDate.getMonth() + 1}월`;
 
-  // ——————————————————————————————
-  // 대시보드 카드 모음
+  // — 대시보드 카드 모음
   const DASHBOARD_COMPONENTS = {
     '운동 루틴 추천': (
       <div className="dashboard-card dark-card clickable-card"
@@ -161,12 +158,33 @@ const MainDashboardPage = () => {
       </div>
     )
   };
-
-  // 사용자 선호도 순서대로
   const ordered = [], fallback = [];
-  Object.entries(DASHBOARD_COMPONENTS).forEach(([k,c]) => {
+  Object.entries(DASHBOARD_COMPONENTS).forEach(([k, c]) => {
     (user?.preferences?.includes(k) ? ordered : fallback).push(c);
   });
+
+  // — 랭킹 미리보기: 백엔드 연동 밑작업
+  const [previewTop3, setPreviewTop3] = useState([
+    { id: 1, name: '김철수', score: 98 },
+    { id: 2, name: '이영희', score: 92 },
+    { id: 3, name: '박민준', score: 89 },
+  ]);
+  const [myRank, setMyRank] = useState('-');
+
+  useEffect(() => {
+    axios.get('/api/ranking/preview', { withCredentials: true })
+      .then(res => {
+        if (Array.isArray(res.data.top3)) {
+          setPreviewTop3(res.data.top3);
+        }
+        if (res.data.myRank != null) {
+          setMyRank(res.data.myRank);
+        }
+      })
+      .catch(() => {
+        // 실패 시 더미 유지
+      });
+  }, []);
 
   return (
     <div className="main-container dark-background">
@@ -176,9 +194,11 @@ const MainDashboardPage = () => {
            onClick={() => navigate('/mypage')}
       >
         <div className="profile-info">
-          <img src={user?.profileImage || defaultProfile}
-               alt="프로필"
-               className="profile-img" />
+          <img
+            src={user?.profileImage || defaultProfile}
+            alt="프로필"
+            className="profile-img"
+          />
           <div className="profile-texts">
             <p className="welcome-text">어서오세요!</p>
             <p className="username-text">{user?.name || '홍길동'} 님</p>
@@ -192,7 +212,7 @@ const MainDashboardPage = () => {
             <div className="notification-dropdown">
               {notifications.length === 0
                 ? <p>알림 없음</p>
-                : notifications.map((n,i) =>
+                : notifications.map((n, i) =>
                     <p key={i}>⏰ {n.time} - {n.message}</p>
                   )
               }
@@ -218,7 +238,7 @@ const MainDashboardPage = () => {
         </div>
         {user?.todayRoutine && (
           <div className="routine-detail">
-            {user.todayRoutine.steps.map((s,i) => <p key={i}>{s}</p>)}
+            {user.todayRoutine.steps.map((s, i) => <p key={i}>{s}</p>)}
             <p>총 소요 시간: {user.todayRoutine.totalTime}</p>
           </div>
         )}
@@ -229,6 +249,16 @@ const MainDashboardPage = () => {
         <div className="dashboard-row">
           {ordered}
           {fallback}
+
+          {/* 운동 기록 확인 카드 */}
+          <div
+            className="dashboard-card dark-card clickable-card"
+            onClick={() => navigate('/records')}
+            key="records"
+          >
+            <p>📋 운동 기록 확인</p>
+            <span>꾸준히 쌓아온 운동 기록을 확인해보세요.</span>
+          </div>
         </div>
 
         {/* 주간 목표 캘린더 */}
@@ -245,7 +275,7 @@ const MainDashboardPage = () => {
             <div className="circular-progress-text">{percentage}%</div>
           </div>
           <div className="calendar-body">
-            {weekData.map((day,i) => (
+            {weekData.map((day, i) => (
               <div key={i}
                    className={`calendar-day ${day.exercised ? 'exercised' : day.hasRoutine ? 'has-routine' : ''}`}
                    onClick={() => navigate('/schedulepage')}
@@ -261,25 +291,35 @@ const MainDashboardPage = () => {
           </div>
         </div>
 
-        {/* 랭킹 */}
-        <div className="ranking-card dark-card clickable-card" onClick={() => navigate('/ranking')}>
-          <p>🏆 랭킹</p>
-          <ol>
-            <li>🥇 신라면</li>
-            <li>🥈 진라면</li>
-            <li>🥉 짜파게티</li>
+        {/* 랭킹 카드 (Top3 미리보기) */}
+        <div
+          className="ranking-card dark-card clickable-card"
+          onClick={() => navigate('/ranking')}
+        >
+          <p className="ranking-card-title">🏆 전체 랭킹 Top 3</p>
+          <ol className="ranking-list">
+            {previewTop3.map((item, idx) => (
+              <li key={item.id} className="ranking-item">
+                <span className="rank-badge">{['🥇','🥈','🥉'][idx]}</span>
+                <span className="rank-name">{item.name}</span>
+                <span className="rank-score">{item.score}점</span>
+              </li>
+            ))}
           </ol>
-          <p className="my-rank">255등 / 전체</p>
+          <p className="my-rank">내 순위: {myRank}등</p>
         </div>
 
-        {/* 게시판 */}
+        {/* 커뮤니티 게시판 */}
         <div className="board-card dark-card clickable-card" onClick={() => navigate('/board')}>
           <p className="board-title">📌 커뮤니티 게시판</p>
           {posts.length === 0
             ? <div className="board-empty"><p>아직 게시글이 없습니다.</p><p>첫 게시글을 올려보세요!</p></div>
             : <div className="board-preview">
-                {posts.slice(0,2).map((p,i)=>(
-                  <div key={i} className="post-preview"><h4>{p.title}</h4><p>{p.content.slice(0,40)}...</p></div>
+                {posts.slice(0,2).map((p, i) => (
+                  <div key={i} className="post-preview">
+                    <h4>{p.title}</h4>
+                    <p>{p.content.slice(0,40)}...</p>
+                  </div>
                 ))}
                 <p className="view-more">더보기 →</p>
               </div>

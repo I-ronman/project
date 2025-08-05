@@ -79,6 +79,8 @@ const getPageDescription = (path) => {
       return '운동 결과'
     case '/posture-feedback':
       return '자세확인 페이지'
+    case '/ranking':
+      return '랭킹'
     default:
       if (path.startsWith('/edit/')) return '게시글 수정페이지';
       return '';

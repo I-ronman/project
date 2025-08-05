@@ -92,8 +92,13 @@ public class RoutineService {
 
                 // 🔹 exerciseTime 합산
                 int totalExerciseTime = exercises.stream()
-                    .mapToInt(e -> e.getExerciseTime() != null ? e.getExerciseTime() : 0)
-                    .sum();
+                		.mapToInt(e -> {
+                	        int sets = e.getSets() != null ? e.getSets() : 1;
+                	        int reps = e.getReps() != null ? e.getReps() : 1;
+                	        int time = e.getExerciseTime() != null ? e.getExerciseTime() : 1;
+                	        return sets * reps * time;
+                	    })
+                	    .sum();
 
                 return FullRoutineDto.builder()
                     .routineId(routine.getRoutineId())

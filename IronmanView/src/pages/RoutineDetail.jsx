@@ -32,7 +32,8 @@ const RoutineDetail = () => {
   useEffect(() => {
     const routine = location.state?.routine;
     if (routine?.exercises?.length > 0) {
-      setRoutineDescription(routine.summary || '');
+      setRoutineDescription((prev) => prev || routine.summary || '');
+      setRoutineName((prev) => prev || routine.name || '');
 
       const mappedExercises = routine.exercises.map((e) => ({
         ...e,
@@ -112,6 +113,7 @@ const RoutineDetail = () => {
         exerciseTime: e.exerciseTime,
         })),
     };
+    console.log(routineData);
 
     try {
       const response = await axios.post('http://localhost:329/web/api/routine/add', routineData, {
