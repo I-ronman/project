@@ -1,4 +1,5 @@
-/* project/IronmanView/src/styles/MainDashboardPage.css */
+/* MainDashboardPage.css */
+
 .main-container {
   max-width: 500px;
   width: 85%;
@@ -92,10 +93,21 @@
   margin: 0;
 }
 
-/* 알림 */
-.notification-icon {
+.edit-btn {
+  background-color: #FBD157;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.notification {
   font-size: 20px;
   position: relative;
+  margin-left: 8px;
   cursor: pointer;
 }
 
@@ -108,26 +120,6 @@
   position: absolute;
   top: -6px;
   right: -10px;
-}
-
-.notification-dropdown {
-  position: absolute;
-  top: 36px;
-  right: 0;
-  width: 220px;
-  background-color: #333;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 13px;
-  z-index: 200;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.notification-dropdown p {
-  margin: 5px 0;
-  word-break: keep-all;
 }
 
 /* 오늘 루틴 */
@@ -252,6 +244,7 @@
   font-size: 14px;
   background-color: #444;
   cursor: pointer;
+  color: white;
   transition: transform 0.1s ease;
 }
 
@@ -265,6 +258,19 @@
 
 .calendar-day.has-routine {
   background-color: #3498db; /* 파랑 */
+}
+
+.calendar-day.today-has-routine {
+  background-color: #ff6b6b; /* 빨강 */
+}
+
+.calendar-day.today-no-routine {
+  background-color: #111;
+  border: 1px solid #777;
+}
+
+.calendar-day.none {
+  background-color: #666;
 }
 
 .legend {
@@ -291,64 +297,103 @@
 .legend .gray { background-color: #444; }
 .legend .black { background-color: #111; }
 
-/* 랭킹 카드 */
+/* 랭킹 */
 .ranking-card {
   margin-top: 24px;
-  padding: 24px;
-  background-color: #222;
-  border-radius: 12px;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 16px;
 }
 
-.ranking-card-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 12px;
-  color: #FBD157;
-}
-
-.ranking-list {
-  list-style: none;
+.ranking-card ol {
   margin: 0;
-  padding: 0;
-}
-
-.ranking-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #444;
+  padding-left: 20px;
   font-size: 14px;
 }
 
-.ranking-item:last-child {
-  border-bottom: none;
-}
-
-.rank-badge {
-  margin-right: 8px;
-}
-
-.rank-name {
-  flex: 1;
-  text-align: left;
-  color: #fff;
-}
-
-.rank-score {
-  color: #ccc;
-}
-
 .my-rank {
-  margin-top: 16px;
-  text-align: right;
-  font-size: 13px;
+  font-size: 12px;
+  margin-top: 10px;
   color: #bbb;
 }
 
-/* 게시판 */
+/* 챗봇 */
+.chatbot-section {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.chatbot-bubble {
+  width: 48px;
+  height: 48px;
+  background-color: #444;
+  color: white;
+  font-size: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 4px;
+  transition: background-color 0.2s;
+}
+
+.chatbot-section:hover .chatbot-bubble {
+  background-color: #FBD157;
+  color: black;
+}
+
+.chatbot-section p {
+  font-size: 12px;
+  color: white;
+  transition: color 0.2s;
+}
+
+.chatbot-section:hover p {
+  color: #FBD157;
+}
+
+/* 가시성 개선용: 어두운 배경이면 흰 글씨 / 밝은 배경이면 검은 글씨 */
+.text-auto {
+  transition: color 0.3s ease;
+}
+
+.dark-card .text-auto,
+.dark-background .text-auto {
+  color: white;
+}
+
+.light-bg .text-auto {
+  color: black;
+}
+.notification-icon {
+  font-size: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  width: 220px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.notification-dropdown p {
+  margin: 5px 0;
+  word-break: keep-all;
+}
+/* 📌 기존 스타일은 유지한 채 추가만 해주세요 */
+
 .board-card {
   margin-top: 20px;
   padding: 20px;
@@ -408,42 +453,14 @@
   margin-top: 8px;
   cursor: pointer;
 }
-
-/* 챗봇 */
-.chatbot-section {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  text-align: center;
-  cursor: pointer;
-  z-index: 100;
+.full-width-card {
+  width: 100%;
+  flex: 1 1 100%;
+  margin-top: 16px;
+}
+.full-width {
+  width: 100%;
+  flex: 1 1 100%;
+  margin-top: 16px;
 }
 
-.chatbot-bubble {
-  width: 48px;
-  height: 48px;
-  background-color: #444;
-  color: white;
-  font-size: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 4px;
-  transition: background-color 0.2s;
-}
-
-.chatbot-section:hover .chatbot-bubble {
-  background-color: #FBD157;
-  color: black;
-}
-
-.chatbot-section p {
-  font-size: 12px;
-  color: white;
-  transition: color 0.2s;
-}
-
-.chatbot-section:hover p {
-  color: #FBD157;
-}

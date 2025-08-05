@@ -1,4 +1,3 @@
-// project/IronmanView/src/pages/MainDashboardPage.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/MainDashboardPage.css';
@@ -8,7 +7,6 @@ import defaultProfile from '../images/default_profile.jpg';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
 } from 'recharts';
-
 
 
 // ✅ 예시용 dummy 데이터
@@ -74,7 +72,7 @@ const MainDashboardPage = () => {
   };
 
   // ——————————————————————————————
-  // 통계 차트용: 오늘 기준 고정 7일
+  // 1) 통계 차트용: 오늘 기준 고정 7일
   const statWeekDates = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + (i - 3));
@@ -86,7 +84,7 @@ const MainDashboardPage = () => {
   }));
 
   // ——————————————————————————————
-  // 주간 목표 캘린더용: 화살표로 이동
+  // 2) 주간 목표 캘린더용: 화살표로 이동
   const [calendarCenterDate, setCalendarCenterDate] = useState(new Date());
   const changeWeek = offset => {
     const d = new Date(calendarCenterDate);
@@ -164,34 +162,12 @@ const MainDashboardPage = () => {
       </div>
     )
   };
+
+  // 사용자 선호도 순서대로
   const ordered = [], fallback = [];
   Object.entries(DASHBOARD_COMPONENTS).forEach(([k,c]) => {
     (user?.preferences?.includes(k) ? ordered : fallback).push(c);
   });
-
-  // ——————————————————————————————
-  // 랭킹 미리보기: 백엔드 연동 밑작업
-  const [previewTop3, setPreviewTop3] = useState([
-    { id: 1, name: '김철수', score: 98 },
-    { id: 2, name: '이영희', score: 92 },
-    { id: 3, name: '박민준', score: 89 },
-  ]);
-  const [myRank, setMyRank] = useState('-');
-
-  useEffect(() => {
-    axios.get('/api/ranking/preview', { withCredentials: true })
-      .then(res => {
-        if (Array.isArray(res.data.top3)) {
-          setPreviewTop3(res.data.top3);
-        }
-        if (res.data.myRank != null) {
-          setMyRank(res.data.myRank);
-        }
-      })
-      .catch(() => {
-        // 실패 시 더미 유지
-      });
-  }, []);
 
   return (
     <div className="main-container dark-background">
@@ -285,22 +261,15 @@ const MainDashboardPage = () => {
           </div>
         </div>
 
-        {/* 랭킹 카드 (수정됨) */}
-        <div
-          className="ranking-card dark-card clickable-card"
-          onClick={() => navigate('/ranking')}
-        >
-          <p className="ranking-card-title">🏆 전체 랭킹 Top 3</p>
-          <ol className="ranking-list">
-            {previewTop3.map((item, idx) => (
-              <li key={item.id} className="ranking-item">
-                <span className="rank-badge">{['🥇','🥈','🥉'][idx]}</span>
-                <span className="rank-name">{item.name}</span>
-                <span className="rank-score">{item.score}점</span>
-              </li>
-            ))}
+        {/* 랭킹 */}
+        <div className="ranking-card dark-card clickable-card" onClick={() => navigate('/ranking')}>
+          <p>🏆 랭킹</p>
+          <ol>
+            <li>🥇 신라면</li>
+            <li>🥈 진라면</li>
+            <li>🥉 짜파게티</li>
           </ol>
-          <p className="my-rank">내 순위: {myRank}등</p>
+          <p className="my-rank">255등 / 전체</p>
         </div>
 
         {/* 게시판 */}
