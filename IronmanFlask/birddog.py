@@ -23,31 +23,38 @@ mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
 pose = mp_pose.Pose()
 
-cap = cv2.VideoCapture("video/birddog/birddog4.mp4")  # 웹캠
+cap = cv2.VideoCapture("video/birddog/birddog5.mp4")  # 웹캠
 
 twist = False
 
 r_beeline = False
 l_beeline = False
 
-def beeline(up,down,arm_ang,shoulder_ang,hip_ang,leg_ang,support_arm,support_knee):
-    """ 팔을 기준으로 팔과 반대편 다리가 올라갔을 때 올라갔는지를 판단하고 정렬이 됐는지 판단하는 함수"""
-    arr = np.array([arm_ang,hip_ang,shoulder_ang])
+def arm_leg_up(up,down,shoulder_ang,hip_ang,leg_ang):
+    """ 좌우 번갈을 때 한쪽 팔 반대쪽 다리가 올라갔는지 판단."""
+    arr = np.array([hip_ang,shoulder_ang])
 
-    if  not up and leg_ang > 150 and np.all(arr > 160) and all([support_arm,support_knee,down]):
+    if  not up and np.all(arr > 120) and down:
         up = True
         down = False
     elif leg_ang < 90 and hip_ang < 120 and shoulder_ang < 90:
         down = True
     return up,down
     
-    
+def beeline(up,beeline,arm_ang,shoulder_ang,hip_ang,leg_ang):
+    """ 팔을 기준으로 팔과 반대편 다리가 올라갔을 때 올라갔는지를 판단하고 정렬이 됐는지 판단하는 함수"""
+    arr = np.array([arm_ang,hip_ang,shoulder_ang,leg_ang])
 
-def perpendicular(p1,p2,angle = 10):
+    if  up and np.all(arr > 160):
+        return True
+    elif beeline : return True
+    else: return False
+
+def perpendicular(p1,p2):
     """지지대가 되는 팔과 다리가 지면과 수직에 가까운지 참 거짓 반환"""
     bl = base_line(p1,p2)
     # print(get_angle(bl,p1,p2))
-    if get_angle(bl,p1,p2) < angle:
+    if get_angle(bl,p1,p2) < 10:
         return True
     else:
         return False
@@ -56,12 +63,12 @@ def perpendicular(p1,p2,angle = 10):
 def twist_body(twist,r_shoulder,l_shoulder,r_hip,l_hip):
     r_hip_ang = get_angle(r_shoulder,r_hip,l_hip)
     l_hip_ang = get_angle(l_shoulder,l_hip,r_hip)
-    difference = abs(r_hip_ang - l_hip_ang)
-    if difference >10:
-        return True
-    elif twist:
-        return True
-    else: False
+    # print("오른쪽 골반",r_hip_ang,"왼쪽골반",l_hip_ang)
+    if (180 - l_hip_ang) > r_hip_ang - 10 and (180 - l_hip_ang) < r_hip_ang + 10 :
+        return False
+    elif not twist:
+        return False
+    else: True
 
 
 r_up = False
@@ -92,37 +99,47 @@ while cap.isOpened():
             r_arm_ang = get_angle(lm[12],lm[14],lm[16])
             l_shoulder_ang = get_angle(lm[23],lm[11],lm[13])
             l_arm_ang = get_angle(lm[11],lm[13],lm[15])
-            test = {"왼다리":l_leg_ang,"오른다리":r_leg_ang,"왼엉덩이":l_hip_ang,"오른엉덩이":r_hip_ang,"오른 어깨":r_shoulder_ang,"왼어깨":l_shoulder_ang}
-            # print(test)
+            test = {"오른어깨":r_shoulder_ang,"왼다리":l_leg_ang,"왼엉덩이":l_hip_ang,"왼어깨":l_shoulder_ang,"오른엉덩이":r_hip_ang,"오른다리":r_leg_ang}
+            print(test)
             l_support_arm = perpendicular(lm[11],lm[15])
             r_support_arm = perpendicular(lm[12],lm[16])
             l_support_knee = perpendicular(lm[23],lm[25])
             r_support_knee = perpendicular(lm[24],lm[26])
-
+            support = [l_support_arm,l_support_knee,r_support_arm,r_support_knee]
 
             
 
             # print(f"왼손 지지 {l_support_arm} 오른손 지지 {r_support_arm} 왼다리 지지{l_support_knee} 오른다리 지지 {r_support_knee}")
             
-            r_up,r_down = beeline(
+            r_up,r_down = arm_leg_up(
                 r_up,
                 r_down,
+                r_shoulder_ang,
+                l_hip_ang,
+                l_leg_ang
+            )
+            l_up,l_down = arm_leg_up(
+                l_up,
+                l_down,
+                l_shoulder_ang,
+                r_hip_ang,
+                r_leg_ang
+            )
+            r_beeline = beeline(
+                r_up,
+                r_beeline,
                 r_arm_ang,
                 r_shoulder_ang,
                 l_hip_ang,
-                l_leg_ang,
-                l_support_arm,
-                r_support_knee
+                l_leg_ang
             )
-            l_up,l_down = beeline(
+            l_beeline = beeline(
                 l_up,
-                l_down,
+                l_beeline,
                 l_arm_ang,
                 l_shoulder_ang,
                 r_hip_ang,
-                r_leg_ang,
-                r_support_arm,
-                l_support_knee
+                r_leg_ang
             )
 
             twist = twist_body(twist,lm[12],lm[11],lm[24],lm[23])
@@ -130,7 +147,7 @@ while cap.isOpened():
             if all([r_up,l_up]) and r_down and l_down:
                 r_up = False
                 l_up = False
-                if twist:
+                if twist and not all(support):
                     bad_cnt += 1
                     print("나쁜 횟수",bad_cnt)
                 else:
@@ -158,7 +175,7 @@ while cap.isOpened():
             cv2.imshow('Capture', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):  # q를 누르면 종료
                 break
-            if cv2.waitKey(20) & 0xFF == ord('c'):  # q를 누르면 종료
+            if cv2.waitKey(1) & 0xFF == ord('c'):  # q를 누르면 종료
                 print("캡쳐시작")
                 cv2.imwrite(f"hello{i}.png",frame)
                 i += 1
