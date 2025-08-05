@@ -1,38 +1,178 @@
-/*project/IronmanView/src/styles/RankingPage.css*/
 .ranking-page {
-    padding: 20px;
-    width: 90%;
-    max-width: 500px;
-    margin: auto;
-    background-color: #111;
-    color: white;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .ranking-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .logo {
-    height: 40px;
-  }
-  
-  .filter-button {
-    background: none;
-    color: white;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .filter-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px 0;
-  }
-  
+  /* PageWrapper 안에서 가로를 꽉 채우기 */
+  width: 100%;
+  padding: 40px 20px;
+  background: #111;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+.ranking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.filter-open-btn {
+  background: #FBD157;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #111;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+/* 필터 태그 */
+.filter-tags {
+  margin: 16px 0;
+}
+.filter-tag {
+  display: inline-block;
+  background: #333;
+  color: #FBD157;
+  padding: 6px 10px;
+  border-radius: 12px;
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+.tag-close {
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+/* 랭킹 카드: max-width 와 가로 중앙 배치 */
+.ranking-card {
+  background: #222;
+  padding: 24px 20px;
+  border-radius: 8px;
+  margin: 16px auto 0;   /* 위쪽 여백 16px, 좌우 auto로 중앙정렬 */
+  box-sizing: border-box;
+
+  /* 카드 너비 고정 */
+  max-width: 360px;
+  width: 100%;
+}
+
+/* 랭킹 테이블 */
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ranking-table th,
+.ranking-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #444;
+  font-size: 0.95rem;
+}
+.ranking-table th {
+  color: #FBD157;
+  text-align: left;
+}
+
+/* 세로 점 3개 */
+.ellipsis-row td {
+  text-align: center;
+}
+.ellipsis-vertical {
+  display: inline-block;
+  line-height: 1;
+  font-size: 1.5rem;
+  color: #888;
+}
+
+/* 내 순위 행 강조 */
+.user-row td {
+  font-weight: bold;
+  background: #333;
+}
+
+/* 모달 백드롭 */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 본체 */
+.modal-content {
+  background: #222;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 360px;
+  position: relative;
+  color: #fff;
+}
+.modal-close {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* 모달 섹션 */
+.modal-section {
+  margin: 16px 0;
+}
+.modal-section label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+.modal-section select,
+.modal-search {
+  width: 100%;
+  padding: 8px 10px;
+  background: #333;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* 체크박스 리스트 */
+.checkbox-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 4px;
+  background: #111;
+}
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.checkbox-group input {
+  accent-color: #FBD157;
+}
+.no-results {
+  color: #888;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* 적용 버튼 */
+.apply-btn {
+  background: #FBD157;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #111;
+  font-size: 0.95rem;
+}
