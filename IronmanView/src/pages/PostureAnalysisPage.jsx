@@ -118,8 +118,6 @@ const PostureAnalysisPage = () => {
               <button className="stat-box" onClick={() => setViewLegHip(prev => !prev)} style={viewLegHip ? { backgroundColor: "gray" } : undefined}>무릎 허리 각도보기</button>
             </div>
 
-            <img src={reportImg} alt="자세 미리보기" />
-            <GuideVideoPlayer videoUrl={selectedVideo} />
 
                    {/* 캡처 이미지 미리보기 영역 */}
             {selectedCapture && (
