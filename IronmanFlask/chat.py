@@ -2,9 +2,9 @@ import openai
 from dotenv import load_dotenv
 import os
 import base64
-from flask import Flask
+from flask import Flask,request
 from flask_socketio import SocketIO
-from flask_cors import CORS
+from flask_cors import CORS,cross_origin
 import pymysql
 from collections import deque
 db = pymysql.connect(
@@ -22,7 +22,7 @@ openai_api_key = os.getenv('OPENAI_API_KEY')
 client = openai.OpenAI(api_key=openai_api_key)
 
 app = Flask(__name__)
-CORS(app, resources={r'*': {'origins': 'https://localhost:5173'}})
+CORS(app, origins =['http://localhost:5173'])
 # socket_io = SocketIO(app,cors_allowed_origins="http://192.168.219.89:5173")
 
 
@@ -128,21 +128,26 @@ def chat(text):
 
     return {"result":result}
 
-@app.route("/short_feed")
-def short_feed(img):
-    question = "이 운동 자세를 보고 자세에서 가장 큰 문제점이 무엇인지 판단하고 지적한 다음 어떻게 개선해야할지 한두마디 정도로 짧게 피드백해줘"
+@app.route("/short_feed", methods=['POST','OPTIONS'])
+@cross_origin(origins="http://localhost:5173")
+def short_feed():
+    data = request.get_json()
+    img = data.get('image')
+    question = f"이 운동의 이름은 {data.get('exercise')} (이)야 자세를 보고 자세에서 문제점이 있다면 무엇인지 판단하고 지적한 다음 어떻게 개선해야할지 한두마디 정도로 짧게 피드백해줘"
     result = analyze_pose_with_image(img,question)
     print("\nGPT 자세 분석 결과:")
-    return {"img":img,"result":result}
+    return {"result":result}
 
-@app.route("/report")
-def analysis(data):
-    question = "이 운동 자세에 대해서 평가해줘."
-    
-    result = analyze_pose_with_image(data, question)
+@app.route("/report", methods=['POST','OPTIONS'])
+@cross_origin(origins="http://localhost:5173")
+def analysis():
+    data = request.get_json()
+    img = data.get('image')
+    question = f"이 운동의 이름은 {data.get('exercise')} (이)야 자세를 분석하고 현재 자세가 어디가 좋은지 어디가 나쁜지 평가해줘."
+    result = analyze_pose_with_image(img, question)
     print("\nGPT 자세 분석 결과:")
     print(result)
-    sendData = {"result":result,"img":data}
+    sendData = {"result":result,"img":img}
 
     return sendData
 

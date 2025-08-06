@@ -115,7 +115,6 @@ class BirddogAnalyzer():
             print(test)
             
 
-            # print(f"왼손 지지 {l_support_arm} 오른손 지지 {r_support_arm} 왼다리 지지{l_support_knee} 오른다리 지지 {r_support_knee}")
             
             self.r_up,self.r_down = arm_leg_up(
                 self.r_up,
@@ -137,6 +136,7 @@ class BirddogAnalyzer():
             r_support_arm = perpendicular(lm[12],lm[16])
             l_support_knee = perpendicular(lm[23],lm[25])
             r_support_knee = perpendicular(lm[24],lm[26])
+            # print(f"왼손 지지 {l_support_arm} 오른손 지지 {r_support_arm} 왼다리 지지{l_support_knee} 오른다리 지지 {r_support_knee}")
             
             # if not self.bad_pose:
             #     self.bad_pose = not check_support(self.r_down,r_support_arm,l_support_knee) and not check_support(self.l_down,l_support_arm,r_support_knee)
@@ -192,7 +192,7 @@ class BirddogAnalyzer():
             
             # 왼쪽 최대 높이시 일자로 뻗었는지. 체크
             if self.l_up:
-                if  l_shoulder_ang >= self.l_before_shoulder_ang -3  or r_hip_ang >= self.r_before_hip_ang -3:
+                if  l_shoulder_ang > self.l_before_shoulder_ang   or r_hip_ang > self.r_before_hip_ang :
                     
                     self.l_before_shoulder_ang = l_shoulder_ang
                     self.r_before_hip_ang = r_hip_ang
@@ -207,7 +207,7 @@ class BirddogAnalyzer():
                     elif r_support_arm and l_support_knee and self.l_perfect:
                         self.best_pose = True
                         self.send_turn = self.turn
-
+            
 
             
             draw_birddog(frame,h,w,lm[12],lm[14],lm[16],lm[24],lm[26],lm[28],lm[32],lm[30],lm[11],lm[13],lm[15],lm[23],lm[25],lm[27],lm[31],lm[29],lm[7])
