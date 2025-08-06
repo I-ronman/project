@@ -39,6 +39,9 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
       } catch (error) {
         console.error(error);
       }
+      setBadCount(data.bad_cnt)
+      setGoodCount(data.good_cnt)
+
     });
 
     wsRef.current.on("short_feed", () => {
@@ -56,17 +59,6 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
       setCapturedList(prev => [...prev, { img: base64Img, issue }]);
     });
 
-    
-
-    wsRef.current.on("goodCount", (data) => {
-
-      setGoodCount(goodCountRef.current+data);
-    });
-
-    wsRef.current.on("badCount", (data) => {
-      setBadCount(badCount + data);
-    });
-
     const sendImage = setInterval(() => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -81,7 +73,7 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
 
         const data = {
           image: imageData,
-          exerciseName:"squat",
+          exerciseName:"birddog",
           id:"jdw",
           view : {knee:viewKneeRef.current, leg_hip_angle:viewLegHipRef.current,center_of_gravity:false,upper_body_slope:false}
         };
@@ -103,7 +95,7 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
       <img src={imgSrc} alt="분석된 이미지" />
       <video
         ref={videoRef}
-        src="/videos/sidesquat.mp4"
+        src="/videos/birddog2.mp4"
         onLoadedMetadata={() => videoRef.current.play()}
         onEnded={onVideoEnd}
         muted
