@@ -26,7 +26,7 @@ const [routineDescription, setRoutineDescription] = useState(routineInfo?.summar
     exerciseTime: 60,  // 기본값 60초
     breaktime : 30,
     description: '운동을 선택해주세요',
-    image: '/images/sample-placeholder.png',
+    image: '/images/exerciseImg/exercise_select.png',
     },
   ]);
 
@@ -71,18 +71,25 @@ const [routineDescription, setRoutineDescription] = useState(routineInfo?.summar
 // ExerciseSearch 에서 선택한 운동을 받은 후에, 해당 index에 있는 운동을 덮어쓴다.
 // 다시 운동 선택 카드가 맨 끝에 없으면 추가
   useEffect(() => {
+    console.log('초기 location.state:', location.state)
+
     const { updatedExercise, index } = location.state || {};
 
-    if (updatedExercise && index !== undefined) {
+    if (updatedExercise && typeof updatedExercise === 'object' && index !== undefined) {
+
       setExerciseList((prevList) => {
         const updatedList = [...prevList];  // 기존 운동 리스트 복사
         updatedList[index] = {
-          ...updatedList[index],   // 기존의 운동 정보 유지
-          exerciseId: updatedExercise.exerciseId,  // 새롭게 들어온 운동 데이터 덮어쓰기
+          ...updatedList[index],
+          exerciseId: updatedExercise.exerciseId,
           name: updatedExercise.name,
           part: updatedExercise.part,
-          description: `${updatedExercise.part} 부위를 강화합니다.`,
-          image: '/images/sample-new.png',
+          description: updatedExercise.name === '운동 선택'
+            ? '운동을 선택해주세요'
+            : `${updatedExercise.part} 부위를 강화합니다.`,
+          image: updatedExercise.name === '운동 선택'
+            ? '/images/exerciseImg/exercise_select.png'
+            : updatedExercise.image, 
         };
 
         // 마지막이 '운동 선택'이 아니면 추가
@@ -95,7 +102,7 @@ const [routineDescription, setRoutineDescription] = useState(routineInfo?.summar
             exerciseTime: 60,
             breaktime: 30,
             description: '운동을 선택해주세요',
-            image: '/images/sample-placeholder.png',
+            image: '/images/exerciseImg/exercise_select.png',
           }); 
         }
 
@@ -189,6 +196,17 @@ const [routineDescription, setRoutineDescription] = useState(routineInfo?.summar
   const hasSelectedExercise = exerciseList.some(
     (e) => e.name !== '운동 선택' && e.exerciseId !== null
   );
+
+  useEffect(() => {
+    const state = location.state;
+
+    // 루틴 생성하러 처음 진입한 경우 → 새로고침 한 번
+    if (state && state.routine && !state.updatedExercise && state.index === undefined) {
+      console.log('🔁 루틴 생성 - 강제 새로고침');
+      navigate(location.pathname, { replace: true, state: {} });
+      window.location.reload();
+    }
+  }, []);
 
   return (
     <PageWrapper>
@@ -315,7 +333,7 @@ const [routineDescription, setRoutineDescription] = useState(routineInfo?.summar
                 exerciseTime: 1,
                 breaktime: 30,
                 description: '운동을 선택해주세요',
-                image: '/images/sample-placeholder.png',
+                image: '/images/exerciseImg/exercise_select.png',
               }]);
             }}>
             운동 추가

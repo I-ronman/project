@@ -13,15 +13,15 @@ const ExerciseSearch = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
 
   const dummyExercises = [
-    { exerciseId: 1, name: '벤치 프레스', part: '상체' },
-    { exerciseId: 2, name: '덤벨 벤치 프레스', part: '상체' },
-    { exerciseId: 3, name: '덤벨 풀오버', part: '상체' },
-    { exerciseId: 4, name: '펙덱 플라이', part: '상체' },
-    { exerciseId: 5, name: '스쿼트', part: '하체' },
-    { exerciseId: 6, name: '런지', part: '하체' },
-    { exerciseId: 7, name: '윗몸 일으키기', part: '코어' },
-    { exerciseId: 8, name: '버드독', part: '코어' },
-    { exerciseId: 9, name: '사이드 레그 레이즈', part: '코어' },
+    { exerciseId: 1, name: '벤치 프레스', part: '상체', image: '/images/exerciseImg/bench_press.png' },
+    { exerciseId: 2, name: '덤벨 벤치 프레스', part: '상체', image: '/images/exerciseImg/dumbbell_bench_press.png' },
+    { exerciseId: 3, name: '덤벨 풀오버', part: '상체', image: '/images/exerciseImg/dumbbell_pullover.png' },
+    { exerciseId: 4, name: '펙덱 플라이', part: '상체', image: '/images/exerciseImg/pec_deck_fly.png' },
+    { exerciseId: 5, name: '스쿼트', part: '하체', image: '/images/exerciseImg/squat.png' },
+    { exerciseId: 6, name: '런지', part: '하체', image: '/images/exerciseImg/lunge.png' },
+    { exerciseId: 7, name: '윗몸 일으키기', part: '코어', image: '/images/exerciseImg/situp.png' },
+    { exerciseId: 8, name: '버드독', part: '코어', image: '/images/exerciseImg/bird_dog.png' },
+    { exerciseId: 9, name: '사이드 레그 레이즈', part: '코어', image: '/images/exerciseImg/side_leg_raise.png' },
   ];
 
   const filteredExercises = dummyExercises.filter((exercise) =>

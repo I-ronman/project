@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRoutine } from '../context/RoutineContext.jsx';
 import PageWrapper from '../layouts/PageWrapper';
 import axios from 'axios';
+import { Clock, Dumbbell } from 'lucide-react'; // 상단 import
 
 const RoutinePage = () => {
   const navigate = useNavigate();
@@ -45,9 +46,9 @@ const RoutinePage = () => {
           exerciseId: e.exerciseId,
         })),
       },
-    },
-  });
-};
+    }
+    });
+  };
 
   const handleDeleteRoutine = async (routineId) => {
   const confirmed = window.confirm('정말 이 루틴을 삭제하시겠습니까?');
@@ -123,11 +124,14 @@ return (
 
             <div className="routine-card-list">
               {routines.map((r, index) => (
-                <div key={index} className="routine-card">
+                <div key={index} className="routine-card-rp">
                   <div className="routine-card-header">
-                    <h2>{r.title || r.name}</h2>
+                    <div className="routine-title-summary">
+                      <h2 className="routine-name">{r.title || r.name}</h2>
+                      {r.summary && <span className="routine-summary-inline">{r.summary}</span>}
+                    </div>
                     <span
-                      className="delete-btn"
+                      className="delete-btn-rp"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteRoutine(r.routineId);

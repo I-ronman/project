@@ -9,7 +9,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import TrainingCamTest from '../components/TrainingCamTest';
 import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
-
+import TrainingCam from '../components/TrainingCam';
 
 const PostureAnalysisPage = () => {
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
