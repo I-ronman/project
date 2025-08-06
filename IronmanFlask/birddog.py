@@ -17,7 +17,6 @@ good_cnt = 0
 bad_cnt = 0
 
 save_cnt = 0
-i = 0
 
 mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
@@ -26,9 +25,20 @@ pose = mp_pose.Pose()
 cap = cv2.VideoCapture("video/birddog/birddog5.mp4")  # 웹캠
 
 twist = False
+def beeline(up,beeline,arm_ang,shoulder_ang,hip_ang,leg_ang):
+    """ 팔을 기준으로 팔과 반대편 다리가 올라갔을 때 올라갔는지를 판단하고 정렬이 됐는지 판단하는 함수"""
+    arr = np.array([arm_ang,hip_ang,shoulder_ang,leg_ang])
 
-r_beeline = False
-l_beeline = False
+    if  up and np.all(arr > 160):
+        return True
+    elif beeline : return True
+    else: return False
+
+
+def check_support(down,support_arm,support_leg):
+        if down and (not support_arm or not support_leg):
+            return False
+        else: return True
 
 def arm_leg_up(up,down,shoulder_ang,hip_ang,leg_ang):
     """ 좌우 번갈을 때 한쪽 팔 반대쪽 다리가 올라갔는지 판단."""
@@ -40,15 +50,22 @@ def arm_leg_up(up,down,shoulder_ang,hip_ang,leg_ang):
     elif leg_ang < 90 and hip_ang < 120 and shoulder_ang < 90:
         down = True
     return up,down
-    
-def beeline(up,beeline,arm_ang,shoulder_ang,hip_ang,leg_ang):
-    """ 팔을 기준으로 팔과 반대편 다리가 올라갔을 때 올라갔는지를 판단하고 정렬이 됐는지 판단하는 함수"""
-    arr = np.array([arm_ang,hip_ang,shoulder_ang,leg_ang])
 
-    if  up and np.all(arr > 160):
-        return True
-    elif beeline : return True
-    else: return False
+class BirddogAnalyzer():
+    def __init__(self):
+        self.good_cnt = 0
+        self.bad_cnt = 0
+        self.twist = False
+        self.save_cnt = 0
+        self.r_beeline = False
+        self.l_beeline = False
+        self.pose = mp_pose.Pose()
+
+    
+
+
+    
+
 
 def perpendicular(p1,p2):
     """지지대가 되는 팔과 다리가 지면과 수직에 가까운지 참 거짓 반환"""
@@ -71,10 +88,13 @@ def twist_body(twist,r_shoulder,l_shoulder,r_hip,l_hip):
     else: True
 
 
+
 r_up = False
 l_up = False
 r_down = True
 l_down = True
+
+bad_pose = False
 
 while cap.isOpened():
         ret, frame = cap.read()
@@ -101,12 +121,6 @@ while cap.isOpened():
             l_arm_ang = get_angle(lm[11],lm[13],lm[15])
             test = {"오른어깨":r_shoulder_ang,"왼다리":l_leg_ang,"왼엉덩이":l_hip_ang,"왼어깨":l_shoulder_ang,"오른엉덩이":r_hip_ang,"오른다리":r_leg_ang}
             print(test)
-            l_support_arm = perpendicular(lm[11],lm[15])
-            r_support_arm = perpendicular(lm[12],lm[16])
-            l_support_knee = perpendicular(lm[23],lm[25])
-            r_support_knee = perpendicular(lm[24],lm[26])
-            support = [l_support_arm,l_support_knee,r_support_arm,r_support_knee]
-
             
 
             # print(f"왼손 지지 {l_support_arm} 오른손 지지 {r_support_arm} 왼다리 지지{l_support_knee} 오른다리 지지 {r_support_knee}")
@@ -125,6 +139,19 @@ while cap.isOpened():
                 r_hip_ang,
                 r_leg_ang
             )
+
+            # 팔,다리 지지 수직인지.
+            l_support_arm = perpendicular(lm[11],lm[15])
+            r_support_arm = perpendicular(lm[12],lm[16])
+            l_support_knee = perpendicular(lm[23],lm[25])
+            r_support_knee = perpendicular(lm[24],lm[26])
+            
+            if not bad_pose:
+                bad_pose = not check_support(r_down,r_support_arm,l_support_knee) and not check_support(l_down,l_support_arm,r_support_knee)
+
+            
+            print("배드포즈",bad_pose)
+
             r_beeline = beeline(
                 r_up,
                 r_beeline,
@@ -147,8 +174,10 @@ while cap.isOpened():
             if all([r_up,l_up]) and r_down and l_down:
                 r_up = False
                 l_up = False
-                if twist and not all(support):
+                bad_pose = False
+                if twist and :
                     bad_cnt += 1
+                    
                     print("나쁜 횟수",bad_cnt)
                 else:
                     good_cnt += 1
