@@ -35,8 +35,6 @@ class SquatAnalyzer:
             self.best_pose = False
         if self.bad_pose:
             self.bad_pose = False
-        self.good_cnt = 0
-        self.bad_cnt = 0
         h,w,_ = frame.shape
         def to_pixel(lm): return int(lm.x * w), int(lm.y * h)
             
@@ -123,17 +121,16 @@ class SquatAnalyzer:
                 self.bad_pose = False
                 self.best_pose = False
                 # print(f"배드포즈 초기화")
-                self.turn += 1
                 if not self.correct_knee or not self.proper_upper_body_tilt or not self.leg_upperbody_parallel or not self.center_of_gravity:
                     print(self.correct_knee,self.proper_upper_body_tilt,self.leg_upperbody_parallel,self.center_of_gravity)
                     self.correct_knee = True
                     self.proper_upper_body_tilt = True
                     self.leg_upperbody_parallel = True
                     self.center_of_gravity = True
-                    self.bad_cnt = 1
+                    self.bad_cnt += 1
                     # print("bad:",self.bad_cnt)
                 else:  
-                    self.good_cnt = 1
+                    self.good_cnt += 1
                     # print("good",self.good_cnt)
 
         
@@ -145,18 +142,14 @@ class SquatAnalyzer:
                     self.before_leg_ang = self.l_leg_ang
                 else:
                     self.before_leg_ang = 55
-                    self.send_turn = self.turn
                     self.best_pose = True
 
-            print( self.send_turn,self.turn)
 
             sendImg = encoding(frame)  
         
             return sendImg, {
                 "good_cnt": self.good_cnt,
                 "bad_cnt": self.bad_cnt,
-                "send_turn": self.send_turn,
-                "turn": self.turn,
                 "bad_pose":self.bad_pose,
                 "best_pose":self.best_pose
             }
