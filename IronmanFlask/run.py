@@ -10,7 +10,7 @@ import socketio
 from draw import draw_squat
 from encoding import encoding,decoding
 from squat import SquatAnalyzer
-
+from base_line import base_line
 
 
 good_cnt = 0
@@ -18,7 +18,9 @@ bad_cnt = 0
 turn = 0
 send_turn = 0
 
-
+mp_pose = mp.solutions.pose
+mp_draw = mp.solutions.drawing_utils
+pose = mp_pose.Pose()
 
 before_upper_body_ang = 35
 before_leg_ang = 55
@@ -225,4 +227,4 @@ def analyze(data):
 
 
 if __name__ == '__main__':
-    socket_io.run(app, debug=True, port=525)
+    socket_io.run(app, debug=True, port=8888)

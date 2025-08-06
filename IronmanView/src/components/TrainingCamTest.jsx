@@ -7,11 +7,15 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
   const wsRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const goodCountRef = useRef(null);
+  const badCountRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
 
   const {
     setGoodCount,
     setBadCount,
+    goodCount,
+    badCount,
     setReportImg,
     setCapturedList
   } = useContext(CountContext);
@@ -22,7 +26,9 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
   useEffect(() => {
     viewKneeRef.current = viewKnee;
     viewLegHipRef.current = viewLegHip;
-  }, [viewKnee, viewLegHip]);
+    goodCountRef.current = goodCount;
+    badCountRef.current = badCount;
+  }, [viewKnee, viewLegHip,goodCount,badCount]);
 
   useEffect(() => {
     wsRef.current = io.connect('http://localhost:525');
@@ -42,7 +48,7 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
     wsRef.current.on("report", (data) => {
       const poseType = data[0];
       const base64Img = `data:image/jpeg;base64,${data[1]}`;
-
+      console.log(data)
       const normalized = poseType.toLowerCase();
       const issue = (normalized.includes('good') || normalized.includes('best')) ? '1' : '0';
 
@@ -53,11 +59,12 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
     
 
     wsRef.current.on("goodCount", (data) => {
-      setGoodCount(data);
+
+      setGoodCount(goodCountRef.current+data);
     });
 
     wsRef.current.on("badCount", (data) => {
-      setBadCount(data);
+      setBadCount(badCount + data);
     });
 
     const sendImage = setInterval(() => {
@@ -74,8 +81,9 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
 
         const data = {
           image: imageData,
-          viewKnee: viewKneeRef.current,
-          viewLegHip: viewLegHipRef.current
+          exerciseName:"squat",
+          id:"jdw",
+          view : {knee:viewKneeRef.current, leg_hip_angle:viewLegHipRef.current,center_of_gravity:false,upper_body_slope:false}
         };
 
         if (data.image) {
