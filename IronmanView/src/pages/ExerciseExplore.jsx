@@ -83,6 +83,7 @@ const ExerciseExplore = () => {
 
   const navigate = useNavigate();
 
+  
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
