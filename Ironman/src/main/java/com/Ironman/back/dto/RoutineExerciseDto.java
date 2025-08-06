@@ -16,8 +16,8 @@ public class RoutineExerciseDto {
     private Integer sets;
     private Integer reps;
     private Integer exerciseTime;
-    private Integer order;
-
+    private Integer breaktime;
+    
     public static RoutineExerciseDto fromEntity(RoutineExerciseEntity entity) {
         return RoutineExerciseDto.builder()
                 .exerciseId(entity.getExercise().getExerciseId())
@@ -26,7 +26,7 @@ public class RoutineExerciseDto {
                 .sets(entity.getSets())
                 .reps(entity.getReps())
                 .exerciseTime(entity.getExerciseTime())
-                .order(entity.getOrder())
+                .breaktime(entity.getBreaktime())
                 .build();
     }
 }

@@ -3,7 +3,7 @@ import './StepIntro.css'
 
 const StepIntro = ({ nextStep }) => (
   <>
-    <img src="/images/coach.png" alt="코치" className="coach-img" />
+    <img src="/images/coach.jpg" alt="코치" className="coach-img" />
     <h2 className="intro-title">안녕하세요!</h2>
     <p className="intro-description">
       저는 당신의 개인 코치입니다.<br />

@@ -19,13 +19,13 @@ const AppLayout = () => {
 
   return (
     <div className="app-layout">
-      <div className="left-panel">
+      {/* <div className="left-panel">
         <div className="branding">
           <span className='text-3d-smalltitle'>team:</span>
           <h1 className="text-3d-title">Ironman</h1>
           <span className="text-3d-content">AI 홈 트레이닝 서비스</span>
         </div>
-      </div>
+      </div> */}
 
       <div className="right-panel">
         <div className="right-content">

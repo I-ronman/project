@@ -8,8 +8,13 @@ function ChatBotPage() {
   const navigate = useNavigate(); // ✅ 추가
 
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: '안녕하세요. 무엇을 도와드릴까요?' }
+    { sender: 'bot', text: '안녕하세요. 무엇을 도와드릴까요?' },
+    { sender: 'user', text: '아침 운동이 좋아? 저녁 운동이 좋아?' },
+    { sender: 'bot', text: '라이프스타일에 따라 달라요! 꾸준함이 가장 중요하고, 본인에게 맞는 시간대를 찾는 게 좋아요.' },
+    { sender: 'user', text: '나는 아침에 하는 게 좋은 것 같아.' },
+    { sender: 'bot', text: '좋아요! 아침 운동은 하루를 활기차게 시작하는 데 도움이 돼요.' }
   ]);
+    
   const [input, setInput] = useState('');
 
   const recommendedMessages = [

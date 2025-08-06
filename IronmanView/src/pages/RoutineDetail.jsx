@@ -9,11 +9,13 @@ import axios from 'axios';
 const RoutineDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { updateRoutine } = useRoutine();
 
-  const [routineDescription, setRoutineDescription] = useState('');
+const [routineInfo, setRoutineInfo] = useState(location.state?.routine ?? null); // ⭐ 여기 추가
 
-  const [routineName, setRoutineName] = useState('');
+// 기존 것들은 이제 routineInfo에서 꺼냄
+const [routineId, setRoutineId] = useState(routineInfo?.routineId ?? null);
+const [routineName, setRoutineName] = useState(routineInfo?.name ?? '');
+const [routineDescription, setRoutineDescription] = useState(routineInfo?.summary ?? '');
   const [exerciseList, setExerciseList] = useState([
     {
     name: '운동 선택',
@@ -22,6 +24,7 @@ const RoutineDetail = () => {
     sets: 3,
     reps: 10,
     exerciseTime: 60,  // 기본값 60초
+    breaktime : 30,
     description: '운동을 선택해주세요',
     image: '/images/exerciseImg/exercise_select.png',
     },
@@ -30,45 +33,40 @@ const RoutineDetail = () => {
  // 만약 루틴을 통해 들어왔을 경우(처음에만), 루틴의 정보대로 리스트를 매핑
  // 처음으로 루틴을 만들러 들어왔을 경우, 루틴 정보 매핑은 생략하고 그냥 운동 선택만 추가
   useEffect(() => {
-    const state = location.state;
+  const routine = location.state?.routine;
+  if (routine?.exercises?.length > 0) {
+    setRoutineDescription(routine.summary || '');
+    setRoutineName(routine.name || '');
 
-    // 루틴 수정(routine 있음)인데도 updatedExercise가 없으면 → 새로 만들기 위해 진입한 것
-    if (state && state.routine && !state.updatedExercise && state.index === undefined) {
-      console.log('🔁 location.state 초기화');
-      navigate(location.pathname, { replace: true, state: {} });
+    // ✅ routineId가 null이나 undefined가 아닐 때만 상태 반영
+    if (routine.routineId !== undefined && routine.routineId !== null) {
+      setRoutineId(routine.routineId);
     }
 
-    const routine = location.state?.routine;
-    if (routine?.exercises?.length > 0) {
-      setRoutineDescription((prev) => prev || routine.summary || '');
-      setRoutineName((prev) => prev || routine.name || '');
+    const mappedExercises = routine.exercises.map((e) => ({
+      ...e,
+      description: `${e.part} 부위를 강화합니다.`,
+      image: '/images/sample-new.png',
+      exerciseId: e.exerciseId,
+    }));
 
-      const mappedExercises = routine.exercises.map((e) => ({
-        ...e,
-        description: e.name === '운동 선택'
-          ? '운동을 선택해주세요'
-          : `${e.part} 부위를 강화합니다.`,
-        image: e.image || (e.name === '운동 선택'
-          ? '/images/exerciseImg/exercise_select.png'
-          : '/images/sample-new.png'),
-      }));
-
-      // 맨 마지막에 '운동 선택'이 없으면 추가
-      if (mappedExercises[mappedExercises.length - 1].name !== '운동 선택') {
-        mappedExercises.push({
-          name: '운동 선택',
-          part: '',
-          sets: 3,
-          reps: 10,
-          exerciseTime: 60,
-          description: '운동을 선택해주세요',
-          image: '/images/exerciseImg/exercise_select.png',
-        });
-      }
-
-      setExerciseList(mappedExercises);
+    if (mappedExercises[mappedExercises.length - 1].name !== '운동 선택') {
+      mappedExercises.push({
+        name: '운동 선택',
+        part: '',
+        sets: 3,
+        reps: 10,
+        exerciseTime: 60,
+        breaktime: 30,
+        description: '운동을 선택해주세요',
+        image: '/images/sample-placeholder.png',
+      });
     }
-  }, []);  // ✅ 최초 진입 시만 실행
+
+    setExerciseList(mappedExercises);
+  }
+}, []);
+
 
 // ExerciseSearch 에서 선택한 운동을 받은 후에, 해당 index에 있는 운동을 덮어쓴다.
 // 다시 운동 선택 카드가 맨 끝에 없으면 추가
@@ -102,6 +100,7 @@ const RoutineDetail = () => {
             sets: 3,
             reps: 10,
             exerciseTime: 60,
+            breaktime: 30,
             description: '운동을 선택해주세요',
             image: '/images/exerciseImg/exercise_select.png',
           }); 
@@ -111,18 +110,22 @@ const RoutineDetail = () => {
       });
 
       // ✅ 상태 초기화해서 중복 선택 방지
-      setTimeout(() => {
-        navigate(location.pathname, { replace: true, state: {} });
-      }, 0);
-    }
-  }, [location.state]);
+       setTimeout(() => {
+      navigate(location.pathname, {
+        replace: true,
+        state: {}, // ✅ location.state 초기화
+      });
+    }, 0);
+  }
+}, [location.state]);
 
   // 백엔드로 루틴 저장 전송
   const handleSave = async () => {
-    const routineData = {
-      title: routineName,
-      summary: routineDescription,
-      exercises: exerciseList
+  const routineData = {
+    routineId: routineId ?? null,
+    title: routineName,
+    summary: routineDescription,
+    exercises: exerciseList
       .filter((e) => e.name !== '운동 선택' && e.exerciseId != null)
       .map((e) => ({
         exerciseId: e.exerciseId,
@@ -130,24 +133,41 @@ const RoutineDetail = () => {
         sets: e.sets,
         reps: e.reps,
         exerciseTime: e.exerciseTime,
-        })),
-    };
-    console.log(routineData);
-
-    try {
-      const response = await axios.post('http://localhost:329/web/api/routine/add', routineData, {
-        withCredentials: true, // 인증 필요 시
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      console.log('루틴 저장 성공:', response.data);
-      navigate('/routine');
-
-    } catch (error) {
-      console.error('루틴 저장 실패:', error);
-      alert('루틴 저장에 실패했습니다.');
-    }
+        breaktime: e.breaktime,
+      })),
   };
+
+  console.log('🟡 보내는 routineData:', routineData);
+
+  const isUpdate = !!routineId;
+
+  try {
+    const response = await axios({
+      method: isUpdate ? 'put' : 'post', // routineId가 있으면 PUT, 없으면 POST
+      url: `http://localhost:329/web/api/routine/save`,
+      data: routineData,
+      withCredentials: true,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    console.log('루틴 저장/수정 성공:', response.data);
+
+    // ✅ 새 루틴 생성 시, 반환된 routineId를 상태에 반영
+    if (!isUpdate && response.data?.routineId) {
+  setRoutineId(response.data.routineId);
+  setRoutineInfo((prev) => ({
+    ...prev,
+    routineId: response.data.routineId,
+  }));
+}
+
+
+    navigate('/routine');
+  } catch (error) {
+    console.error('루틴 저장/수정 실패:', error);
+    alert('루틴 저장에 실패했습니다.');
+  }
+};
 
   // 루틴 페이지로 돌아가기 기능
   const handleBack = () => {
@@ -163,6 +183,7 @@ const RoutineDetail = () => {
       state: {
         index,  // ✅ 누른 카드의 index 넘김
         routine: {
+          routineId:routineId,
           name: routineName,
           summary: routineDescription,
           exercises: exerciseList,  // ✅ 전체 리스트 넘김
@@ -175,6 +196,17 @@ const RoutineDetail = () => {
   const hasSelectedExercise = exerciseList.some(
     (e) => e.name !== '운동 선택' && e.exerciseId !== null
   );
+
+  useEffect(() => {
+    const state = location.state;
+
+    // 루틴 생성하러 처음 진입한 경우 → 새로고침 한 번
+    if (state && state.routine && !state.updatedExercise && state.index === undefined) {
+      console.log('🔁 루틴 생성 - 강제 새로고침');
+      navigate(location.pathname, { replace: true, state: {} });
+      window.location.reload();
+    }
+  }, []);
 
   return (
     <PageWrapper>
@@ -254,7 +286,7 @@ const RoutineDetail = () => {
                       </label>
 
                       <label>
-                        시간(초):
+                        세트시간(초):
                         <input
                           type="number"
                           value={exercise.exerciseTime || 0}
@@ -266,6 +298,19 @@ const RoutineDetail = () => {
                           }}
                         />
                       </label>
+                       <label>
+                          쉬는 시간(초):
+                          <input
+                            type="number"
+                            value={exercise.breaktime || 0}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => {
+                              const newList = [...exerciseList];
+                              newList[i] = { ...newList[i], breaktime: parseInt(e.target.value, 10) };
+                              setExerciseList(newList);
+                            }}
+                          />
+                        </label>
                     </div>
                   )}
                 </div>
@@ -286,6 +331,7 @@ const RoutineDetail = () => {
                 sets: 3,
                 reps: 10,
                 exerciseTime: 1,
+                breaktime: 30,
                 description: '운동을 선택해주세요',
                 image: '/images/exerciseImg/exercise_select.png',
               }]);

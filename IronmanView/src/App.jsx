@@ -39,6 +39,7 @@ import EditPostPage           from './pages/EditPostPage';
 import RecordsPage            from './pages/RecordsPage';
 
 import ModalWrapper           from './components/ModalWrapper';
+import ExerciseExplore        from './pages/ExerciseExplore';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -90,6 +91,7 @@ const AppRoutes = () => {
           <Route path="write"              element={<BoardWritePage />} />
           <Route path="edit/:id"           element={<EditPostPage />} />
           <Route path="records"            element={<RecordsPage />} />
+          <Route path="exercise"           element={<ExerciseExplore/>} />
         </Route>
 
         {/* 독립 진입 시에도 동작해야 하는 경로 */}

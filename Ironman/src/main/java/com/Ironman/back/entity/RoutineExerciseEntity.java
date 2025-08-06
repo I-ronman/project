@@ -43,6 +43,6 @@ public class RoutineExerciseEntity {
 	    @Column(nullable = true)
 	    private Integer exerciseTime;
 
-	    @Column(name = "`order`")
-	    private Integer order;
+	    @Column(nullable = true)
+	    private Integer breaktime;
 }

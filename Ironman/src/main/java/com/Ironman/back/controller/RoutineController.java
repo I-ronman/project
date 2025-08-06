@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Ironman.back.dto.RoutineExerciseDto;
@@ -35,17 +37,19 @@ public class RoutineController {
     private final RoutineRepository routineRepository;
 
     // 루틴 + 운동 목록 저장
-    @PostMapping("/add")
-    public ResponseEntity<?> addRoutine(@RequestBody FullRoutineDto dto, HttpSession session) {
-    	 UserEntity user = (UserEntity) session.getAttribute("user");
-    	 	if (user == null) {
-    	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
-    	    }
-    	 	
-    	    String email = user.getEmail();
-    	    routineService.saveFullRoutine(dto, email);
-    	    return ResponseEntity.ok("루틴 저장 완료");
-    	}
+    @RequestMapping(value = "/save", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity<?> saveOrUpdateRoutine(@RequestBody FullRoutineDto dto, HttpSession session) {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        System.out.println("📌 루틴 저장/수정 요청 - routineId: " + dto.getRoutineId());
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
+        }
+
+        routineService.saveOrUpdateFullRoutine(dto, user.getEmail());
+        return ResponseEntity.ok("루틴 저장/수정 완료");
+    }
+
 
     // 내 루틴 목록 조회
     @GetMapping("/list")
@@ -70,6 +74,5 @@ public class RoutineController {
         routineService.deleteRoutine(routineId, user.getEmail());
         return ResponseEntity.ok().build();
     }
-
     
 }

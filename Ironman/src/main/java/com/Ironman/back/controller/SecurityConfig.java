@@ -32,8 +32,8 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // ⬅ 추가!
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/oauth/**", "/css/**", "/js/**", "/images/**", "/email/**",      //  이메일 인증 관련 요청 허용
-                        "/signup","/login","/api/routine/add", "/api/routine/list",
-                        "/login/check","/login/user","/api/routine/**","/api/survey","/api/posture/**"    ).permitAll() // 비로그인 허용 경로
+                        "/signup","/login","/login/check","/login/user",
+                        "/api/routine/**","/api/survey","/api/posture/**"    ).permitAll() // 비로그인 허용 경로
                 .anyRequest().authenticated() // 나머지는 인증 필요
                 
             )
