@@ -9,6 +9,8 @@ from calcData import get_angle,draw_angle_arc
 import socketio
 from draw import draw_squat
 from encoding import encoding,decoding
+from squat import SquatAnalyzer
+from base_line import base_line
 
 
 good_cnt = 0
@@ -44,12 +46,6 @@ app = Flask(__name__)
 # socket_io = SocketIO(app,cors_allowed_origins="http://192.168.219.89:5173")
 socket_io = SocketIO(app,cors_allowed_origins="http://localhost:5173")
 
-class base_line(object):
-     def __init__(self,xp,yp):
-        self.x = xp.x
-        self.y = yp.y
-     def get(self):
-          return self.x,self.y
      
 
 # @app._got_first_request
@@ -231,4 +227,4 @@ def analyze(data):
 
 
 if __name__ == '__main__':
-    socket_io.run(app, debug=True, port=525)
+    socket_io.run(app, debug=True, port=8888)

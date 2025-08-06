@@ -12,11 +12,12 @@ html, body, #root {
 
 /* 전체 레이아웃 설정 */
 .app-layout {
+  height: 100vh;
   width: 100vw;
-  min-height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: stretch;
+  background-color: black;
   background-image: url('/images/background1.jpg'); /* 전체 배경으로 이동 */
   background-size: auto;
   background-position: center;
@@ -62,9 +63,7 @@ html, body, #root {
 }
 
 .right-panel {
-  width: 30vw;
-  min-width: 530px;
-  max-width: none;
+  width: 100vw;
   height: 100vh;
   background-color: #121212;
   color: white;
@@ -77,16 +76,16 @@ html, body, #root {
 
 .right-content {
   width: 100%;
+  max-width: none;
   height: 100%;
   box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
-  align-items: center;       /* 내부 요소 가운데 정렬 */
+  align-items: stretch;       /* 내부 요소 가운데 정렬 */
   justify-content: flex-start;
 
   padding: 0;
-  overflow-y: auto;
 }
 
 

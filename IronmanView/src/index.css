@@ -57,7 +57,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
   }
   a:hover {
     color: #747bff;
@@ -79,9 +79,21 @@ body, html, #root {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f5f5f5;
+  background-color: black; /* ✅ 이 줄이 중요 */
+  /* background: #f5f5f5; */
 }
 
+/* 크롬, 엣지, 사파리용 스크롤바 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background-color: black;  /* ✅ 스크롤 트랙도 어둡게 */
+}
 
   
   

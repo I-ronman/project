@@ -176,6 +176,17 @@ const RoutineDetail = () => {
     (e) => e.name !== '운동 선택' && e.exerciseId !== null
   );
 
+  useEffect(() => {
+    const state = location.state;
+
+    // 루틴 생성하러 처음 진입한 경우 → 새로고침 한 번
+    if (state && state.routine && !state.updatedExercise && state.index === undefined) {
+      console.log('🔁 루틴 생성 - 강제 새로고침');
+      navigate(location.pathname, { replace: true, state: {} });
+      window.location.reload();
+    }
+  }, []);
+
   return (
     <PageWrapper>
       <div className="routine-detail-container">
