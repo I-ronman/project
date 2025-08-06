@@ -30,24 +30,23 @@ const RoutinePage = () => {
   }, []);
 
   const handleRoutineClick = (routine) => {
-  console.log('넘어가는 루틴', routine);
-    navigate('/routinedetail', {
-      state: {
-        routine: {
-          routineId: routine.routineId,
-          name: routine.title,
-          summary: routine.summary,
-          exercises: routine.exercises.map((e) => ({
-            name: e.exerciseName || e.name,
-            part: e.part || '',
-            sets: e.sets,
-            reps: e.reps,
-            exerciseTime: e.exerciseTime,
-            description: e.description || '',
-            image: e.image || '/images/sample-placeholder.png',
-          })),
-        },
+  navigate('/routinedetail', {
+    state: {
+      routine: {
+        routineId: routine.routineId,
+        name: routine.title,
+        summary: routine.summary,
+        exercises: routine.exercises.map((e) => ({
+          name: e.name,
+          part: e.part,
+          sets: e.sets,
+          reps: e.reps,
+          breaktime: e.breaktime,
+          exerciseTime: e.exerciseTime,
+          exerciseId: e.exerciseId,
+        })),
       },
+    }
     });
   };
 
@@ -78,6 +77,7 @@ const RoutinePage = () => {
         sets: 3,
         reps: 10,
         exerciseTime: 60,
+        breaktime: 30,
         description: '운동을 선택해주세요',
         image: '/images/sample-placeholder.png',
       }
@@ -140,17 +140,28 @@ return (
                       X
                     </span>
                   </div>
-                  
-                  <p className="routine-time-line">
-                    <Clock size={18} color="#88ff00ff" style={{ transform: 'translateY(0px)' }} />
-                    {r.exerciseTime < 60 ? `${r.exerciseTime}초` : `${r.exerciseTime / 60}분`}
-                  </p>
+                  {r.summary && <p className="routine-summary">{r.summary}</p>}
+                            <p>⏱ { r.exercises && r.exercises.length > 0
+                ? (() => {
+                    const totalSeconds = r.exercises.reduce((acc, cur) => {
+                      const time = (cur.exerciseTime || 0);
+                      const rest = (cur.breaktime || 0);
+                      const sets = (cur.sets || 1);
+                      return acc + (time + rest) * sets;
+                    }, 0);
 
-                  <p className="routine-exercises-line">
-                    <Dumbbell size={18} color="#ffcc00" style={{ transform: 'translateY(0px)' }} />
-                    {r.exercises.length > 0
-                      ? r.exercises.map((ex, idx) => ex.exerciseName).join(', ')
-                      : '운동없음'}
+                    const minutes = Math.floor(totalSeconds / 60);
+                    const seconds = totalSeconds % 60;
+
+                    return minutes > 0
+                      ? `${minutes}분 ${seconds > 0 ? `${seconds}초` : ''}`
+                      : `${seconds}초`;
+                  })()
+                : '0초'}</p>
+                  <p>
+                    💪 {r.exercises.length > 0 
+                          ? r.exercises.map((ex, idx) => ex.exerciseName).join(', ')
+                          : '운동없음'}
                   </p>
                   <button className="start-routine-btn"
                     onClick={(e) => {

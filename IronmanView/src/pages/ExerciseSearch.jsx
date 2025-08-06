@@ -42,6 +42,7 @@ const ExerciseSearch = () => {
             updatedExercise: selectedExercise,
             index,
             routine: {
+              routineId: location.state?.routine?.routineId,
               name: location.state?.routine?.name || '루틴 A',
               summary: location.state?.routine?.summary || '',  
               exercises: location.state?.routine?.exercises || [],
