@@ -10,8 +10,9 @@
   margin-bottom: 0;
   align-items: center;
   border-bottom: 1px solid #333;
-  max-width: 500px;
-  width: 90%
+  max-width: none;
+  width: 100%;
+  min-height: 90px;
   
 }
 .header-left {
