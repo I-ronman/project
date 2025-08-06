@@ -69,10 +69,10 @@ def analyze(data):
     frame, result = analyzer.process_frame(frame,view)
     
     if result["bad_pose"]:
-        socket_io.emit("short_feed", frame)
-        socket_io.emit("report", ["badPose", frame])
+        socket_io.emit("short_feed", {"img":frame,"exercise":exercise_name})
+        socket_io.emit("report", ["badPose", {"img":frame,"exercise":exercise_name}])
     elif result["best_pose"]:
-        socket_io.emit("report", ["bestPose", frame])
+        socket_io.emit("report", ["bestPose", {"img":frame,"exercise":exercise_name}])
     # print(analyzer_map)
     socket_io.emit("show", {"sendImg": frame,"good_cnt":result["good_cnt"],"bad_cnt":result["bad_cnt"]})
 
