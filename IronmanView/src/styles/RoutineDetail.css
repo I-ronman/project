@@ -54,6 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-image: url('/images/dumbel.jpg');
 }
 
 .ex-info {

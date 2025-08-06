@@ -9,6 +9,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
 } from 'recharts';
 
+
 // ✅ 예시용 dummy 데이터
 const dummyData = {
   weeklyStats: [
@@ -158,6 +159,8 @@ const MainDashboardPage = () => {
       </div>
     )
   };
+
+  // 사용자 선호도 순서대로
   const ordered = [], fallback = [];
   Object.entries(DASHBOARD_COMPONENTS).forEach(([k, c]) => {
     (user?.preferences?.includes(k) ? ordered : fallback).push(c);
@@ -306,7 +309,7 @@ const MainDashboardPage = () => {
               </li>
             ))}
           </ol>
-          <p className="my-rank">내 순위: {myRank}등</p>
+          <p className="my-rank">255등 / 전체</p>
         </div>
 
         {/* 커뮤니티 게시판 */}

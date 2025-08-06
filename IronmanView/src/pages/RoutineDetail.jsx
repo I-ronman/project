@@ -23,13 +23,21 @@ const RoutineDetail = () => {
     reps: 10,
     exerciseTime: 60,  // 기본값 60초
     description: '운동을 선택해주세요',
-    image: '/images/sample-placeholder.png',
+    image: '/images/exerciseImg/exercise_select.png',
     },
   ]);
 
  // 만약 루틴을 통해 들어왔을 경우(처음에만), 루틴의 정보대로 리스트를 매핑
  // 처음으로 루틴을 만들러 들어왔을 경우, 루틴 정보 매핑은 생략하고 그냥 운동 선택만 추가
   useEffect(() => {
+    const state = location.state;
+
+    // 루틴 수정(routine 있음)인데도 updatedExercise가 없으면 → 새로 만들기 위해 진입한 것
+    if (state && state.routine && !state.updatedExercise && state.index === undefined) {
+      console.log('🔁 location.state 초기화');
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+
     const routine = location.state?.routine;
     if (routine?.exercises?.length > 0) {
       setRoutineDescription((prev) => prev || routine.summary || '');
@@ -37,8 +45,12 @@ const RoutineDetail = () => {
 
       const mappedExercises = routine.exercises.map((e) => ({
         ...e,
-        description: `${e.part} 부위를 강화합니다.`,
-        image: '/images/sample-new.png',
+        description: e.name === '운동 선택'
+          ? '운동을 선택해주세요'
+          : `${e.part} 부위를 강화합니다.`,
+        image: e.image || (e.name === '운동 선택'
+          ? '/images/exerciseImg/exercise_select.png'
+          : '/images/sample-new.png'),
       }));
 
       // 맨 마지막에 '운동 선택'이 없으면 추가
@@ -50,7 +62,7 @@ const RoutineDetail = () => {
           reps: 10,
           exerciseTime: 60,
           description: '운동을 선택해주세요',
-          image: '/images/sample-placeholder.png',
+          image: '/images/exerciseImg/exercise_select.png',
         });
       }
 
@@ -61,18 +73,25 @@ const RoutineDetail = () => {
 // ExerciseSearch 에서 선택한 운동을 받은 후에, 해당 index에 있는 운동을 덮어쓴다.
 // 다시 운동 선택 카드가 맨 끝에 없으면 추가
   useEffect(() => {
+    console.log('초기 location.state:', location.state)
+
     const { updatedExercise, index } = location.state || {};
 
-    if (updatedExercise && index !== undefined) {
+    if (updatedExercise && typeof updatedExercise === 'object' && index !== undefined) {
+
       setExerciseList((prevList) => {
         const updatedList = [...prevList];  // 기존 운동 리스트 복사
         updatedList[index] = {
-          ...updatedList[index],   // 기존의 운동 정보 유지
-          exerciseId: updatedExercise.exerciseId,  // 새롭게 들어온 운동 데이터 덮어쓰기
+          ...updatedList[index],
+          exerciseId: updatedExercise.exerciseId,
           name: updatedExercise.name,
           part: updatedExercise.part,
-          description: `${updatedExercise.part} 부위를 강화합니다.`,
-          image: '/images/sample-new.png',
+          description: updatedExercise.name === '운동 선택'
+            ? '운동을 선택해주세요'
+            : `${updatedExercise.part} 부위를 강화합니다.`,
+          image: updatedExercise.name === '운동 선택'
+            ? '/images/exerciseImg/exercise_select.png'
+            : updatedExercise.image, 
         };
 
         // 마지막이 '운동 선택'이 아니면 추가
@@ -84,7 +103,7 @@ const RoutineDetail = () => {
             reps: 10,
             exerciseTime: 60,
             description: '운동을 선택해주세요',
-            image: '/images/sample-placeholder.png',
+            image: '/images/exerciseImg/exercise_select.png',
           }); 
         }
 
@@ -268,7 +287,7 @@ const RoutineDetail = () => {
                 reps: 10,
                 exerciseTime: 1,
                 description: '운동을 선택해주세요',
-                image: '/images/sample-placeholder.png',
+                image: '/images/exerciseImg/exercise_select.png',
               }]);
             }}>
             운동 추가

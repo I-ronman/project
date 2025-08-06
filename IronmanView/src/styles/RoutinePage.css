@@ -1,6 +1,5 @@
+/* project/IronmanView/src/styles/RoutinePage.css */
 
-
-/*project/IronmanView/src/styles/RoutinePage.css*/
 .routine-wrapper {
   background: black;
   min-height: 100vh;
@@ -12,8 +11,8 @@
 .routine-container {
   background: #111;
   color: white;
-  width: 100%;
-  max-width: 430px;
+  width: 90%;
+  max-width: 500px;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -42,6 +41,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 
 .survey-btn {
@@ -53,26 +53,140 @@
   border-radius: 6px;
 }
 
-.routine-card {
-  background: #222;
+.routine-card-rp {
+  position: relative;
+  overflow: hidden;
+  background-image: url('/images/exercise_man.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #111;
   border-radius: 12px;
   padding: 16px;
-  margin-top: 12px;
-  margin-bottom: 20px;
+  margin: 12px 0;
+}
+
+.routine-card-rp::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+  border-radius: 12px;
+}
+
+.routine-card-rp > * {
+  position: relative;
+  z-index: 1;
+}
+
+.routine-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   position: relative;
 }
 
-.routine-card h2 {
-  font-size: 20px;
-  margin-bottom: 6px;
+.routine-title-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 80%;
+  flex-wrap: wrap;
+}
+
+.routine-name,
+.routine-card-rp h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.routine-summary-inline {
+  font-size: 14px;
+  color: #ccc;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.routine-summary {
+  font-size: 14px;
+  color: #ccc;
+  margin-left: 10px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.routine-card-rp p {
+  font-size: 16px;
+  line-height: 1;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0px;
+}
+
+.delete-btn-rp {
+  background-color: transparent;
+  border: 1px solid rgb(255, 109, 51);
+  color: rgb(255, 109, 51);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.delete-btn-rp:hover{
+  background-color: rgb(255, 109, 51);
+  color: #1c1c1c;
+}
+
+.routine-card-click-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.start-routine-btn {
+  margin-top: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 100%;
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+
+.start-routine-btn:hover {
+  background-color: #666;
+}
+
+.routine-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .routine-actions {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 24px;
+  justify-content: center;
 }
 
 .routine-actions button {
@@ -81,6 +195,32 @@
   border-radius: 10px;
   padding: 12px;
   font-weight: bold;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.card-buttons button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card-buttons button:first-child {
+  background-color: #d7fb07;
+  color: black;
+}
+
+.card-buttons button:last-child {
+  background-color: #ff6464;
+  color: white;
 }
 
 .individual-list {
@@ -100,258 +240,66 @@
   text-align: center;
 }
 
-.routine-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
+.routine-form input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
 }
 
-.routine-card-header {
+.calories-text {
+  margin: 10px 0;
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+.btn-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: 10px;
 }
 
-.delete-btn {
-  font-size: 16px;
-  color: #ff5c5c;
-  cursor: pointer;
+.btn-row button {
+  flex: 1;
+  background: #d7fb07;
+  color: black;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
   font-weight: bold;
-  z-index: 2;
-}
-
-.routine-card-click-layer {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 1;
-}
-  .routine-container {
-    background: #111;
-    color: white;
-    width: 90%;
-    max-width: 500px;
-    box-sizing: border-box;
-  }
-  
-  .routine-tab {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .tab {
-    background: #333;
-    color: #aaa;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .tab.active {
-    background: white;
-    color: black;
-  }
-  
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .survey-btn {
-    font-size: 13px;
-    padding: 6px 10px;
-    background: #666;
-    border: none;
-    color: white;
-    border-radius: 6px;
-  }
-  
-  .routine-card {
-    background: #222;
-    border-radius: 12px;
-    padding: 16px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-  
-  .routine-card h2 {
-    font-size: 20px;
-    margin-bottom: 6px;
-  }
-  
-  .routine-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  
-  .routine-actions button {
-    background: #aaa;
-    border: none;
-    border-radius: 10px;
-    padding: 12px;
-    font-weight: bold;
-  }
-  
-  .routine-form input {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-  }
-  
-  .calories-text {
-    margin: 10px 0;
-    color: #ffcc00;
-    font-weight: bold;
-  }
-  
-  .btn-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  
-  .btn-row button {
-    flex: 1;
-    background: #d7fb07;
-    color: black;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: bold;
-  }
-  
-  .individual-list {
-    margin-top: 20px;
-  }
-  
-  .individual-list ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .individual-list li {
-    background: #333;
-    margin-bottom: 10px;
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  .card-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 12px;
-    gap: 8px;
-  }
-  
-  .card-buttons button {
-    flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    background-color: #ff6464;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .card-buttons button:first-child {
-    background-color: #d7fb07;
-    color: black;
-  }
-  
-  .routine-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px; /* 여백 추가해서 아래 버튼과 거리 확보 */
-}
-
-/* 추천받기 버튼은 맨 아래에 고정되는 게 아니라 자연스럽게 따라 내려가야 함 */
-.routine-actions {
-  display: flex;
-  justify-content: center;
-}
-
-.routine-description {
-  font-size: 13px;
-  color: #ccc;
-  margin-top: 6px;
-  white-space: pre-wrap;
-}
-
-.routine-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.routine-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.delete-btn {
-  color: #f55;
-  cursor: pointer;
-  font-size: 18px;
-  margin-left: 8px;
 }
 
 .top-btn-group {
   display: flex;
 }
-
-/* 루틴 시작하기 버튼 */
-.start-routine-btn {
-  margin-top: 10px;
-  background-color: #444;
+.routine-time-line,
+.routine-exercises-line {
+  display: flex;
+  align-items: center; /* ✅ 아이콘과 텍스트 수직 중앙 정렬 */
+  font-size: 16px;
+  gap: 6px;
+  line-height: 1.4;
   color: white;
+}
+
+.routine-time-line{
+  margin-top: 40px;
+}
+
+.add-routine-card {
+  background: transparent;
   border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  width: 100%;
-  cursor: pointer;
-  z-index: 1;
-  position: relative;
-}
-
-.start-routine-btn:hover {
-  background-color: #666;
-}
-
-.routine-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.routine-card-click-layer {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; /* 기본 */
-}
-
-.start-routine-btn {
-  position: relative;
-  z-index: 2;
-}
-.delete-btn {
-  position: relative;
-  z-index: 2;
-}
-
-.routine-summary {
-  font-size: 0.9rem;
   color: #ccc;
-  margin-bottom: 6px;
+  font-weight: bold;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.add-routine-card:hover {
+  color: #FBD157;
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }

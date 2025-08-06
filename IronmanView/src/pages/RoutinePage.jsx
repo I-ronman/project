@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRoutine } from '../context/RoutineContext.jsx';
 import PageWrapper from '../layouts/PageWrapper';
 import axios from 'axios';
+import { Clock, Dumbbell } from 'lucide-react'; // 상단 import
 
 const RoutinePage = () => {
   const navigate = useNavigate();
@@ -119,11 +120,14 @@ return (
 
             <div className="routine-card-list">
               {routines.map((r, index) => (
-                <div key={index} className="routine-card">
+                <div key={index} className="routine-card-rp">
                   <div className="routine-card-header">
-                    <h2>{r.title || r.name}</h2>
+                    <div className="routine-title-summary">
+                      <h2 className="routine-name">{r.title || r.name}</h2>
+                      {r.summary && <span className="routine-summary-inline">{r.summary}</span>}
+                    </div>
                     <span
-                      className="delete-btn"
+                      className="delete-btn-rp"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteRoutine(r.routineId);
@@ -132,14 +136,17 @@ return (
                       X
                     </span>
                   </div>
-                  {r.summary && <p className="routine-summary">{r.summary}</p>}
-                  <p>⏱ {r.exerciseTime < 60
-                        ? `${r.exerciseTime}초`
-                        : `${(r.exerciseTime / 60)}분`}</p>
-                  <p>
-                    💪 {r.exercises.length > 0 
-                          ? r.exercises.map((ex, idx) => ex.exerciseName).join(', ')
-                          : '운동없음'}
+                  
+                  <p className="routine-time-line">
+                    <Clock size={18} color="#88ff00ff" style={{ transform: 'translateY(0px)' }} />
+                    {r.exerciseTime < 60 ? `${r.exerciseTime}초` : `${r.exerciseTime / 60}분`}
+                  </p>
+
+                  <p className="routine-exercises-line">
+                    <Dumbbell size={18} color="#ffcc00" style={{ transform: 'translateY(0px)' }} />
+                    {r.exercises.length > 0
+                      ? r.exercises.map((ex, idx) => ex.exerciseName).join(', ')
+                      : '운동없음'}
                   </p>
                   <button className="start-routine-btn"
                     onClick={(e) => {
