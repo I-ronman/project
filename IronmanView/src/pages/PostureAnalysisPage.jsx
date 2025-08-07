@@ -22,7 +22,6 @@ const PostureAnalysisPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routine = location.state?.routine;
-  const [totalCount, setTotalCount] = useState(0);
   const [goodCount, setGoodCount] = useState(0);
   const [badCount, setBadCount] = useState(0);
   const [selectedCapture, setSelectedCapture] = useState(null); // 선택한 이미지
@@ -75,8 +74,6 @@ const PostureAnalysisPage = () => {
 
   return (
     <CountContext.Provider value={{
-      totalCount,
-      setTotalCount,
       goodCount,
       setGoodCount,
       badCount,
