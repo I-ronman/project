@@ -110,7 +110,12 @@ public class RoutineService {
                         int sets = e.getSets() != null ? e.getSets() : 1;
                         int reps = e.getReps() != null ? e.getReps() : 1;
                         int time = e.getExerciseTime() != null ? e.getExerciseTime() : 1;
-                        return sets * reps * time;
+                        int breakTime = e.getBreaktime() != null ? e.getBreaktime() : 0;
+                        
+                        int exerciseDuration = sets * reps * time;
+                        int totalBreakTime = (sets > 1) ? (sets - 1) * breakTime : 0;
+                        
+                        return exerciseDuration + totalBreakTime;
                     })
                     .sum();
 
