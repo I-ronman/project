@@ -69,7 +69,6 @@ const dummyExercises = [
   }
 ];
 
-
 const bodyParts = ['전체', '상체', '하체', '코어', '유산소', '전신'];
 
 const ExerciseExplore = () => {
@@ -82,6 +81,11 @@ const ExerciseExplore = () => {
   const [routineModal, setRoutineModal] = useState(null);
   const [originalRoutine, setOriginalRoutine] = useState(null);
   const [calculatedTime, setCalculatedTime] = useState(0);
+  const [customSets, setCustomSets] = useState(3);
+  const [customReps, setCustomReps] = useState(5);
+  const [customExerciseTime, setCustomExerciseTime] = useState(60);
+  const [customBreaktime, setCustomBreaktime] = useState(30);
+  const [expandedRoutineId, setExpandedRoutineId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -102,7 +106,17 @@ const ExerciseExplore = () => {
   }, []);
 
   const handleStartExercise = () => {
-    navigate('/postureanalysis', { state: { exercise: selectedExercise } });
+    const exerciseWithCustomValues = {
+    ...selectedExercise,
+    sets: customSets,
+    reps: customReps,
+    exerciseTime: customExerciseTime,
+    breaktime: customBreaktime,
+    };
+
+    console.log('[운동하기 클릭] 전달될 운동 정보:', exerciseWithCustomValues); // 🔍
+    
+    navigate('/postureanalysis', { state: { exercise: exerciseWithCustomValues } });
   };
 
   const handleCardClick = (exercise) => {
@@ -135,10 +149,10 @@ const ExerciseExplore = () => {
     const newExercise = {
         exerciseId: selectedExercise.exerciseId,
         exerciseName: selectedExercise.exerciseName,
-        sets: 3,
-        reps: 5,
-        exerciseTime: 60,
-        breaktime: 30,
+        sets: customSets,
+        reps: customReps,
+        exerciseTime: customExerciseTime,
+        breaktime: customBreaktime,
         order: selectedRoutine.exercises.length + 1,
         isNew: true,
     };
@@ -213,12 +227,26 @@ const ExerciseExplore = () => {
     }
   };
 
+  // 🔢 고정 인덱스 생성 로직 (routineId 기반)
+  const getImageIndexFromId = (id) => {
+    if (!id) return 1;
+    return (id % 5) + 1;  // 1~5 반복
+  };
 
   useEffect(() => {
     if (routineModal) {
       setCalculatedTime(calculateTotalTime(routineModal.exercises));
     }
   }, [routineModal]);
+
+  useEffect(() => {
+    if (showModal && selectedExercise) {
+      setCustomSets(3);
+      setCustomReps(5);
+      setCustomExerciseTime(60);
+      setCustomBreaktime(30);
+    }
+  }, [showModal, selectedExercise]);
 
   return (
     <div className="explore-container">
@@ -263,61 +291,80 @@ const ExerciseExplore = () => {
       <div className="right-panel-exp" onClick={() => setSelectedRoutine(null)}>
         <div className="right-top-exp">
           <p>루틴 리스트</p>
-          {routines.map((routine) => (
-            <div
-                key={routine.routineId}
-                className={`routine-card-box-exp ${selectedRoutine?.routineId === routine.routineId ? 'selected' : ''}`}
-                onClick={(e) => {
-                e.stopPropagation();
-                handleRoutineCardClick(routine);
-                }}
-            >
-                <div className="routine-card-title-exp">{routine.title || '제목 없음'}</div>
-                <button
-                className="routine-select-btn-exp"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleRoutineSelect(routine);
-                }}
-                >
-                선택
-                </button>
-            </div>
-            ))}
-        </div>
+            {routines.map((routine, index) => {
+              const isExpanded = expandedRoutineId === routine.routineId;
+              const totalTime = calculateTotalTime(routine.exercises);
+              const imageIndex = getImageIndexFromId(routine.routineId);
+              const backgroundImageUrl = `/images/bg/exercise_man${imageIndex}.png`;
 
-        <div className="right-bottom-exp">
-          {selectedRoutine && selectedRoutine.exercises.length > 0 ? (
-            selectedRoutine.exercises.map((e, idx) => (
-              <div key={idx} className="routine-exercise-item-exp">
-                <div className="routine-exercise-header-exp">
-                  <div className="routine-exercise-text-exp">
-                    <strong>{e.exerciseName}</strong> 
+              return (
+                <div 
+                  key={routine.routineId} 
+                  className="routine-card-large-exp"
+                >
+                  {/* 🔥 배경 이미지 */}
+                  <div
+                    className="routine-background-image"
+                    style={{ backgroundImage: `url(${backgroundImageUrl})` }}
+                  />
+                  <div className="routine-card-content">
+                  {/* 🔴 루틴 삭제 버튼 (우상단) */}
+                  <button
+                    className="routine-delete-btn-exp"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('삭제 버튼 클릭 - 루틴 ID:', routine.routineId);
+                      // 실제 삭제 로직은 나중에 연결
+                    }}
+                  >
+                    ✕
+                  </button>
+                  
+                  {/* 상단: 제목, 시간, 운동 목록 */}
+                  <div className="routine-card-header">
+                    <h3>{routine.title || '제목 없음'}</h3>
+                    {routine.summary && <p className="routine-summary">{routine.summary}</p>} 
+                    <p>총 시간: {formatSecondsToHourMinute(totalTime)}</p>
+                    <p>운동: {routine.exercises.map((e) => e.exerciseName).join(', ')}</p>
                   </div>
 
-                  {e.isNew && (
+                  {/* 상세 보기 (화살표 클릭 시 확장) */}
+                  {isExpanded && (
+                    <div className="routine-card-detail">
+                      {routine.exercises.map((e, i) => (
+                        <div key={i} className="routine-exercise-row">
+                          <strong>{e.exerciseName}</strong> - 세트: {e.sets}, 반복: {e.reps}, 시간: {e.exerciseTime}s, 휴식: {e.breaktime}s
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* 하단 버튼 영역 */}
+                  <div className="routine-card-footer">
                     <button
-                      className="delete-exercise-btn-exp"
-                      onClick={(eBtn) => {
-                        eBtn.stopPropagation();
-                        const updatedExercises = selectedRoutine.exercises.filter((_, i) => i !== idx);
-                        const updatedRoutine = { ...selectedRoutine, exercises: updatedExercises };
-                        setSelectedRoutine(updatedRoutine);
-                        setRoutines(prev =>
-                          prev.map(r => r.routineId === selectedRoutine.routineId ? updatedRoutine : r)
-                        );
+                      className="start-btn-inside"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/postureanalysis', { state: { routine } });
                       }}
                     >
-                      ✕
+                      루틴 시작하기
                     </button>
-                  )}
+                    <button
+                      className="expand-btn"
+                      onClick={() => setExpandedRoutineId(isExpanded ? null : routine.routineId)}
+                    >
+                      {isExpanded ? '▲' : '▼'}
+                    </button>
+                  </div>
                 </div>
               </div>
-            ))
-          ) : (
-            <p className="empty-msg">루틴을 선택하세요</p>
-          )}
+            );
+          })}
+
         </div>
+
+        
       </div>
 
       {/* 운동 모달 */}
@@ -329,6 +376,28 @@ const ExerciseExplore = () => {
             <img src={selectedExercise.image} alt={selectedExercise.exerciseName} />
             <p>운동 부위: {selectedExercise.part}</p>
             <p style={{ marginTop: '10px' }}>{selectedExercise.description}</p>
+            <div className="exercise-set-rep-inputs">
+              <div className="input-row">
+                <div className="input-group">
+                  <label htmlFor="sets">세트:</label>
+                  <input id="sets" type="number" value={customSets} onChange={(e) => setCustomSets(Number(e.target.value))} />
+                </div>
+                <div className="input-group">
+                  <label htmlFor="reps">반복:</label>
+                  <input id="reps" type="number" value={customReps} onChange={(e) => setCustomReps(Number(e.target.value))} />
+                </div>
+              </div>
+              <div className="input-row">
+                <div className="input-group">
+                  <label htmlFor="exerciseTime">운동 시간(초):</label>
+                  <input id="exerciseTime" type="number" value={customExerciseTime} onChange={(e) => setCustomExerciseTime(Number(e.target.value))} />
+                </div>
+                <div className="input-group">
+                  <label htmlFor="breaktime">휴식 시간(초):</label>
+                  <input id="breaktime" type="number" value={customBreaktime} onChange={(e) => setCustomBreaktime(Number(e.target.value))} />
+                </div>
+              </div>
+            </div>
             <div className="modal-buttons-exp">
               <button className="start-btn-exp" onClick={handleStartExercise}>운동하기</button>
               <button className="add-btn-exp" onClick={addExerciseToRoutine}>루틴에 넣기</button>
@@ -338,122 +407,7 @@ const ExerciseExplore = () => {
       )}
 
       {/* 루틴 모달 */}
-      {routineModal && (
-        <div className="modal-overlay-exp">
-          <div className="modal-content-exp">
-            <button className="close-btn-exp" onClick={() => setRoutineModal(null)}>X</button>
 
-            {/* 제목, 설명 */}
-            <input
-              type="text"
-              value={routineModal.title}
-              onChange={(e) => setRoutineModal({ ...routineModal, title: e.target.value })}
-              className="routine-edit-input-exp"
-              placeholder="루틴 제목"
-            />
-            <textarea
-              value={routineModal.summary || ''}
-              onChange={(e) => setRoutineModal({ ...routineModal, summary: e.target.value })}
-              className="routine-edit-textarea-exp"
-              placeholder="루틴 설명"
-            />
-
-            {/* ✅ 총 운동 시간 표시 */}
-            <p style={{ marginTop: '8px', fontSize: '14px', color: '#ccc', textAlign: 'left' }}>
-              총 운동 예상 시간: <strong>{formatSecondsToHourMinute(calculatedTime)}</strong>
-            </p>
-
-            {/* 운동 카드 리스트 */}
-            <div className="routine-exercise-list-exp">
-              {routineModal.exercises.map((e, i) => (
-                <div key={i} className="exercise-card-exp modal-version">
-                  <div className="card-info-exp">
-                    <h4>{e.exerciseName}</h4>
-                    <div className="exercise-set-rep-inputs">
-                      세트:
-                      <input
-                        type="number"
-                        min="1"
-                        value={e.sets}
-                        onChange={(ev) => {
-                          const updated = [...routineModal.exercises];
-                          updated[i].sets = parseInt(ev.target.value);
-                          setRoutineModal({ ...routineModal, exercises: updated });
-                        }}
-                      />
-                      반복:
-                      <input
-                        type="number"
-                        min="1"
-                        value={e.reps}
-                        onChange={(ev) => {
-                          const updated = [...routineModal.exercises];
-                          updated[i].reps = parseInt(ev.target.value);
-                          setRoutineModal({ ...routineModal, exercises: updated });
-                        }}
-                      />
-                      운동 시간(초):
-                      <input
-                        type="number"
-                        min="0"
-                        value={e.exerciseTime}
-                        onChange={(ev) => {
-                          const updated = [...routineModal.exercises];
-                          updated[i].exerciseTime = parseInt(ev.target.value);
-                          setRoutineModal({ ...routineModal, exercises: updated });
-                        }}
-                      />
-                      휴식 시간(초):
-                      <input
-                        type="number"
-                        min="0"
-                        value={e.breaktime}
-                        onChange={(ev) => {
-                          const updated = [...routineModal.exercises];
-                          updated[i].breaktime = parseInt(ev.target.value);
-                          setRoutineModal({ ...routineModal, exercises: updated });
-                        }}
-                      />  
-                      {/* 삭제 버튼 */}
-                      <button
-                        className="delete-exercise-btn-exp"
-                        onClick={() => {
-                          const updated = routineModal.exercises.filter((_, idx) => idx !== i);
-                          setRoutineModal({ ...routineModal, exercises: updated });
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* 하단 버튼 */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '16px' }}>
-              <button
-                className="save-btn-exp"
-                onClick={() => {
-                  setSelectedRoutine(routineModal);
-                  setRoutines(prev => prev.map(r => r.routineId === routineModal.routineId ? routineModal : r));
-                  setRoutineModal(null);
-                }}
-              >
-                수정 및 저장
-              </button>
-
-              <button
-                className="start-btn-exp"
-                disabled={isRoutineModified()}
-                onClick={() => navigate('/postureanalysis', { state: { routine: routineModal } })}
-              >
-                운동하기
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
