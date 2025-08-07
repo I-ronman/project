@@ -24,4 +24,10 @@ public class ExerciseEntity {
     
     @Column(name = "exercise_summary", nullable = true)
     private String exerciseSummary;
+    
+    @Column(name = "exercise_img", nullable = true)
+    private String exerciseImg;
+    
+    @Column(name = "part", nullable = true)
+    private String part;
 }

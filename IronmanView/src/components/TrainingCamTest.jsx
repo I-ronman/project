@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { CountContext } from '../context/CountContext';
+import axios from 'axios';
 
 function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
   const wsRef = useRef(null);
@@ -39,13 +40,24 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
       } catch (error) {
         console.error(error);
       }
+      setBadCount(data.bad_cnt)
+      setGoodCount(data.good_cnt)
+
     });
 
-    wsRef.current.on("short_feed", () => {
+    wsRef.current.on("short_feed", (data) => {
       console.log("숏피드");
+      axios.post("http://localhost:456/short_feed",{"image":`data:image/jpeg;base64,${data.img}`, exercise:data.exercise})
+      .then(response => {
+        console.log(response)
+      })
     });
 
     wsRef.current.on("report", (data) => {
+      axios.post("http://localhost:456/report",{"image":`data:image/jpeg;base64,${data[1].img}`, exercise:data[1].exercise})
+      .then(response => {
+        console.log(response)
+      })
       const poseType = data[0];
       const base64Img = `data:image/jpeg;base64,${data[1]}`;
       console.log(data)
@@ -54,17 +66,6 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
 
       setReportImg(base64Img); // 미리보기 용도
       setCapturedList(prev => [...prev, { img: base64Img, issue }]);
-    });
-
-    
-
-    wsRef.current.on("goodCount", (data) => {
-
-      setGoodCount(goodCountRef.current+data);
-    });
-
-    wsRef.current.on("badCount", (data) => {
-      setBadCount(badCount + data);
     });
 
     const sendImage = setInterval(() => {
@@ -81,8 +82,7 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
 
         const data = {
           image: imageData,
-          exerciseName:"squat",
-          id:"jdw",
+          exerciseName:"birddog",
           view : {knee:viewKneeRef.current, leg_hip_angle:viewLegHipRef.current,center_of_gravity:false,upper_body_slope:false}
         };
 
@@ -103,7 +103,7 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
       <img src={imgSrc} alt="분석된 이미지" />
       <video
         ref={videoRef}
-        src="/videos/sidesquat.mp4"
+        src="/videos/birddog4.mp4"
         onLoadedMetadata={() => videoRef.current.play()}
         onEnded={onVideoEnd}
         muted

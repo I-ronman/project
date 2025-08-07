@@ -77,11 +77,13 @@ const ExerciseExplore = () => {
   const [selectedPart, setSelectedPart] = useState('전체');
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [routines, setRoutines] = useState([]);              // ✅ 루틴 목록
-  const [selectedRoutine, setSelectedRoutine] = useState(null); // ✅ 선택된 루틴
+  const [routines, setRoutines] = useState([]);
+  const [selectedRoutine, setSelectedRoutine] = useState(null);
+  const [routineModal, setRoutineModal] = useState(null);
 
   const navigate = useNavigate();
 
+  
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
@@ -105,6 +107,51 @@ const ExerciseExplore = () => {
     setSelectedExercise(exercise);
     setShowModal(true);
   };
+
+  const handleRoutineSelect = (routine) => {
+    console.log('선택된 루틴:', routine);
+    setSelectedRoutine(routine);
+  };
+
+  const handleRoutineCardClick = (routine) => {
+    setRoutineModal(routine);
+  };
+
+  const handleStartRoutine = (e) => {
+    e.stopPropagation(); // ← 이 줄 추가
+    if (selectedRoutine) {
+        navigate('/postureanalysis', { state: { routine: selectedRoutine } });
+    }
+  };
+
+  const addExerciseToRoutine = () => {
+    if (!selectedRoutine || !selectedExercise) return;
+
+    // 새로운 운동 객체 구성
+    const newExercise = {
+        exerciseId: selectedExercise.exerciseId,
+        exerciseName: selectedExercise.exerciseName,
+        sets: 1,
+        reps: 5,
+        order: selectedRoutine.exercises.length + 1,
+    };
+
+    // selectedRoutine 업데이트
+    const updatedRoutine = {
+        ...selectedRoutine,
+        exercises: [...selectedRoutine.exercises, newExercise],
+    };
+
+    setSelectedRoutine(updatedRoutine);
+
+    // 루틴 목록도 함께 업데이트해주면 UI 일관성 ↑
+    setRoutines(prev =>
+        prev.map(r => r.routineId === selectedRoutine.routineId ? updatedRoutine : r)
+    );
+
+    setShowModal(false); // 모달 닫기
+  };
+
 
   const filteredExercises = dummyExercises.filter((exercise) => {
     const matchesSearch = exercise.exerciseName.includes(searchTerm);
@@ -142,7 +189,7 @@ const ExerciseExplore = () => {
             className="exercise-card-exp"
             onClick={() => handleCardClick(exercise)}
           >
-            <img src={exercise.image} alt={exercise.name} />
+            <img src={exercise.image} alt={exercise.exerciseName} />
             <div className="card-info-exp">
               <h4>{exercise.exerciseName}</h4>
               <p>{exercise.part}</p>
@@ -152,46 +199,76 @@ const ExerciseExplore = () => {
       </div>
 
       {/* 오른쪽 */}
-      <div className="right-panel-exp">
+      <div className="right-panel-exp" onClick={() => setSelectedRoutine(null)}>
         <div className="right-top-exp">
           <p>루틴 리스트</p>
           {routines.map((routine) => (
             <div
-              key={routine.routineId}
-              className={`routine-card-small ${selectedRoutine?.routineId === routine.routineId ? 'active' : ''}`}
-              onClick={() => setSelectedRoutine(routine)}
+                key={routine.routineId}
+                className={`routine-card-box-exp ${selectedRoutine?.routineId === routine.routineId ? 'selected' : ''}`}
+                onClick={(e) => {
+                e.stopPropagation();
+                handleRoutineCardClick(routine);
+                }}
             >
-              {routine.title || '제목 없음'}
+                <div className="routine-card-title-exp">{routine.title || '제목 없음'}</div>
+                <button
+                className="routine-select-btn-exp"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleRoutineSelect(routine);
+                }}
+                >
+                선택
+                </button>
             </div>
-          ))}
+            ))}
         </div>
 
         <div className="right-bottom-exp">
-          <p>루틴 상세 운동 리스트</p>
           {selectedRoutine && selectedRoutine.exercises.length > 0 ? (
             selectedRoutine.exercises.map((e, idx) => (
-              <div key={idx} className="routine-exercise-item">
+                <div key={idx} className="routine-exercise-item">
                 <strong>{e.exerciseName}</strong> - 세트: {e.sets} / 반복: {e.reps}
-              </div>
+                </div>
             ))
-          ) : (
-            <p className="empty-msg">루틴을 선택하세요.</p>
-          )}
+            ) : (
+            <p className="empty-msg">루틴에 추가할 운동을 선택하세요.</p>
+            )}
         </div>
       </div>
 
+      {/* 운동 모달 */}
       {showModal && selectedExercise && (
         <div className="modal-overlay-exp">
           <div className="modal-content-exp">
             <button className="close-btn-exp" onClick={() => setShowModal(false)}>X</button>
-            <h2>{selectedExercise.name}</h2>
-            <img src={selectedExercise.image} alt={selectedExercise.name} />
+            <h2>{selectedExercise.exerciseName}</h2>
+            <img src={selectedExercise.image} alt={selectedExercise.exerciseName} />
             <p>운동 부위: {selectedExercise.part}</p>
             <p style={{ marginTop: '10px' }}>{selectedExercise.description}</p>
             <div className="modal-buttons-exp">
               <button className="start-btn-exp" onClick={handleStartExercise}>운동하기</button>
-              <button className="add-btn-exp">루틴에 넣기</button>
+              <button className="add-btn-exp" onClick={addExerciseToRoutine}>루틴에 넣기</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 루틴 모달 */}
+      {routineModal && (
+        <div className="modal-overlay-exp">
+          <div className="modal-content-exp">
+            <button className="close-btn-exp" onClick={() => setRoutineModal(null)}>X</button>
+            <h2>{routineModal.title}</h2>
+            <p>루틴 ID: {routineModal.routineId}</p>
+            <p>운동 수: {routineModal.exercises.length}</p>
+            <ul>
+              {routineModal.exercises.map((e, i) => (
+                <li key={i}>{e.exerciseName} - 세트: {e.sets}, 반복: {e.reps}, 순서: {e.order}</li>
+              ))}
+            </ul>
+            
           </div>
         </div>
       )}
