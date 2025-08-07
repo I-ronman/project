@@ -72,8 +72,6 @@ const getPageDescription = (path) => {
       return '마이페이지';
     case '/profile-edit':
       return '프로필 수정';
-    case '/main':
-      return '메인화면';
     case '/write':
       return '게시글 작성하기';
     case '/workoutresult':

@@ -1,3 +1,5 @@
+// MainDashboardPage.jsx
+
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/MainDashboardPage.css';
@@ -5,12 +7,12 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import defaultProfile from '../images/default_profile.jpg';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer
 } from 'recharts';
-
+import { motion } from 'framer-motion';
 import {
-  FaRobot, FaDumbbell, FaChartBar,
-  FaClipboardList, FaTrophy, FaUsers, FaCalendarAlt
+  FaRobot, FaDumbbell, FaChartBar, FaClipboardList,
+  FaTrophy, FaUsers, FaCalendarAlt
 } from 'react-icons/fa';
 
 const dummyData = {
@@ -33,14 +35,21 @@ const dummyData = {
 const MainDashboardPage = () => {
   const navigate = useNavigate();
   const { user, setUser, surveyDone } = useContext(AuthContext);
-
   const [calendarData, setCalendarData] = useState([]);
+  const [calendarCenterDate, setCalendarCenterDate] = useState(new Date());
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
+
   const [posts] = useState([
     { title: "오늘 첫 운동 완료했어요!", content: "스트레칭부터 유산소까지 알차게 했습니다." },
     { title: "질문이 있어요", content: "하체 루틴을 바꿔보려고 하는데 추천 있을까요?" },
   ]);
+  const [previewTop3] = useState([
+    { id: 1, name: '김철수', score: 98 },
+    { id: 2, name: '이영희', score: 92 },
+    { id: 3, name: '박민준', score: 89 },
+  ]);
+  const [myRank] = useState('-');
 
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
   useEffect(() => {
     const handleResize = () => setIsMobileView(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
@@ -71,7 +80,6 @@ const MainDashboardPage = () => {
     ...dummyData.weeklyStats[idx]?.chartData
   }));
 
-  const [calendarCenterDate, setCalendarCenterDate] = useState(new Date());
   const changeWeek = offset => {
     const d = new Date(calendarCenterDate);
     d.setDate(d.getDate() + offset * 7);
@@ -83,6 +91,7 @@ const MainDashboardPage = () => {
     d.setDate(d.getDate() + (i - 3));
     return d;
   });
+
   const weekData = calendarDates.map(d => {
     const ds = d.toISOString().split('T')[0];
     return {
@@ -90,17 +99,11 @@ const MainDashboardPage = () => {
       dayLabel: `${d.getDate()}일`
     };
   });
+
   const completedDays = weekData.filter(d => d.exercised).length;
   const totalDays = 7;
   const percentage = Math.round((completedDays / totalDays) * 100);
   const yearMonthLabel = `${calendarCenterDate.getFullYear()}년 ${calendarCenterDate.getMonth() + 1}월`;
-
-  const [previewTop3] = useState([
-    { id: 1, name: '김철수', score: 98 },
-    { id: 2, name: '이영희', score: 92 },
-    { id: 3, name: '박민준', score: 89 },
-  ]);
-  const [myRank] = useState('-');
 
   return (
     <div className="main-container dark-background">
@@ -131,7 +134,8 @@ const MainDashboardPage = () => {
 
       <div className="dashboard-row">
 
-        <div className="dashboard-card dark-card clickable-card" onClick={() => navigate('/routine')}>
+        {/* ✅ 여기에만 routine-hover 클래스 추가 */}
+        <div className="dashboard-card dark-card clickable-card routine-hover" onClick={() => navigate('/routine')}>
           <FaClipboardList className="card-icon" />
           <p>루틴 짜기/추천받기</p>
           <span>루틴을 직접 짜거나 추천받아 보세요.</span>
@@ -150,7 +154,7 @@ const MainDashboardPage = () => {
                 <BarChart data={statData}>
                   <XAxis dataKey="name" />
                   <YAxis allowDecimals={false} />
-                  <Tooltip />
+                  <RechartsTooltip />
                   {Object.entries(dummyData.exerciseColors).map(([k, col]) =>
                     <Bar key={k} dataKey={k} stackId="a" fill={col} />
                   )}
@@ -179,11 +183,29 @@ const MainDashboardPage = () => {
             <span>{yearMonthLabel} 주간 목표</span>
             <span className="arrow" onClick={() => changeWeek(1)}>▶</span>
           </div>
-          <div className="weekly-goal">{completedDays}/{totalDays}</div>
-          <div className="circular-progress"
-            style={{ background: `conic-gradient(#a5eb47 0% ${percentage}%, #2b2b2b ${percentage}% 100%)` }}>
-            <div className="circular-progress-text">{percentage}%</div>
-          </div>
+          <motion.div
+            className="animated-circle"
+            initial={{ strokeDashoffset: 251 }}
+            animate={{ strokeDashoffset: 251 - (251 * percentage / 100) }}
+            transition={{ duration: 1 }}
+          >
+            <svg width="100" height="100">
+              <circle cx="50" cy="50" r="40" stroke="#2b2b2b" strokeWidth="10" fill="none" />
+              <motion.circle
+                cx="50"
+                cy="50"
+                r="40"
+                stroke="#a5eb47"
+                strokeWidth="10"
+                fill="none"
+                strokeDasharray="251"
+                strokeDashoffset="251"
+                animate={{ strokeDashoffset: 251 - (251 * percentage / 100) }}
+                transition={{ duration: 1 }}
+              />
+              <text x="50%" y="50%" textAnchor="middle" dy=".3em" fill="white" fontSize="18">{percentage}%</text>
+            </svg>
+          </motion.div>
           <div className="calendar-body">
             {weekData.map((day, i) => (
               <div key={i}
