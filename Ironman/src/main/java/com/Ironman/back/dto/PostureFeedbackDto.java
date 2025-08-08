@@ -1,6 +1,7 @@
 package com.Ironman.back.dto;
 
 import com.Ironman.back.entity.PostureFeedbackEntity;
+import com.Ironman.back.entity.SingleExerciseLogEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class PostureFeedbackDto {
     private String feedbackImg;          // base64 전체 문자열 (data:image/... 포함)
     private String postureFeedbackcol;
 
-    public PostureFeedbackEntity toEntity() {
+    public PostureFeedbackEntity toEntity(SingleExerciseLogEntity log) {
         String base64Data = feedbackImg;
 
         // ⚠️ 필요시 앞부분 제거
@@ -27,7 +28,7 @@ public class PostureFeedbackDto {
         }
 
         return PostureFeedbackEntity.builder()
-                .singleExerciseLogId(singleExerciseLogId)
+                .singleExerciseLog(log)
                 .detectedIssue(detectedIssue)
                 .feedbackImg(base64Data)
                 .postureFeedbackcol(postureFeedbackcol)

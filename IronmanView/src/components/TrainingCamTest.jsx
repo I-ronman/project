@@ -4,13 +4,32 @@ import { io } from 'socket.io-client';
 import { CountContext } from '../context/CountContext';
 import axios from 'axios';
 
-function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
+function TrainingCamTest({
+   viewKnee,
+   viewLegHip,
+   onVideoEnd,
+   currentExercise,
+   onRepCounted    
+    }) {
   const wsRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const goodCountRef = useRef(null);
   const badCountRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
+  const totalCountRef = useRef(0); 
+  
+
+   const videoMap = {
+    "스쿼트": "squat.mp4",
+    "버드독": "birddog0.mp4",
+    "사이드 스쿼트": "sidesquat.mp4",
+    // 필요 시 계속 추가
+  };
+
+  const nameKey = currentExercise?.exerciseName?.trim();
+const videoFile = nameKey && videoMap[nameKey] ? videoMap[nameKey] : null;
+
 
   const {
     setGoodCount,
@@ -32,18 +51,30 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
   }, [viewKnee, viewLegHip,goodCount,badCount]);
 
   useEffect(() => {
+    if(!currentExercise) return;
+
     wsRef.current = io.connect('http://localhost:525');
 
     wsRef.current.on("show", (data) => {
-      try {
-        setImgSrc(`data:image/jpeg;base64,${data.sendImg}`);
-      } catch (error) {
-        console.error(error);
-      }
-      setBadCount(data.bad_cnt)
-      setGoodCount(data.good_cnt)
+  try {
+    setImgSrc(`data:image/jpeg;base64,${data.sendImg}`);
+  } catch (error) {
+    console.error(error);
+  }
 
-    });
+  setBadCount(data.bad_cnt);
+  setGoodCount(data.good_cnt);
+
+  const currentTotal = data.good_cnt + data.bad_cnt;
+  if (currentTotal > totalCountRef.current && typeof onRepCounted === 'function') {
+    const repsToAdd = currentTotal - totalCountRef.current;
+    for (let i = 0; i < repsToAdd; i++) {
+      onRepCounted(currentExercise.exerciseId);
+    }
+  }
+  totalCountRef.current = currentTotal;
+});
+
 
     wsRef.current.on("short_feed", (data) => {
       console.log("숏피드");
@@ -59,7 +90,7 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
         console.log(response)
       })
       const poseType = data[0];
-      const base64Img = `data:image/jpeg;base64,${data[1]}`;
+      const base64Img = `data:image/jpeg;base64,${data[1].img}`;
       console.log(data)
       const normalized = poseType.toLowerCase();
       const issue = (normalized.includes('good') || normalized.includes('best')) ? '1' : '0';
@@ -82,8 +113,13 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
 
         const data = {
           image: imageData,
-          exerciseName:"birddog",
-          view : {knee:viewKneeRef.current, leg_hip_angle:viewLegHipRef.current,center_of_gravity:false,upper_body_slope:false}
+          exerciseName: currentExercise?.exerciseName?.toLowerCase() || "unknown",
+          view: {
+            knee: viewKneeRef.current,
+            leg_hip_angle: viewLegHipRef.current,
+            center_of_gravity: false,
+            upper_body_slope: false,
+          },
         };
 
         if (data.image) {
@@ -93,25 +129,36 @@ function TrainingCamTest({ viewKnee, viewLegHip, onVideoEnd }) {
     }, 100);
 
     return () => {
-      clearInterval(sendImage);
-      wsRef.current.disconnect();
-    };
-  }, []);
+  clearInterval(sendImage);
+  if (wsRef.current) {
+    wsRef.current.off("show");
+    wsRef.current.off("short_feed");
+    wsRef.current.off("report");
+    wsRef.current.disconnect();
+  }
+};
+ }, [currentExercise]);
 
-  return (
-    <div>
-      <img src={imgSrc} alt="분석된 이미지" />
+   return (
+  <div>
+    <img src={imgSrc} alt="분석된 이미지" />
+    
+    {videoFile ? (
       <video
+      
         ref={videoRef}
-        src="/videos/birddog4.mp4"
-        onLoadedMetadata={() => videoRef.current.play()}
+        src={`/videos/${videoFile}`}
+        onLoadedMetadata={() => videoRef.current?.play()}
         onEnded={onVideoEnd}
         muted
         style={{ display: "none" }}
       />
-      <canvas ref={canvasRef} style={{ display: "none" }} />
-    </div>
-  );
+    ) : null}
+
+    <canvas ref={canvasRef} style={{ display: "none" }} />
+  </div>
+);
+
 }
 
 export default TrainingCamTest;

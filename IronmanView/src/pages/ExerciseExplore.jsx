@@ -209,11 +209,11 @@ const ExerciseExplore = () => {
   const calculateTotalTime = (exercises) => {
     return exercises.reduce((acc, e) => {
       const sets = e.sets ?? 1;
-      const reps = e.reps ?? 1;
       const exerciseTime = e.exerciseTime ?? 1;
       const breaktime = e.breaktime ?? 0;
 
-      const time = sets * exerciseTime + (sets - 1) * breaktime;
+      const time = (exerciseTime + breaktime) * sets;
+      
       return acc + time;
     }, 0);
   };

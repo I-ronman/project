@@ -64,6 +64,29 @@ const Header = () => {
         {isMobile && isMenuOpen && (
           <div className="side-menu">
             <div className="close-btn" onClick={() => setIsMenuOpen(false)}>×</div>
+<<<<<<< HEAD
+            <div className="menu-item" onClick={() => handleMove('/exercise')}>
+              <span>운동하기</span>
+            </div>
+            <div className="menu-item" onClick={() => handleMove('/schedulepage')}>
+              <span>스케줄</span>
+            </div>
+            <div className="menu-item" onClick={() => handleMove('/statistics')}>
+              <span>통계</span>
+            </div>
+            <div className="menu-item" onClick={() => handleMove('/chatbot')}>
+              <span>챗봇</span>
+            </div>
+            <div className="menu-item" onClick={() => handleMove('/board')}>
+              <span>커뮤니티</span>
+            </div>
+            <div className="menu-item" onClick={() => handleMove('/survey')}>
+              <span>설문조사</span>
+            </div>
+            <div className="menu-item" onClick={() => handleMove('/mypage')}>
+              <span>마이 페이지</span>
+            </div>
+=======
             {navItems.map((item) => (
               <div
                 key={item.path}
@@ -73,6 +96,7 @@ const Header = () => {
                 {item.name}
               </div>
             ))}
+>>>>>>> c10b2e1b25c27a02e2e3f4f1d63299be2004c177
           </div>
         )}
       </div>
