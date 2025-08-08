@@ -3,6 +3,7 @@ import '../styles/ExerciseExplore.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
 const dummyExercises = [
   {
     exerciseId: 1,
@@ -79,17 +80,52 @@ const ExerciseExplore = () => {
   const [routines, setRoutines] = useState([]);
   const [selectedRoutine, setSelectedRoutine] = useState(null);
   const [routineModal, setRoutineModal] = useState(null);
-  const [originalRoutine, setOriginalRoutine] = useState(null);
-  const [calculatedTime, setCalculatedTime] = useState(0);
   const [customSets, setCustomSets] = useState(3);
   const [customReps, setCustomReps] = useState(5);
   const [customExerciseTime, setCustomExerciseTime] = useState(60);
   const [customBreaktime, setCustomBreaktime] = useState(30);
   const [expandedRoutineId, setExpandedRoutineId] = useState(null);
+  const [showRoutineSelectModal, setShowRoutineSelectModal] = useState(false);
+  const [showRightPanel, setShowRightPanel] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 900);  // 🔹 모바일 여부 체크
+  const [newRoutineTitle, setNewRoutineTitle] = useState('');
+  const [newRoutineSummary, setNewRoutineSummary] = useState('');
+  const [showRoutineInputModal, setShowRoutineInputModal] = useState(false);
+
+
+  // ✅ 화면 크기 변경 감지
+  useEffect(() => {
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth < 1000;
+      setIsMobile(isNowMobile);
+
+      if (isNowMobile) {
+        setShowRightPanel(false); // 모바일 전환 시 패널 닫기
+      } else {
+        setShowRightPanel(true);  // 데스크탑 전환 시 패널 열기
+      }
+    };
+
+  // 초기 실행
+  handleResize();
+
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
 
   const navigate = useNavigate();
-
   
+  // 운동을 선택하거나 모바일에 넣을 때 기본 값 넣기
+  useEffect(() => {
+    if (showModal && selectedExercise) {
+      setCustomSets(3);
+      setCustomReps(5);
+      setCustomExerciseTime(60);
+      setCustomBreaktime(30);
+    }
+  }, [showModal, selectedExercise]);
+  
+  // 루틴 목록
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
@@ -105,6 +141,7 @@ const ExerciseExplore = () => {
     fetchRoutines();
   }, []);
 
+  // 개별 운동하기 클릭할 경우 함수
   const handleStartExercise = () => {
     const exerciseWithCustomValues = {
     ...selectedExercise,
@@ -119,89 +156,55 @@ const ExerciseExplore = () => {
     navigate('/postureanalysis', { state: { exercise: exerciseWithCustomValues } });
   };
 
+  // 운동을 선택하면, 운동 모달을 선택하고 모달을 띄우는 함수
   const handleCardClick = (exercise) => {
     setSelectedExercise(exercise);
     setShowModal(true);
   };
 
+  // 루틴을 선택하는 함수
   const handleRoutineSelect = (routine) => {
     console.log('선택된 루틴:', routine);
     setSelectedRoutine(routine);
   };
 
-  const handleRoutineCardClick = (routine) => {
-    setRoutineModal(JSON.parse(JSON.stringify(routine))); // 깊은 복사
-    setOriginalRoutine(JSON.parse(JSON.stringify(routine)));
-  };
+  // 운동을 루틴에 추가하는 함수
+  const addExerciseToRoutine = (routine) => {
+    if (!routine || !selectedExercise) return;
 
-
-  const handleStartRoutine = (e) => {
-    e.stopPropagation(); // ← 이 줄 추가
-    if (selectedRoutine) {
-        navigate('/postureanalysis', { state: { routine: selectedRoutine } });
-    }
-  };
-
-  const addExerciseToRoutine = () => {
-    if (!selectedRoutine || !selectedExercise) return;
-
-    // 새로운 운동 객체 구성
     const newExercise = {
-        exerciseId: selectedExercise.exerciseId,
-        exerciseName: selectedExercise.exerciseName,
-        sets: customSets,
-        reps: customReps,
-        exerciseTime: customExerciseTime,
-        breaktime: customBreaktime,
-        order: selectedRoutine.exercises.length + 1,
-        isNew: true,
+      exerciseId: selectedExercise.exerciseId,
+      exerciseName: selectedExercise.exerciseName,
+      exerciseImg: selectedExercise.image,
+      sets: customSets,
+      reps: customReps,
+      exerciseTime: customExerciseTime,
+      breaktime: customBreaktime,
+      order: routine.exercises.length + 1,
+      isNew: true,
     };
 
-    // selectedRoutine 업데이트
     const updatedRoutine = {
-        ...selectedRoutine,
-        exercises: [...selectedRoutine.exercises, newExercise],
+      ...routine,
+      exercises: [...routine.exercises, newExercise],
     };
 
+    // 전역 selectedRoutine도 업데이트
     setSelectedRoutine(updatedRoutine);
 
-    // 루틴 목록도 함께 업데이트해주면 UI 일관성 ↑
-    setRoutines(prev =>
-        prev.map(r => r.routineId === selectedRoutine.routineId ? updatedRoutine : r)
+    // 루틴 목록도 업데이트
+    setRoutines((prev) =>
+      prev.map((r) => r.routineId === routine.routineId ? updatedRoutine : r)
     );
-
-    setShowModal(false); // 모달 닫기
   };
 
 
+  // 운동 필터링
   const filteredExercises = dummyExercises.filter((exercise) => {
     const matchesSearch = exercise.exerciseName.includes(searchTerm);
     const matchesPart = selectedPart === '전체' || exercise.part === selectedPart;
     return matchesSearch && matchesPart;
   });
-
-  const isRoutineModified = () => {
-    if (!originalRoutine || !routineModal) return false;
-
-    const originalExercises = originalRoutine.exercises;
-    const currentExercises = routineModal.exercises;
-
-    // 운동 개수 비교
-    if (originalExercises.length !== currentExercises.length) return true;
-
-    // 각 운동의 reps/sets 비교
-    for (let i = 0; i < currentExercises.length; i++) {
-      if (
-        originalExercises[i].exerciseId !== currentExercises[i].exerciseId ||
-        originalExercises[i].sets !== currentExercises[i].sets ||
-        originalExercises[i].reps !== currentExercises[i].reps
-      ) {
-        return true;
-      }
-    }
-
-    return false;
-  };
 
   const calculateTotalTime = (exercises) => {
     return exercises.reduce((acc, e) => {
@@ -215,6 +218,7 @@ const ExerciseExplore = () => {
     }, 0);
   };
 
+  // 초 단위를 시간, 분단위로 바꾸는 함수
   const formatSecondsToHourMinute = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -230,26 +234,80 @@ const ExerciseExplore = () => {
   // 🔢 고정 인덱스 생성 로직 (routineId 기반)
   const getImageIndexFromId = (id) => {
     if (!id) return 1;
-    return (id % 5) + 1;  // 1~5 반복
+    return (id % 5) + 1;  // 1~5 사이
   };
 
-  useEffect(() => {
-    if (routineModal) {
-      setCalculatedTime(calculateTotalTime(routineModal.exercises));
-    }
-  }, [routineModal]);
+  // ???
+  const updateRoutineExercises = (routineId, updatedExercises) => {
+    setRoutines(prev =>
+      prev.map(r => r.routineId === routineId ? { ...r, exercises: updatedExercises } : r)
+    );
 
-  useEffect(() => {
-    if (showModal && selectedExercise) {
-      setCustomSets(3);
-      setCustomReps(5);
-      setCustomExerciseTime(60);
-      setCustomBreaktime(30);
+  };
+  
+  // 루틴 저장하기
+  const saveRoutineToServer = async (routine) => {
+    try {
+      const payload = {
+        routineId: routine.routineId,
+        title: routine.title,
+        summary: routine.summary,
+        exercises: routine.exercises.map(e => ({
+          exerciseId: e.exerciseId,
+          sets: e.sets,
+          reps: e.reps,
+          exerciseTime: e.exerciseTime,
+          breaktime: e.breaktime,
+        })),
+      };
+
+      const response = await axios.post(
+        'http://localhost:329/web/api/routine/save',
+        payload,
+        { withCredentials: true }
+      );
+
+      console.log('✅ 루틴 저장 성공:', response.data);
+      alert('루틴이 저장되었습니다!');
+    } catch (error) {
+      console.error('❌ 루틴 저장 실패:', error);
+      alert('루틴 저장에 실패했습니다.');
     }
-  }, [showModal, selectedExercise]);
+  };
+
+  // 루틴 삭제하기
+  const deleteRoutineFromServer = async (routineId) => {
+    try {
+      await axios.delete(`http://localhost:329/web/api/routine/${routineId}`, {
+        withCredentials: true
+      });
+      setRoutines(prev => prev.filter(r => r.routineId !== routineId));
+      if (selectedRoutine?.routineId === routineId) {
+        setSelectedRoutine(null);
+      }
+      if (routineModal?.routineId === routineId) {
+        setRoutineModal(null);
+      }
+      alert('루틴이 삭제되었습니다.');
+    } catch (error) {
+      console.error('❌ 루틴 삭제 실패:', error);
+      alert('루틴 삭제에 실패했습니다.');
+    }
+  };
 
   return (
     <div className="explore-container">
+
+      {/* 📱 토글 버튼 (왼쪽 하단) */}
+          {isMobile && (
+            <button
+              className="toggle-right-panel-btn left"
+              onClick={() => setShowRightPanel((prev) => !prev)}
+            >
+              {showRightPanel ? '▶ 루틴 닫기' : '◀ 루틴 열기'}
+            </button>
+          )}
+
       {/* 왼쪽 */}
       <div className="left-panel-exp">
         <div className="filter-buttons-exp">
@@ -262,6 +320,8 @@ const ExerciseExplore = () => {
               {part}
             </button>
           ))}
+
+          
         </div>
 
         <input
@@ -288,7 +348,13 @@ const ExerciseExplore = () => {
       </div>
 
       {/* 오른쪽 */}
-      <div className="right-panel-exp" onClick={() => setSelectedRoutine(null)}>
+      <div
+        className={`right-panel-exp ${showRightPanel ? 'visible' : ''}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedRoutine(null);
+        }}
+      >
         <div className="right-top-exp">
           <p>루틴 리스트</p>
             {routines.map((routine, index) => {
@@ -314,7 +380,10 @@ const ExerciseExplore = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       console.log('삭제 버튼 클릭 - 루틴 ID:', routine.routineId);
-                      // 실제 삭제 로직은 나중에 연결
+                      const confirmed = window.confirm(`'${routine.title}' 루틴을 정말 삭제하시겠습니까?`);
+                      if (confirmed) {
+                        deleteRoutineFromServer(routine.routineId);
+                      }
                     }}
                   >
                     ✕
@@ -331,11 +400,76 @@ const ExerciseExplore = () => {
                   {/* 상세 보기 (화살표 클릭 시 확장) */}
                   {isExpanded && (
                     <div className="routine-card-detail">
+                      <div className="exercise-set-rep-inputs">
                       {routine.exercises.map((e, i) => (
                         <div key={i} className="routine-exercise-row">
-                          <strong>{e.exerciseName}</strong> - 세트: {e.sets}, 반복: {e.reps}, 시간: {e.exerciseTime}s, 휴식: {e.breaktime}s
+                          {/* 상단: 운동 이름 + 삭제 버튼 */}
+                          <div className="routine-exercise-header">
+                            <p className="exercise-name">{e.exerciseName}</p>
+                            <button
+                              className="routine-exercise-delete-btn-exp"
+                              onClick={() => {
+                                const updated = routine.exercises.filter((_, idx) => idx !== i);
+                                updateRoutineExercises(routine.routineId, updated);
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+
+                          {/* 이미지 및 입력 필드 */}
+                          <div className="routine-exercise-body">
+                            <img
+                              src={e.exerciseImg}
+                              alt={e.exerciseName}
+                              className="exercise-thumb"
+                            />
+                            <div className='exercise-input-group'>
+                                <div className='input-row-elements'>
+                                  세트: <input type="number" value={e.sets} onChange={(ev) => {
+                                    const updated = [...routine.exercises];
+                                    updated[i].sets = Number(ev.target.value);
+                                    updateRoutineExercises(routine.routineId, updated);
+                                  }} />
+                                </div>
+                                <div className='input-row-elements'>
+                                  반복: <input type="number" value={e.reps} onChange={(ev) => {
+                                    const updated = [...routine.exercises];
+                                    updated[i].reps = Number(ev.target.value);
+                                    updateRoutineExercises(routine.routineId, updated);
+                                  }} />
+                                </div>
+                                <div className='input-row-elements'>
+                                시간: <input type="number" value={e.exerciseTime} onChange={(ev) => {
+                                  const updated = [...routine.exercises];
+                                  updated[i].exerciseTime = Number(ev.target.value);
+                                  updateRoutineExercises(routine.routineId, updated);
+                                }} />
+                                </div>
+                                <div className='input-row-elements'>
+                                휴식: <input type="number" value={e.breaktime} onChange={(ev) => {
+                                  const updated = [...routine.exercises];
+                                  updated[i].breaktime = Number(ev.target.value);
+                                  updateRoutineExercises(routine.routineId, updated);
+                                }} />
+                                </div>
+                              
+                            </div>
+                          </div>
                         </div>
                       ))}
+                      </div>
+                      <div className="routine-detail-footer">
+                        <button
+                          className="save-btn-exp"
+                          onClick={() => {
+                            console.log('루틴 저장:', routine);
+                            saveRoutineToServer(routine)
+                          }}
+                        >
+                          수정/저장
+                        </button>
+                      </div>
                     </div>
                   )}
 
@@ -361,9 +495,16 @@ const ExerciseExplore = () => {
               </div>
             );
           })}
-
+          <div className="routine-create-section-exp">
+            <button
+              className="routine-create-btn-exp"
+              onClick={() => setShowRoutineInputModal(true)}
+            >
+              ＋ 새 루틴 만들기
+            </button>
+          </div>
         </div>
-
+        
         
       </div>
 
@@ -377,22 +518,22 @@ const ExerciseExplore = () => {
             <p>운동 부위: {selectedExercise.part}</p>
             <p style={{ marginTop: '10px' }}>{selectedExercise.description}</p>
             <div className="exercise-set-rep-inputs">
-              <div className="input-row">
-                <div className="input-group">
+              <div className="input-row-exp">
+                <div className="input-group-exp">
                   <label htmlFor="sets">세트:</label>
                   <input id="sets" type="number" value={customSets} onChange={(e) => setCustomSets(Number(e.target.value))} />
                 </div>
-                <div className="input-group">
+                <div className="input-group-exp">
                   <label htmlFor="reps">반복:</label>
                   <input id="reps" type="number" value={customReps} onChange={(e) => setCustomReps(Number(e.target.value))} />
                 </div>
               </div>
-              <div className="input-row">
-                <div className="input-group">
+              <div className="input-row-exp">
+                <div className="input-group-exp">
                   <label htmlFor="exerciseTime">운동 시간(초):</label>
                   <input id="exerciseTime" type="number" value={customExerciseTime} onChange={(e) => setCustomExerciseTime(Number(e.target.value))} />
                 </div>
-                <div className="input-group">
+                <div className="input-group-exp">
                   <label htmlFor="breaktime">휴식 시간(초):</label>
                   <input id="breaktime" type="number" value={customBreaktime} onChange={(e) => setCustomBreaktime(Number(e.target.value))} />
                 </div>
@@ -400,15 +541,90 @@ const ExerciseExplore = () => {
             </div>
             <div className="modal-buttons-exp">
               <button className="start-btn-exp" onClick={handleStartExercise}>운동하기</button>
-              <button className="add-btn-exp" onClick={addExerciseToRoutine}>루틴에 넣기</button>
+              <button className="add-btn-exp" onClick={() => {setShowRoutineSelectModal(true);}}>루틴에 넣기</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 루틴 모달 */}
+      {/* 루틴 선택 모달 */}
+      {showRoutineSelectModal && (
+        <div className="modal-overlay-exp">
+          <div className="modal-content-exp">
+            <button className="close-btn-exp" onClick={() => setShowRoutineSelectModal(false)}>X</button>
+            <h3>루틴 선택</h3>
+            {routines.map((routine) => (
+              <div key={routine.routineId} className="routine-select-item" onClick={() => {
+                handleRoutineSelect(routine);
+                addExerciseToRoutine(routine);
+                setExpandedRoutineId(routine.routineId);
+                setShowRoutineSelectModal(false);
+                setShowModal(false);  // 운동 모달도 닫기
+                setShowRightPanel(true);
+              }}>
+                {routine.title || '제목 없음'}
+              </div>
+            ))}
+
+            {/* ➕ 루틴 만들기 버튼 추가 */}
+            <button
+              className="routine-create-btn-inline"
+              onClick={() => {
+                setShowRoutineSelectModal(false);       // 기존 모달 닫고
+                setShowRoutineInputModal(true);         // 루틴 생성 모달 열기
+                setShowModal(false);
+              }}
+            >
+              ＋ 새 루틴 만들기
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showRoutineInputModal && (
+        <div className="modal-overlay-exp">
+          <div className="routine-create-modal">
+            <button className="close-btn-exp" onClick={() => setShowRoutineInputModal(false)}>X</button>
+            <h3>새 루틴 만들기</h3>
+            <input
+              type="text"
+              placeholder="새 루틴"
+              value={newRoutineTitle}
+              onChange={(e) => setNewRoutineTitle(e.target.value)}
+            />
+            <textarea
+              placeholder="내 운동 루틴"
+              value={newRoutineSummary}
+              onChange={(e) => setNewRoutineSummary(e.target.value)}
+              rows={4}
+            />
+            <button
+              className="create-btn-exp"
+              onClick={() => {
+                const newRoutine = {
+                  routineId: null,  // 프론트 임시 ID
+                  title: newRoutineTitle || '새 루틴',
+                  summary: newRoutineSummary || '내 운동 루틴',
+                  exercises: [],
+                  isNew: true,
+                };
+                setRoutines((prev) => [...prev, newRoutine]);
+                setExpandedRoutineId(newRoutine.routineId);
+                setSelectedRoutine(newRoutine);
+                setShowRightPanel(true);
+                setShowRoutineInputModal(false);
+                setNewRoutineTitle('새 루틴');
+                setNewRoutineSummary('내 운동 루틴');
+              }}
+            >
+              만들기
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
+    
   );
 };
 
