@@ -1,47 +1,87 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
-import SideMenu from './SideMenu';
+import './SideMenu';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, logout } = useContext(AuthContext);
+  const profileImgSrc = user?.user?.face || './images/default_profile.jpg';
+  const [profileImg, setProfileImg] = useState('./images/default_profile.jpg');
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {user, logout } = useContext(AuthContext);
-  const profileImgSrc = user?.profileImage || './images/default_profile.jpg';
-  
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+
+  // 이미지를 db에서 가져오는 useEffect
+  useEffect(() => {
+  axios
+    .get('http://localhost:329/web/login/user', { withCredentials: true })
+    .then(res => {
+      const { face } = res.data;
+      if (face) {
+        setProfileImg(face);
+      }
+    })
+    .catch(err => {
+      console.error('프로필 이미지 불러오기 실패', err);
+    });
+}, []);
+
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 900);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleMove = (path) => {
     navigate(path);
-    setIsMenuOpen(false); // 메뉴 닫기
+    setIsMenuOpen(false);
   };
 
   const handleLogout = async () => {
-    try{
-      await axios.post('http://localhost:329/web/logout',{},{
-        withCredentials: true
-      });
-    } catch (err){
+    try {
+      await axios.post('http://localhost:329/web/logout', {}, { withCredentials: true });
+    } catch (err) {
       console.error("백엔드 로그아웃 실패", err);
     }
     logout();
     navigate('/login');
-  }
-  
+  };
+
+  const navItems = [
+    { name: '운동하기', path: '/exercise' },
+    { name: '스케줄', path: '/schedulepage' },
+    { name: '통계', path: '/statistics' },
+    { name: '챗봇', path: '/chatbot' },
+    { name: '커뮤니티', path: '/board' },
+    { name: '설문조사', path: '/survey' },
+    { name: '마이 페이지', path: '/mypage' },
+  ];
+
   return (
     <header className="header">
-      {/* 왼쪽: 햄버거 */}
-      <div className="header-left" style= {{position: 'relative'}}>
-        <div className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-        </div>
-
-        {isMenuOpen && (
+      {/* 왼쪽 영역 */}
+      <div className="header-left">
+        {isMobile ? (
+          <div className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <div className="bar" />
+            <div className="bar" />
+            <div className="bar" />
+          </div>
+        ) : (
+          <div className="logo-area" onClick={() => navigate('/main')}>
+            <img src="/images/ironman_logo.png" alt="Ironman 로고" className="logo_img" />
+          </div>
+        )}
+        {isMobile && isMenuOpen && (
           <div className="side-menu">
-            {/* 닫기 버튼 */}
             <div className="close-btn" onClick={() => setIsMenuOpen(false)}>×</div>
+<<<<<<< HEAD
             <div className="menu-item" onClick={() => handleMove('/exercise')}>
               <span>운동하기</span>
             </div>
@@ -63,26 +103,47 @@ const Header = () => {
             <div className="menu-item" onClick={() => handleMove('/mypage')}>
               <span>마이 페이지</span>
             </div>
+=======
+            {navItems.map((item) => (
+              <div
+                key={item.path}
+                className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={() => handleMove(item.path)}
+              >
+                {item.name}
+              </div>
+            ))}
+>>>>>>> c10b2e1b25c27a02e2e3f4f1d63299be2004c177
           </div>
         )}
       </div>
 
-      {/* 가운데: 로고 */}
-      <div className="header-center" onClick={() => navigate('/main')}>
-        <img
-          src="/images/ironman_logo.png"
-          alt="Ironman 로고"
-          className="logo_img"
-        />
-      </div>
+      {/* 가운데: 모바일일 때만 로고 */}
+      {isMobile && (
+        <div className="header-center" onClick={() => navigate('/main')}>
+          <img src="/images/ironman_logo.png" alt="Ironman 로고" className="logo_img" />
+        </div>
+      )}
 
-      {/* 오른쪽: 로그아웃 + 프로필 */}
+      {/* 오른쪽 영역 */}
       <div className="header-right">
-        <button className="logout-btn" onClick={handleLogout}>
-          로그아웃
-        </button>
+        {!isMobile && (
+          <div className="nav-items">
+            {navItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => handleMove(item.path)}
+                className={location.pathname === item.path ? 'active' : ''}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        )}
+        <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
         <img
-          src={profileImgSrc}
+        
+          src={profileImg}
           alt="프로필"
           className="profile-img"
           onClick={() => navigate('/mypage')}

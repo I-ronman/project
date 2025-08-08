@@ -56,7 +56,7 @@ const getPageDescription = (path) => {
   switch (path) {
     case '/exercise':
       return '운동하기';
-    case '/schedulepage':
+    case '/schedule':
       return '스케쥴';
     case '/statistics':
       return '통계';

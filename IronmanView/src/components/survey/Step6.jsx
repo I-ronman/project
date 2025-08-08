@@ -3,13 +3,13 @@ import '../../styles/SurveyPage.css';
 
 const Step6 = ({ plankTime, setPlankTime, nextStep }) => {
   const options = [
-    { label: '훌륭한 (6분 이상)', value: 'very_good' },
-    { label: '좋은 (4분~6분)', value: 'good' },
-    { label: '평균 이상 (3분~4분)', value: 'over_common' },
-    { label: '평균 (1분~3분)', value: 'common' },
-    { label: '평균 이하 (30초~60초)', value: 'under_common' },
-    { label: '나쁨 (15초~30초)', value: 'bad' },
-    { label: '매우 나쁨 (15초 이하)', value: 'very_bad' },
+    { label: '훌륭한 (6분 이상)', value: '플랭크 수준 훌륭함' },
+    { label: '좋은 (4분~6분)', value: '플랭크 수준 좋음' },
+    { label: '평균 이상 (3분~4분)', value: '플랭크 수준 평균 이상임' },
+    { label: '평균 (1분~3분)', value: '플랭크 수준 평균임' },
+    { label: '평균 이하 (30초~60초)', value: '플랭크 수준 평균 이하임' },
+    { label: '나쁨 (15초~30초)', value: '플랭크 수준 나쁨' },
+    { label: '매우 나쁨 (15초 이하)', value: '플랭크 수준 매우 나쁨' },
   ];
 
   const handleClick = (value) => {

@@ -5,19 +5,19 @@ const Step4 = ({ activity, setActivity, nextStep }) => {
   const activityOptions = [
     {
       label: '저는 하루 종일 책상 앞에 앉아 있습니다.',
-      value: 'not_good',
+      value: '저는 하루 종일 책상 앞에 앉아 있습니다.',
     },
     {
       label: '저는 가끔 운동하거나 30분 산책을 합니다.',
-      value: 'common',
+      value: '저는 가끔 운동하거나 30분 산책을 합니다.',
     },
     {
       label: '저는 매일 한 시간 이상 운동을 합니다.',
-      value: 'good',
+      value: '저는 매일 한 시간 이상 운동을 합니다.',
     },
     {
       label: '저는 운동을 좋아하고 더 운동하고 싶습니다.',
-      value: 'very_good',
+      value: '저는 운동을 좋아하고 더 운동하고 싶습니다.',
     },
   ];
 

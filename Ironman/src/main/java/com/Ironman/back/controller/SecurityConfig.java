@@ -33,7 +33,12 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/oauth/**", "/css/**", "/js/**", "/images/**", "/email/**",      //  이메일 인증 관련 요청 허용
                         "/signup","/login","/login/check","/login/user",
+<<<<<<< HEAD
                         "/api/routine/**","/api/survey","/api/posture/**","/api/exercise/**"    ).permitAll() // 비로그인 허용 경로
+=======
+                        "/api/routine/**","/api/survey","/api/posture/**",
+                        "/api/user/profile").permitAll() // 비로그인 허용 경로
+>>>>>>> c10b2e1b25c27a02e2e3f4f1d63299be2004c177
                 .anyRequest().authenticated() // 나머지는 인증 필요
                 
             )
