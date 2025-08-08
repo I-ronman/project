@@ -86,15 +86,3 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 768px) {
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    cursor: pointer;
-  }
-
-  .desktop-nav {
-    display: none;
-  }
-}
