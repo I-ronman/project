@@ -40,7 +40,6 @@ html, body, #root {
 
 .app-layout > * {
   position: relative;
-  z-index: 1; /* ✅ 자식 콘텐츠는 위에 표시 */
 }
 
 

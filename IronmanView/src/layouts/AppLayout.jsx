@@ -54,7 +54,7 @@ const AppLayout = () => {
 
 const getPageDescription = (path) => {
   switch (path) {
-    case '/routine':
+    case '/exercise':
       return '운동하기';
     case '/schedulepage':
       return '스케쥴';
