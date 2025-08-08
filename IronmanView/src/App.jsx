@@ -37,9 +37,9 @@ import PostureFeedbackPage    from './pages/PostureFeedbackPage';
 import BoardWritePage         from './pages/BoardWritePage';
 import EditPostPage           from './pages/EditPostPage';
 import RecordsPage            from './pages/RecordsPage';
-
-import ModalWrapper           from './components/ModalWrapper';
 import ExerciseExplore        from './pages/ExerciseExplore';
+import ModalWrapper           from './components/ModalWrapper';
+import GalaxyBackground       from './components/GalaxyBackground';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -47,7 +47,6 @@ const AppRoutes = () => {
   const isLogin      = !!localStorage.getItem('user');
   const isFirstLogin = localStorage.getItem('firstLogin') === 'true';
 
-  // 첫 로그인 시 온보딩으로 리다이렉트
   useEffect(() => {
     if (location.pathname === '/' && isLogin && isFirstLogin) {
       localStorage.setItem('firstLogin', 'false');
@@ -55,24 +54,23 @@ const AppRoutes = () => {
     }
   }, [location, isLogin, isFirstLogin, navigate]);
 
-  // 모달 띄울 때 배경이 되는 location
   const backgroundLocation = location.state && location.state.backgroundLocation;
 
   return (
     <>
-      {/* ● 기본 화면 라우팅 (모달 아닌 경우) */}
+      {/* ✅ Galaxy 배경은 /main 경로에서만 표시 */}
+      {location.pathname === '/main' && <GalaxyBackground />}
+
       <Routes location={backgroundLocation || location}>
-        {/* 비로그인·랜딩 화면 */}
         <Route path="/" element={<HomePage isLoggedIn={isLogin} />} />
 
-        {/* 로그인 후 공통 레이아웃 */}
         <Route path="/" element={<AppLayout />}>
           <Route path="training"           element={<Training />} />
           <Route path="login"              element={<LoginPage />} />
           <Route path="signup"             element={<SignupPage />} />
           <Route path="chatbot"            element={<ChatBotPage />} />
           <Route path="onboarding"         element={<OnboardingPage />} />
-          <Route path="schedule"       element={<SchedulePage />} />
+          <Route path="schedule"           element={<SchedulePage />} />
           <Route path="survey"             element={<SurveyPage />} />
           <Route path="routine"            element={<RoutinePage />} />
           <Route path="routinedetail"      element={<RoutineDetail />} />
@@ -91,14 +89,12 @@ const AppRoutes = () => {
           <Route path="write"              element={<BoardWritePage />} />
           <Route path="edit/:id"           element={<EditPostPage />} />
           <Route path="records"            element={<RecordsPage />} />
-          <Route path="exercise"           element={<ExerciseExplore/>} />
+          <Route path="exercise"           element={<ExerciseExplore />} />
         </Route>
 
-        {/* 독립 진입 시에도 동작해야 하는 경로 */}
         <Route path="postureanalysis" element={<PostureAnalysisPage />} />
       </Routes>
 
-      {/* ● 모달 전용 라우팅: backgroundLocation 이 있을 때만 */}
       {backgroundLocation && (
         <Routes>
           <Route
@@ -116,7 +112,7 @@ const AppRoutes = () => {
 };
 
 function App() {
-  const isLogin  = !!localStorage.getItem('user');
+  const isLogin = !!localStorage.getItem('user');
   const isLanding = window.location.pathname === '/' && !isLogin;
 
   return (
