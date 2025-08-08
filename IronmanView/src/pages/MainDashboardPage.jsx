@@ -70,6 +70,7 @@ const MainDashboardPage = () => {
     setCalendarData([{ date: today, exercised: true, hasRoutine: true }]);
   }, []);
 
+
   const statWeekDates = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + (i - 3));
@@ -121,14 +122,11 @@ const MainDashboardPage = () => {
       <div className="routine-card dark-card clickable-card"
         onClick={() =>
           user?.todayRoutine
-            ? navigate('/postureanalysis', { state: { routine: user.todayRoutine } })
-            : navigate('/routine')}>
+            ? navigate('/postureanalysis', { state: { routine: routines[0] } })
+            : navigate('/exercise')}>
         <div className="routine-header">
           <FaDumbbell className="card-icon" />
           <strong className="routine-title">오늘 루틴 시작</strong>
-          {user?.todayRoutine
-            ? <span className="routine-name">{user.todayRoutine.name}</span>
-            : <span className="no-routine-text">등록된 루틴이 없습니다.</span>}
         </div>
       </div>
 

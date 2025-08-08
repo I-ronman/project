@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +29,9 @@ public class PostureFeedbackEntity {
     @Column(name = "feedback_id")
     private Long feedbackId;
     
-    @Column(name = "single_exercise_log_id")
-    private Long singleExerciseLogId;
+    @ManyToOne
+    @JoinColumn(name = "single_exercise_log_id", nullable = false)
+    private SingleExerciseLogEntity singleExerciseLog;
 
     @Column(name = "detected_issue")
     private String detectedIssue;

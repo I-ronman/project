@@ -42,7 +42,7 @@ const Header = () => {
           <div className="side-menu">
             {/* 닫기 버튼 */}
             <div className="close-btn" onClick={() => setIsMenuOpen(false)}>×</div>
-            <div className="menu-item" onClick={() => handleMove('/routine')}>
+            <div className="menu-item" onClick={() => handleMove('/exercise')}>
               <span>운동하기</span>
             </div>
             <div className="menu-item" onClick={() => handleMove('/schedulepage')}>
