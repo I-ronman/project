@@ -1,341 +1,211 @@
-// project/IronmanView/src/pages/MainDashboardPage.jsx
-import React, { useEffect, useState, useContext } from 'react';
+// src/pages/MainDashboardPage.jsx
+
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/MainDashboardPage.css';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
-import defaultProfile from '../images/default_profile.jpg';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
-} from 'recharts';
+  FaClipboardList, FaCalendarAlt, FaRobot, FaUsers,
+  FaChartBar, FaTrophy, FaRunning
+} from 'react-icons/fa';
+import { Doughnut, Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ArcElement, Tooltip, Legend,
+  CategoryScale, LinearScale, BarElement
+} from 'chart.js';
+import GalaxyBackground from '../components/GalaxyBackground';
+import '../styles/MainDashboardPage.css';
 
-
-// ✅ 예시용 dummy 데이터
-const dummyData = {
-  weeklyStats: [
-    { chartData: { '스쿼트': 3, '푸쉬업': 2 } },
-    { chartData: { '스쿼트': 1, '푸쉬업': 1 } },
-    { chartData: { '스쿼트': 2, '푸쉬업': 3 } },
-    { chartData: { '스쿼트': 2, '푸쉬업': 1, '플랭크': 2 } },
-    { chartData: { '푸쉬업': 1 } },
-    { chartData: { '스쿼트': 0 } },
-    { chartData: {} },
-  ],
-  exerciseColors: {
-    '스쿼트': '#FF5C5C',
-    '푸쉬업': '#4A90E2',
-    '플랭크': '#7ED957',
-  }
-};
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 const MainDashboardPage = () => {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { user, setUser, surveyDone } = useContext(AuthContext);
 
-  // — 프로필·알림·게시글 상태
-  const [calendarData, setCalendarData] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [posts] = useState([
-    { title: "오늘 첫 운동 완료했어요!", content: "스트레칭부터 유산소까지 알차게 했습니다. 여러분도 힘내세요!" },
-    { title: "질문이 있어요", content: "하체 루틴을 바꿔보려고 하는데 추천 있을까요?" },
-  ]);
+  const todayRoutine = {
+    exists: true,
+    name: '전신 루틴'
+  };
 
-  // 사용자 정보 로드
-  useEffect(() => {
-    axios.get('http://localhost:329/web/login/user', { withCredentials: true })
-      .then(res => {
-        const { name, email, preferences = [], todayRoutine, hasSurvey, unreadNotifications = 0 } = res.data;
-        setUser(prev => ({ ...prev, name, email, preferences, todayRoutine, hasSurvey, unreadNotifications }));
-      })
-      .catch(() => navigate('/login'));
-  }, [navigate, setUser]);
+  const weeklyData = [
+    { day: '월', routine: true, done: false },
+    { day: '화', routine: true, done: true },
+    { day: '수', routine: true, done: true },
+    { day: '목', routine: false, done: false },
+    { day: '금', routine: true, done: false },
+    { day: '토', routine: false, done: false },
+    { day: '일', routine: true, done: true },
+  ];
 
-  // 오늘 캘린더 데이터 (더미)
-  useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    setCalendarData([{ date: today, exercised: true, hasRoutine: true }]);
-  }, []);
+  const completed = weeklyData.filter(d => d.done).length;
+  const percent = Math.round((completed / 7) * 100);
 
-  // 오늘 루틴 알림
-  useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    if (calendarData.some(d => d.date === today && d.hasRoutine)) {
-      setNotifications([{ time: '07:00', message: `${today}에 오늘의 루틴이 있습니다.`, read: false }]);
+  const doughnutData = {
+    datasets: [{
+      data: [percent, 100 - percent],
+      backgroundColor: ['#A5EB47', '#333'],
+      borderWidth: 0,
+    }]
+  };
+
+  const doughnutOptions = {
+    cutout: '70%',
+    plugins: { tooltip: { enabled: false } },
+  };
+
+  const barChartData = {
+    labels: ['월', '화', '수', '목', '금', '토', '일'],
+    datasets: [
+      {
+        label: '스트레칭',
+        data: [2, 1, 2, 1, 3, 0, 2],
+        backgroundColor: '#FBD157',
+        stack: '운동'
+      },
+      {
+        label: '근력',
+        data: [1, 2, 3, 2, 1, 0, 1],
+        backgroundColor: '#A5EB47',
+        stack: '운동'
+      },
+      {
+        label: '유산소',
+        data: [1, 1, 2, 0, 1, 2, 1],
+        backgroundColor: '#00CFFF',
+        stack: '운동'
+      }
+    ]
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: { color: 'white', font: { size: 12 } }
+      }
+    },
+    scales: {
+      x: { stacked: true, ticks: { color: 'white' } },
+      y: { stacked: true, ticks: { color: 'white' } }
     }
-  }, [calendarData]);
-
-  const handleNotificationClick = () => {
-    setShowNotifications(v => !v);
-    setUser(u => ({ ...u, unreadNotifications: 0 }));
-    setNotifications(ns => ns.map(n => ({ ...n, read: true })));
   };
-
-  // — 통계 차트용: 오늘 기준 고정 7일
-  const statWeekDates = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + (i - 3));
-    return d;
-  });
-  const statData = statWeekDates.map((d, idx) => ({
-    name: `${d.getDate()}일`,
-    ...dummyData.weeklyStats[idx]?.chartData
-  }));
-
-  // — 주간 목표 캘린더용: 화살표로 이동
-  const [calendarCenterDate, setCalendarCenterDate] = useState(new Date());
-  const changeWeek = offset => {
-    const d = new Date(calendarCenterDate);
-    d.setDate(d.getDate() + offset * 7);
-    setCalendarCenterDate(d);
-  };
-  const calendarDates = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(calendarCenterDate);
-    d.setDate(d.getDate() + (i - 3));
-    return d;
-  });
-  const weekData = calendarDates.map(d => {
-    const ds = d.toISOString().split('T')[0];
-    return {
-      ...calendarData.find(c => c.date === ds) || { exercised: false, hasRoutine: false },
-      dayLabel: `${d.getDate()}일`
-    };
-  });
-  const completedDays = weekData.filter(d => d.exercised).length;
-  const totalDays = 7;
-  const percentage = Math.round((completedDays / totalDays) * 100);
-  const yearMonthLabel = `${calendarCenterDate.getFullYear()}년 ${calendarCenterDate.getMonth() + 1}월`;
-
-  // — 대시보드 카드 모음
-  const DASHBOARD_COMPONENTS = {
-    '운동 루틴 추천': (
-      <div className="dashboard-card dark-card clickable-card"
-           onClick={() => navigate('/routine')}
-           key="routine"
-      >
-        <p>루틴 짜기/추천받기</p>
-        <span>루틴을 직접 짜거나 추천받아 보세요.</span>
-      </div>
-    ),
-    '챗봇 서비스': (
-      <div className="dashboard-card dark-card clickable-card"
-           onClick={() => navigate('/chatbot')}
-           key="chatbot"
-      >
-        <p>AI 챗봇</p>
-        <span>운동 및 건강 관련 질문을 도와드려요.</span>
-      </div>
-    ),
-    '통계 보기': (
-      <div className="dashboard-card dark-card clickable-card full-width"
-           onClick={() =>
-             (user?.hasSurvey || surveyDone)
-               ? navigate('/statistics')
-               : navigate('/survey')
-           }
-           key="statistics"
-      >
-        {user?.hasSurvey || surveyDone ? (
-          <>
-            <p>📊 통계 보기</p>
-            <ResponsiveContainer width="100%" height={140}>
-              <BarChart data={statData}>
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                {Object.entries(dummyData.exerciseColors).map(([k, col]) =>
-                  <Bar key={k} dataKey={k} stackId="a" fill={col} />
-                )}
-              </BarChart>
-            </ResponsiveContainer>
-          </>
-        ) : (
-          <>
-            <p>📝 설문조사</p>
-            <span>AI 루틴 추천을 위해 설문을 완료해 주세요.</span>
-            <p className="survey-link">통계 보러가기 →</p>
-          </>
-        )}
-      </div>
-    )
-  };
-
-  // 사용자 선호도 순서대로
-  const ordered = [], fallback = [];
-  Object.entries(DASHBOARD_COMPONENTS).forEach(([k, c]) => {
-    (user?.preferences?.includes(k) ? ordered : fallback).push(c);
-  });
-
-  // — 랭킹 미리보기: 백엔드 연동 밑작업
-  const [previewTop3, setPreviewTop3] = useState([
-    { id: 1, name: '김철수', score: 98 },
-    { id: 2, name: '이영희', score: 92 },
-    { id: 3, name: '박민준', score: 89 },
-  ]);
-  const [myRank, setMyRank] = useState('-');
-
-  useEffect(() => {
-    axios.get('/api/ranking/preview', { withCredentials: true })
-      .then(res => {
-        if (Array.isArray(res.data.top3)) {
-          setPreviewTop3(res.data.top3);
-        }
-        if (res.data.myRank != null) {
-          setMyRank(res.data.myRank);
-        }
-      })
-      .catch(() => {
-        // 실패 시 더미 유지
-      });
-  }, []);
 
   return (
-    <div className="main-container dark-background">
+    <>
+      {/* ✅ Galaxy 배경을 AppLayout 아래에서만 적용 */}
+      
 
-      {/* 프로필 & 알림 */}
-      <div className="profile-card dark-card clickable-card"
-           onClick={() => navigate('/mypage')}
-      >
-        <div className="profile-info">
-          <img
-            src={user?.profileImage || defaultProfile}
-            alt="프로필"
-            className="profile-img"
-          />
-          <div className="profile-texts">
-            <p className="welcome-text">어서오세요!</p>
-            <p className="username-text">{user?.name || '홍길동'} 님</p>
-          </div>
-        </div>
-        <div className="notification-icon"
-             onClick={e => { e.stopPropagation(); handleNotificationClick(); }}
-        >
-          🔔{user?.unreadNotifications > 0 && <span className="badge">{user.unreadNotifications}</span>}
-          {showNotifications && (
-            <div className="notification-dropdown">
-              {notifications.length === 0
-                ? <p>알림 없음</p>
-                : notifications.map((n, i) =>
-                    <p key={i}>⏰ {n.time} - {n.message}</p>
-                  )
-              }
+      <div className="main-dashboard-wrapper">
+        <div className="dark-background">
+        <GalaxyBackground />
+          <div className="main-container">
+
+            {/* 프로필 카드 */}
+            <div className="profile-card clickable-card" onClick={() => navigate('/profile-edit')}>
+              <img src={user?.profileImage || '/default_profile.jpg'} alt="profile" className="profile-img" />
+              <div className="profile-text">
+                <div>환영합니다,</div>
+                <div className="profile-name">{user?.name ?? '홍길동'} 님</div>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* 오늘 루틴 시작 */}
-      <div className="routine-card dark-card clickable-card"
-           onClick={() =>
-             user?.todayRoutine
-               ? navigate('/postureanalysis', { state: { routine: user.todayRoutine } })
-               : navigate('/routine')
-           }
-      >
-        <div className="routine-header">
-          <strong className="routine-title">오늘 루틴 시작</strong>
-          {user?.todayRoutine
-            ? <span className="routine-name">{user.todayRoutine.name}</span>
-            : <span className="routine-name">등록된 루틴이 없습니다.</span>
-          }
-        </div>
-        {user?.todayRoutine && (
-          <div className="routine-detail">
-            {user.todayRoutine.steps.map((s, i) => <p key={i}>{s}</p>)}
-            <p>총 소요 시간: {user.todayRoutine.totalTime}</p>
-          </div>
-        )}
-      </div>
-
-      {/* 대시보드 카드 */}
-      <div className="dashboard">
-        <div className="dashboard-row">
-          {ordered}
-          {fallback}
-
-          {/* 운동 기록 확인 카드 */}
-          <div
-            className="dashboard-card dark-card clickable-card"
-            onClick={() => navigate('/records')}
-            key="records"
-          >
-            <p>📋 운동 기록 확인</p>
-            <span>꾸준히 쌓아온 운동 기록을 확인해보세요.</span>
-          </div>
-        </div>
-
-        {/* 주간 목표 캘린더 */}
-        <div className="calendar-card dark-card">
-          <div className="calendar-header">
-            <span className="arrow" onClick={() => changeWeek(-1)}>◀</span>
-            <span>{yearMonthLabel} 주간 목표</span>
-            <span className="arrow" onClick={() => changeWeek(1)}>▶</span>
-          </div>
-          <div className="weekly-goal">{completedDays}/{totalDays}</div>
-          <div className="circular-progress"
-               style={{ background: `conic-gradient(#a5eb47 0% ${percentage}%, #333 ${percentage}% 100%)` }}
-          >
-            <div className="circular-progress-text">{percentage}%</div>
-          </div>
-          <div className="calendar-body">
-            {weekData.map((day, i) => (
-              <div key={i}
-                   className={`calendar-day ${day.exercised ? 'exercised' : day.hasRoutine ? 'has-routine' : ''}`}
-                   onClick={() => navigate('/schedulepage')}
-              >
-                {day.dayLabel}
+            {/* 카드들 */}
+            <div className="dashboard-grid">
+              {/* 루틴 추천 */}
+              <div className="dark-card clickable-card" onClick={() => navigate('/routine')}>
+                <FaClipboardList className="card-icon" />
+                <h3>루틴 짜기/추천받기</h3>
+                <p>루틴을 직접 짜거나 AI에게 추천받아보세요.</p>
               </div>
-            ))}
-          </div>
-          <div className="legend">
-            <div><span className="legend-box green" /> 운동 완료</div>
-            <div><span className="legend-box blue" /> 루틴 있음</div>
-            <div><span className="legend-box gray" /> 루틴 없음</div>
-          </div>
-        </div>
 
-        {/* 랭킹 카드 (Top3 미리보기) */}
-        <div
-          className="ranking-card dark-card clickable-card"
-          onClick={() => navigate('/ranking')}
-        >
-          <p className="ranking-card-title">🏆 전체 랭킹 Top 3</p>
-          <ol className="ranking-list">
-            {previewTop3.map((item, idx) => (
-              <li key={item.id} className="ranking-item">
-                <span className="rank-badge">{['🥇','🥈','🥉'][idx]}</span>
-                <span className="rank-name">{item.name}</span>
-                <span className="rank-score">{item.score}점</span>
-              </li>
-            ))}
-          </ol>
-          <p className="my-rank">255등 / 전체</p>
-        </div>
-
-        {/* 커뮤니티 게시판 */}
-        <div className="board-card dark-card clickable-card" onClick={() => navigate('/board')}>
-          <p className="board-title">📌 커뮤니티 게시판</p>
-          {posts.length === 0
-            ? <div className="board-empty"><p>아직 게시글이 없습니다.</p><p>첫 게시글을 올려보세요!</p></div>
-            : <div className="board-preview">
-                {posts.slice(0,2).map((p, i) => (
-                  <div key={i} className="post-preview">
-                    <h4>{p.title}</h4>
-                    <p>{p.content.slice(0,40)}...</p>
-                  </div>
-                ))}
-                <p className="view-more">더보기 →</p>
+              {/* 오늘의 루틴 */}
+              <div className="dark-card clickable-card" onClick={() => navigate('/exercise')}>
+                <FaRunning className="card-icon" />
+                <h3>오늘의 루틴</h3>
+                {todayRoutine.exists ? (
+                  <p>📌 오늘의 루틴: <strong>{todayRoutine.name}</strong></p>
+                ) : (
+                  <p>오늘 등록된 루틴이 없습니다. 나만의 루틴을 만들어보세요!</p>
+                )}
               </div>
-          }
+
+              {/* 통계 */}
+              <div className="dark-card clickable-card" onClick={() => navigate('/statistics')}>
+                <FaChartBar className="card-icon" />
+                <h3>통계 보기</h3>
+                <Bar data={barChartData} options={barChartOptions} />
+              </div>
+
+              {/* 운동기록 */}
+              <div className="dark-card clickable-card" onClick={() => navigate('/records')}>
+                <FaCalendarAlt className="card-icon" />
+                <h3>운동 기록</h3>
+                <p>내가 기록한 운동 데이터를 한 눈에 확인하세요.</p>
+              </div>
+
+              {/* 주간 달성률 */}
+              <div className="dark-card calendar-card">
+                <FaCalendarAlt className="card-icon" />
+                <h3>주간 달성률</h3>
+                <div className="calendar-progress">
+                  <Doughnut data={doughnutData} options={doughnutOptions} />
+                  <div className="percent-label">{percent}%</div>
+                </div>
+                <div className="calendar-body">
+                  {weeklyData.map((day, idx) => (
+                    <div
+                      key={idx}
+                      className={`calendar-day ${day.done ? 'exercised' : day.routine ? 'has-routine' : ''}`}
+                      onClick={() => navigate('/schedule')}
+                    >
+                      {day.day}
+                    </div>
+                  ))}
+                </div>
+                <div className="calendar-legend">
+                  <span style={{ color: '#FBD157' }}>●</span> 루틴 있음 &nbsp;
+                  <span style={{ color: '#A5EB47' }}>●</span> 운동 완료 &nbsp;
+                  무색: 없음
+                </div>
+              </div>
+
+              {/* AI 챗봇 */}
+              <div className="dark-card clickable-card" onClick={() => navigate('/chatbot')}>
+                <FaRobot className="card-icon" />
+                <h3>AI 챗봇</h3>
+                <p>홈트에 대한 궁금한 점을 AI가 도와드려요.</p>
+              </div>
+
+              {/* 커뮤니티 */}
+              <div className="dark-card clickable-card" onClick={() => navigate('/board')}>
+                <FaUsers className="card-icon" />
+                <h3>커뮤니티</h3>
+                <div className="post-preview">
+                  <h4>오늘 첫 운동 완료했어요!</h4>
+                  <p>스트레칭부터 유산소까지 알차게 했습니다</p>
+                </div>
+                <div className="post-preview">
+                  <h4>오운완 인증합니다!</h4>
+                  <p>푸쉬업, 플랭크, 스쿼트 루틴 돌림!</p>
+                </div>
+              </div>
+
+              {/* 랭킹 */}
+              <div className="dark-card clickable-card" onClick={() => navigate('/ranking')}>
+                <FaTrophy className="card-icon" />
+                <h3>전체 랭킹</h3>
+                <ul className="ranking-list">
+                  <li>🥇 철수 100점</li>
+                  <li>🥈 영희 98점</li>
+                  <li>🥉 민수 96점</li>
+                </ul>
+                <div className="my-rank">17등 / 전체</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* 챗봇 */}
-      <div className="chatbot-section clickable-card" onClick={() => navigate('/chatbot')}>
-        <div className="chatbot-bubble">💬</div>
-        <p>I봇</p>
-      </div>
-    </div>
+    </>
   );
 };
 

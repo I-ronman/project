@@ -36,14 +36,14 @@ const MyPage = () => {
     axios
       .get('http://localhost:329/web/login/user', { withCredentials: true })
       .then(res => {
-        const { name, email, birthdate, gender, profileImage } = res.data;
+        const { name, email, birthdate, gender, face } = res.data;
         setUser(prev => ({
           ...prev,
           name,
           email,
           birthdate,
           gender,
-          profileImage,
+          face,
         }));
       })
       .catch(() => navigate('/login'));
@@ -58,7 +58,7 @@ const MyPage = () => {
           <div className="profile-card">
             <div className="profile-avatar">
               <img
-                src={user?.profileImage || defaultProfileImage}
+                src={user?.face || defaultProfileImage}
                 alt="프로필"
                 className="profile-image"
               />

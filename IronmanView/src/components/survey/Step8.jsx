@@ -3,10 +3,10 @@ import '../../styles/SurveyPage.css';
 
 const Step8 = ({ flexibility, setFlexibility, nextStep }) => {
   const options = [
-    { label: '발끝에 안닿음', value: 'bad' },
-    { label: '발끝에 닿음', value: 'common' },
-    { label: '발끝을 조금 넘어감', value: 'good' },
-    { label: '발끝을 많이 넘어감', value: 'very_good' },
+    { label: '발끝에 안닿음', value: '유연성 나쁨' },
+    { label: '발끝에 닿음', value: '유연성 평균임' },
+    { label: '발끝을 조금 넘어감', value: '유연성 좋음' },
+    { label: '발끝을 많이 넘어감', value: '유연성 훌륭함' },
   ];
 
   const handleClick = (value) => {

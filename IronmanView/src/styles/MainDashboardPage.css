@@ -1,187 +1,168 @@
-/* MainDashboardPage.css */
-
-.main-container {
-  max-width: 500px;
-  width: 85%;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Pretendard', sans-serif;
-  color: white;
-}
-
+/* 전체 페이지 배경 - 은하수 이미지 + 어두운 오버레이 */
 .dark-background {
-  background-color: #1c1c1c;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('/images/bg-home.jpg') no-repeat center center fixed;
+  background-size: cover;
   min-height: 100vh;
-}
-
-/* 상단 헤더 */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.logo-fixed {
-  height: 40px;
-  width: auto;
-  object-fit: contain;
-  cursor: pointer;
-}
-
-/* 로그아웃 버튼 */
-.logout-btn {
-  background: none;
   color: white;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
+  font-family: 'Pretendard', sans-serif;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 1400px;
+  z-index: 1;
+  position: relative;
 }
 
-/* 카드 공통 */
-.dark-card {
-  background-color: #2b2b2b;
-  border-radius: 16px;
-  padding: 16px;
-  margin-top: 16px;
-  transition: background-color 0.3s;
+/* 메인 전체 래퍼 */
+.main-dashboard-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  z-index: 0;
 }
 
-.clickable-card:hover {
-  background-color: #3a3a3a;
-  transition: background-color 0.2s;
+/* 내부 컨테이너 */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 95%;
+  margin: 0 auto;
+  padding: 20px 0;
 }
 
-/* 프로필 */
+/* 프로필 카드 */
 .profile-card {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  position: relative;
-}
-
-.profile-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  cursor: default;
+  color: white;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 .profile-img {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
-.profile-texts {
+/* 카드 그리드 */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* 공통 카드 스타일 */
+.dark-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-
-.welcome-text {
-  font-size: 12px;
-  color: #bbb;
-  margin: 0;
-}
-
-.username-text {
-  font-size: 15px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.edit-btn {
-  background-color: #FBD157;
-  color: black;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.notification {
-  font-size: 20px;
-  position: relative;
-  margin-left: 8px;
-  cursor: pointer;
-}
-
-.badge {
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  font-size: 10px;
-  padding: 2px 6px;
-  position: absolute;
-  top: -6px;
-  right: -10px;
-}
-
-/* 오늘 루틴 */
-.routine-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  cursor: pointer;
-}
-
-.routine-header {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 15px;
+  overflow: hidden;
+  color: white;
 }
 
-.routine-title {
-  font-weight: bold;
-}
-
-.routine-name {
-  color: #FBD157;
-}
-
-.routine-detail {
-  font-size: 13px;
-  color: #ddd;
-  padding-left: 4px;
-}
-
-/* 대시보드 */
-.dashboard {
-  margin-top: 20px;
-}
-
-.dashboard-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.dashboard-card {
-  flex: 1;
-  min-width: 170px;
-  text-align: center;
-  padding: 12px;
+.dark-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 209, 87, 0.4);
   cursor: pointer;
 }
 
-.dashboard-card p {
-  margin: 0;
-  font-weight: bold;
-  font-size: 15px;
+/* 클릭 가능한 카드 */
+.clickable-card {
+  cursor: pointer;
 }
 
-.dashboard-card span {
+/* 카드 아이콘 */
+.card-icon {
+  font-size: 28px;
+  color: #FBD157;
+  margin-bottom: 12px;
+}
+
+.center-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* 루틴 카드 배경 강조 */
+.routine-card {
+  background: linear-gradient(135deg, rgba(251, 209, 87, 0.1), rgba(0, 0, 0, 0.1));
+}
+
+/* 챗봇 카드 */
+.chatbot-card {
+  background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(0, 0, 0, 0.1));
+}
+
+/* 게시판 카드 */
+.board-card .board-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.post-preview {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-preview h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.post-preview p {
+  margin: 4px 0 0 0;
   font-size: 12px;
   color: #ccc;
 }
 
-/* 캘린더 */
+/* 랭킹 카드 */
+.ranking-card-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ranking-list li {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.my-rank {
+  font-size: 13px;
+  margin-top: 10px;
+  color: #ccc;
+}
+
+/* 주간 목표 (도넛 + 달력) */
 .calendar-card {
   text-align: center;
 }
@@ -190,277 +171,98 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 10px 0;
   font-weight: bold;
-  font-size: 15px;
-  margin-bottom: 10px;
 }
 
 .arrow {
   cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
+  padding: 0 10px;
+  font-size: 18px;
 }
 
-.arrow:hover {
-  transform: scale(1.2);
-  color: #FBD157;
-}
-
-.weekly-goal {
-  font-size: 16px;
-  margin-bottom: 8px;
-}
-
-.circular-progress {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin: 0 auto;
+.calendar-progress {
+  position: relative;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: conic-gradient(#a5eb47 0% 0%, #333 0% 100%);
+  margin-bottom: 10px;
 }
 
-.circular-progress-text {
-  color: white;
+.percent-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
   font-weight: bold;
-  font-size: 16px;
+  color: white;
 }
 
 .calendar-body {
   display: flex;
-  justify-content: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 8px;
   margin-top: 10px;
-  flex-wrap: wrap;
 }
 
 .calendar-day {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  line-height: 42px;
-  text-align: center;
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 8px;
   font-size: 14px;
-  background-color: #444;
-  cursor: pointer;
+  background-color: #2b2b2b;
+  text-align: center;
   color: white;
-  transition: transform 0.1s ease;
-}
-
-.calendar-day:hover {
-  transform: scale(1.05);
 }
 
 .calendar-day.exercised {
-  background-color: #31cc53; /* 초록 */
+  background-color: #A5EB47;
+  color: black;
 }
 
 .calendar-day.has-routine {
-  background-color: #3498db; /* 파랑 */
-}
-
-.calendar-day.today-has-routine {
-  background-color: #ff6b6b; /* 빨강 */
-}
-
-.calendar-day.today-no-routine {
-  background-color: #111;
-  border: 1px solid #777;
-}
-
-.calendar-day.none {
-  background-color: #666;
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  margin-top: 12px;
-  font-size: 12px;
-  color: #ccc;
-}
-
-.legend-box {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 4px;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-
-.legend .green { background-color: #31cc53; }
-.legend .blue { background-color: #3498db; }
-.legend .red { background-color: #ff6b6b; }
-.legend .gray { background-color: #444; }
-.legend .black { background-color: #111; }
-
-/* 랭킹 */
-.ranking-card {
-  margin-top: 24px;
-  padding: 16px;
-}
-
-.ranking-card ol {
-  margin: 0;
-  padding-left: 20px;
-  font-size: 14px;
-}
-
-.my-rank {
-  font-size: 12px;
-  margin-top: 10px;
-  color: #bbb;
-}
-
-/* 챗봇 */
-.chatbot-section {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  text-align: center;
-  cursor: pointer;
-  z-index: 100;
-}
-
-.chatbot-bubble {
-  width: 48px;
-  height: 48px;
-  background-color: #444;
-  color: white;
-  font-size: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 4px;
-  transition: background-color 0.2s;
-}
-
-.chatbot-section:hover .chatbot-bubble {
   background-color: #FBD157;
   color: black;
 }
 
-.chatbot-section p {
+.calendar-legend {
   font-size: 12px;
-  color: white;
-  transition: color 0.2s;
-}
-
-.chatbot-section:hover p {
-  color: #FBD157;
-}
-
-/* 가시성 개선용: 어두운 배경이면 흰 글씨 / 밝은 배경이면 검은 글씨 */
-.text-auto {
-  transition: color 0.3s ease;
-}
-
-.dark-card .text-auto,
-.dark-background .text-auto {
-  color: white;
-}
-
-.light-bg .text-auto {
-  color: black;
-}
-.notification-icon {
-  font-size: 20px;
-  position: relative;
-  cursor: pointer;
-}
-
-.notification-dropdown {
-  position: absolute;
-  top: 36px;
-  right: 0;
-  width: 220px;
-  background-color: #333;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 13px;
-  z-index: 200;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.notification-dropdown p {
-  margin: 5px 0;
-  word-break: keep-all;
-}
-/* 📌 기존 스타일은 유지한 채 추가만 해주세요 */
-
-.board-card {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #1f1f1f;
-  border-radius: 10px;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  transition: transform 0.2s ease;
-}
-
-.board-card:hover {
-  transform: translateY(-3px);
-}
-
-.board-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.board-empty {
-  padding: 10px;
-  text-align: center;
-  color: #bbb;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.board-empty strong {
-  color: #ffdf58;
-}
-
-.board-preview .post-preview {
-  background-color: #2a2a2a;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
-
-.board-preview .post-preview h4 {
-  margin: 0;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.board-preview .post-preview p {
-  margin: 6px 0 0;
   color: #ccc;
-  font-size: 14px;
-}
-
-.board-preview .view-more {
-  text-align: right;
-  color: #aaa;
-  font-size: 13px;
   margin-top: 8px;
-  cursor: pointer;
-}
-.full-width-card {
-  width: 100%;
-  flex: 1 1 100%;
-  margin-top: 16px;
-}
-.full-width {
-  width: 100%;
-  flex: 1 1 100%;
-  margin-top: 16px;
+  text-align: center;
 }
 
+/* 하단 챗봇 버튼 */
+.chatbot-section {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  text-align: center;
+}
+
+.chatbot-bubble {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #FBD157;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-size: 26px;
+  box-shadow: 0 4px 15px rgba(251, 209, 87, 0.5);
+  transition: transform 0.3s ease;
+  margin-bottom: 4px;
+}
+
+.chatbot-section:hover .chatbot-bubble {
+  transform: scale(1.1);
+}
+
+/* 반응형 */
+@media screen and (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

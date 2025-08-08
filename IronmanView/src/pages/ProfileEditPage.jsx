@@ -9,24 +9,11 @@ import { AuthContext } from '../context/AuthContext';
 
 const ProfileEditPage = () => {
  
-  useEffect(() => {
-  axios.get('http://localhost:329/web/login/user', { withCredentials: true })
-    .then(res => {
-      const { name, email, birthdate, gender  } = res.data;
-      setUser(prev => ({ ...prev, name, email, birthdate, gender }));
-      
-    })
-    .catch(err => {
-      console.error('세션 사용자 정보 불러오기 실패', err);
-      navigate('/login');
-    });
-}, []);
- 
   const navigate = useNavigate();
   const { user, setUser, surveyDone } = useContext(AuthContext);
 
   const [userInfo, setUserInfo] = useState({
-    profileImage: '/default_profile.jpg',
+    face: '/default_profile.jpg',
     height: '',
     weight: '',
     goalWeight: '',
@@ -37,7 +24,8 @@ const ProfileEditPage = () => {
     flexibility: '',
     workoutFrequency: '',
   });
-  const [previewImage, setPreviewImage] = useState(userInfo.profileImage);
+
+  const [previewImage, setPreviewImage] = useState(userInfo.face);
   const [hasSurvey, setHasSurvey] = useState(false);
 
   // 1) 세션에서 사용자 기본 정보 로드
@@ -45,8 +33,13 @@ const ProfileEditPage = () => {
     axios
       .get('http://localhost:329/web/login/user', { withCredentials: true })
       .then(res => {
-        const { name, email, birthdate, gender } = res.data;
-        setUser(prev => ({ ...prev, name, email, birthdate, gender }));
+        console.log('받아오는 데이터: ', res.data)
+        const { name, email, birthdate, gender, face } = res.data;
+        setUser(prev => ({ ...prev, name, email, birthdate, gender, face }));
+        
+        setUserInfo(prev => ({...prev, face}));
+
+        setPreviewImage(face);
       })
       .catch(err => {
         console.error('세션 사용자 정보 불러오기 실패', err);
@@ -59,16 +52,25 @@ const ProfileEditPage = () => {
     setHasSurvey(surveyDone);
   }, [surveyDone]);
 
+  // face 값이 바뀌는 미리보기 갱신
+  useEffect(()=> {
+    setPreviewImage(userInfo.face);
+  }, [userInfo.face]);
+
+
   // 3) 프로필 이미지 미리보기
-  const handleImageChange = e => {
+  const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onloadend = () => {
+      console.log('이미지 파일(base64): ', reader.result);
+      setUserInfo(prev => ({ ...prev, face: reader.result }));
       setPreviewImage(reader.result);
-      setUserInfo(prev => ({ ...prev, profileImage: reader.result }));
     };
     reader.readAsDataURL(file);
+    
   };
 
   // 4) 폼 입력값 변경
@@ -77,7 +79,7 @@ const ProfileEditPage = () => {
     setUserInfo(prev => ({ ...prev, [name]: value }));
   };
 
-  
+  // 설문조사 저장하는 axios
   const handleSave = async () => {
     const cleanedData = Object.fromEntries(
     Object.entries(userInfo).filter(([_, value]) => value !== '')
@@ -94,6 +96,22 @@ const ProfileEditPage = () => {
   }
 };
 
+  // 프로필 사진 저장하는 axios
+  const handleProfileSave = async () => {
+    try {
+      await axios.post('http://localhost:329/web/api/user/profile', {
+        face: userInfo.face  // ✅ base64 데이터 전송
+      }, {
+        withCredentials: true
+      });
+
+      alert('프로필 사진 저장 완료');
+      setUser(prev => ({ ...prev, face: userInfo.face })); // 화면 즉시 반영
+    } catch (err) {
+      console.error('프로필 저장 실패', err);
+      alert('저장 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <PageWrapper>
@@ -130,6 +148,9 @@ const ProfileEditPage = () => {
             </p>
             <p>생년월일: {user.birthdate}</p>
           </div>
+          <button className="profile-save-button" onClick={handleProfileSave}>
+            프로필 사진 저장
+          </button>
         </div>
 
         {/* 신체 정보 & 설문 */}

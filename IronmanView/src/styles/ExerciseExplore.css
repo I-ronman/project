@@ -1,5 +1,6 @@
-/* ExerciseExplore.css */
+/* ExerciseExplore.css - 정리 및 주석 추가 */
 
+/* ✅ 전체 컨테이너 */
 .explore-container {
   display: flex;
   width: 100%;
@@ -10,20 +11,21 @@
   min-height: 100vh;
   align-items: flex-start;
   background-color: black;
+  flex-direction: row;
 }
 
-/* 왼쪽 운동 카드 영역 */
+/* ✅ 왼쪽 패널 - 운동 카드 영역 */
 .left-panel-exp {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  flex-direction: center;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 10px;
   overflow-y: auto;
   max-height: 100%;
+  z-index: 40;
 }
 
-/* 필터 버튼 스타일 */
+/* ✅ 운동 부위 필터 버튼 */
 .filter-buttons-exp {
   grid-column: 1 / -1;
   display: flex;
@@ -49,6 +51,7 @@
   color: black;
 }
 
+/* ✅ 운동 검색 입력창 */
 .exercise-search-input-exp {
   grid-column: 1 / -1; 
   width: 100%;
@@ -62,7 +65,7 @@
   color: white;
 }
 
-/* 카드 스타일 */
+/* ✅ 운동 카드 */
 .exercise-card-exp {
   display: flex;
   align-items: center;
@@ -71,7 +74,6 @@
   padding: 12px;
   gap: 12px;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
-  max-height: 100px;
   border-bottom: 1px solid #1a1a1a;
 }
 
@@ -95,39 +97,156 @@
   font-size: 14px;
 }
 
-/* 오른쪽 20vh 영역 */
+/* ✅ 오른쪽 루틴 패널 */
 .right-panel-exp {
-  max-width: 30vw;
-  width: 30vw;
+  position: relative;
+  max-width: 35vw;
+  min-width: 500px;
+  width: 100vw;
   display: flex;
   flex-direction: column;
-  height: 80%;
+  height: 100%;
   background-color: #1e1e1e;
   border-radius: 12px;
   padding: 16px;
   color: white;
   box-shadow: 0 0 6px rgba(0,0,0,0.3);
   box-sizing: border-box;
+  overflow-y: auto;
+  z-index: 101;
 }
 
-/* 오른쪽 패널 내 하위 영역 */
 .right-top-exp {
-  height: 35%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: #333;
   border-radius: 8px;
   padding: 10px;
 }
 
-.right-bottom-exp {
-  flex: 1;
-  height: 50%;
-  margin-top: 16px;
-  background-color: #444;
-  border-radius: 8px;
-  padding: 10px;
+/* ✅ 루틴 카드 - 대형 */
+.routine-card-large-exp {
+  position: relative;
+  background-color: #2b2b2b;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center right;
+  overflow: hidden;
+  color: white;
+  margin-bottom: 10px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
 }
 
+.routine-background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  z-index: 0;
+}
 
+.routine-card-content {
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+}
+
+.routine-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  margin-bottom: 12px;
+}
+
+.routine-card-header p {
+  margin: 2px 0;
+}
+
+.routine-card-detail {
+  background-color: transparent;
+  margin-top: 0px;
+  border-top: 1px solid #444;
+  padding-top: 0px;
+  font-size: 14px;
+  color: #ccc;
+  border-radius: 12px;
+}
+
+.routine-exercise-row {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 0px;
+  margin-bottom: 0px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: center;
+  justify-content: flex-start;
+  background-color: rgba(0, 0, 0, 0.7); /* 살짝 밝은 배경 */
+  border-radius: 12px;                         /* 모서리 둥글게 */
+  border: 1px solid rgba(255, 255, 255, 0.1);  /* 연한 테두리 */
+}
+
+.routine-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0px;
+}
+
+.start-btn-inside {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.expand-btn {
+  background: none;
+  color: #ccc;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.routine-delete-btn-exp {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 2px 8px;
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.routine-delete-btn-exp:hover {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.routine-summary {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 0px;
+  word-break: keep-all;
+}
+
+/* ✅ 운동 모달 */
 .modal-overlay-exp {
   position: fixed;
   top: 0;
@@ -144,31 +263,26 @@
 .modal-content-exp {
   background: #222;
   color: white;
-  padding: 20px;
+  padding: 24px;
   border-radius: 12px;
   width: 90%;
-  max-width: 400px;
+  max-width: 650px;
   position: relative;
   box-shadow: 0 0 10px black;
   text-align: center;
 }
 
 .modal-content-exp img {
-  max-width: 100%;
+  max-width: 90%;
+  max-height: 90%;
   border-radius: 8px;
-  margin: 10px 0;
-}
-
-.modal-content-exp p {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #ddd;
+  margin: 10px;
 }
 
 .close-btn-exp {
   position: absolute;
-  top: 10px;
-  right: 14px;
+  top: -12px;
+  right: -15px;
   background: none;
   color: white;
   border: none;
@@ -192,6 +306,9 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
+}
+
+.start-btn-exp {
   background-color: #4caf50;
   color: white;
 }
@@ -209,126 +326,364 @@
   background-color: #555;
 }
 
-/* 루틴 카드 박스 (오른쪽 루틴 리스트 영역 내) */
-.routine-card-box-exp {
-  background: #555;  /* 기존보다 더 밝은 회색으로 카드 강조 */
-  border-radius: 10px;
-  padding: 8px;
-  margin-bottom: 8px;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.1);
-  transition: all 0.3s;
-  cursor: pointer;
-  position: relative;
+
+/* 입력창 */
+
+.exercise-set-rep-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.routine-card-box-exp:hover {
-  background-color: #666;
-}
-
-.routine-card-box-exp.selected {
-  border: 2px solid #4caf50;
-  background-color: #2e7d32; /* 선택 시 더 진한 녹색 톤 */
+.exercise-set-rep-inputs label {
   color: white;
+  font-size: 14px;
+  margin-right: 4px;
 }
 
-.routine-card-box-exp.selected .routine-select-btn-exp {
-  background-color: white;
-  color: black;
-}
-
-/* 루틴 제목 */
-.routine-card-title-exp {
-  font-size: 15px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: white;
-}
-
-/* 선택 버튼 */
-.routine-select-btn-exp {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  font-size: 12px;
-  padding: 4px 8px;
-  background-color: white;
-  color: black;
-  border: none;
+.exercise-set-rep-inputs input {
+  width: 60px;           /* 기존보다 축소 */
+  padding: 6px 8px;
   border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.routine-select-btn-exp:hover {
-  background-color: #ccc;
-}
-
-.start-btn-exp {
-  background-color: #4caf50;
+  border: 1px solid #555;
+  background-color: #1a1a1a;
   color: white;
-  padding: 10px 20px;
-  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.exercise-set-rep-inputs input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* 삭제 버튼 (운동 항목 내) */
+.exercise-set-rep-inputs button {
+  background: transparent;
   border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.exercise-set-rep-inputs button:hover {
+  color: red;
+  transform: scale(1.2);
+}
+
+.input-group-exp {
+  max-width: 200px;
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent; /* ✅ 배경 없애기 */
+  padding: 0px;                  /* ✅ input에 직접 padding 주기 */
+}
+
+.input-group label {
+  color: white;
+  font-size: 14px;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+
+
+/* 루틴 선택 리스트 */
+
+.routine-select-item {
+  background-color: #333;
+  padding: 12px;
+  margin: 8px 0;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background-color 0.3s;
+  color: white;
+  text-align: center;
 }
 
+.routine-select-item:hover {
+  background-color: #555;
+} 
+
+/* 운동 카드 내 스타일 */
+
+/* 운동 카드 내 상단 영역 */
+.routine-exercise-header {
+  height: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+  margin-left: 12px;
+}
+
+.routine-exercise-header .exercise-name {
+  font-weight: bold;
+  font-size: 15px;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* 삭제 버튼 - 운동 항목용 */
+.routine-exercise-delete-btn-exp {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.routine-exercise-delete-btn-exp:hover {
+  color: red;
+  transform: scale(1.2);
+}
+
+/* 운동 항목 하단 입력 영역 */
+.routine-exercise-body {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 4px;
+}
+
+/* 썸네일 이미지 */
+.exercise-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+.routine-detail-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* 저장 버튼 */
 
 .save-btn-exp {
-  background-color: #555;
+  background-color: #333;            /* 어두운 배경 */
   color: white;
-  border: none;
-  padding: 10px;
+  border: 1px solid #555;            /* 테두리 추가 */
+  padding: 8px 14px;
   font-size: 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .save-btn-exp:hover {
-  background-color: #777;
+  background-color: #444;            /* 살짝 밝은 톤으로 호버 효과 */
+  border-color: #666;
 }
 
-.start-btn-exp {
-  background-color: #28a745;
+/* 운동 카드 두줄로 만들기 */
+.routine-exercise-body {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: flex-start;  /* ← 위에서 맞춤 */
+  gap: 5px;
+  margin: 0 12px;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+}
+
+.exercise-input-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 6px;
+  flex: 1;
+}
+
+.input-row-exp {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+/* 반응형 토글 */
+
+.toggle-right-panel-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 2000;
+  background-color: #333;
   color: white;
   border: none;
-  padding: 10px;
+  border-radius: 10px;
+  padding: 8px 16px;
   font-size: 14px;
-  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.toggle-right-panel-btn:hover {
+  background-color: #555;
+}
+
+.toggle-right-panel-btn.left {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 3000;
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-right-panel-btn.left:hover {
+  background-color: #555;
+}
+
+/* 루틴 생성 섹션 */
+.routine-create-section-exp {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* 루틴 생성 버튼 */
+.routine-create-btn-exp {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.routine-create-btn-exp:hover {
+  background-color: #666;
+}
+
+/* 루틴 생성 모달 - 다크 스타일 */
+.routine-create-modal {
+  background-color: #1e1e1e;
+  padding: 24px;
+  border-radius: 12px;
+  width: 360px;
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  font-family: 'Pretendard', sans-serif;
+  text-align: center;
+}
+
+.routine-create-modal h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #f5f5f5;
+}
+
+.routine-create-modal input,
+.routine-create-modal textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  color: white;
+  font-size: 15px;
+  transition: border 0.3s;
+}
+
+.routine-create-modal input:focus,
+.routine-create-modal textarea:focus {
+  border-color: #00c6ff;
+  outline: none;
+}
+
+.routine-create-modal .create-btn-exp {
+  background-color: #3a6c89;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.routine-create-modal .create-btn-exp:hover {
+  background-color: #325d75;
+  transform: translateY(-1px);
+}
+
+.routine-create-modal .close-btn-exp {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
   cursor: pointer;
 }
 
-.start-btn-exp:hover {
-  background-color: #218838;
-}
-
-.right-bottom-exp {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch; /* 가로폭 고정 */
-  justify-content: flex-start; /* 위에서 시작 */
-}
-
-
-.routine-exercise-item {
-  background-color: #2c2c2c;
+/* 운동 선택 중 루틴 추가 버튼 */
+.routine-create-btn-inline {
+  margin-top: 0px;
+  padding: 10px 20px;
+  width: 100%;
+  background-color: #333;
   color: white;
-  padding: 0 10px;
+  border: none;
   border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;  
-  align-items: center;    
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.routine-create-btn-inline:hover {
+  background-color: #555;
 }
 
 
+/* ✅ 반응형: 모바일에서 1열로 */
 @media (max-width: 800px) {
   .left-panel-exp {
-    grid-template-columns: 1fr;  /* 모바일에서는 1열 */
+    z-index: 1;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .right-panel-exp {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: #1c1c1c;
+    z-index: 999;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%);
+  }
+
+  .right-panel-exp.visible {
+    transform: translateX(0); 
   }
 }

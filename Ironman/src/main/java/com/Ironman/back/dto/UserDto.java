@@ -17,6 +17,7 @@ public class UserDto {
 	private String name;
 	private String gender;
 	private String birthdate;
+	private String face;
 
 	public UserEntity toEntity() {
 		return UserEntity.builder()
@@ -25,6 +26,7 @@ public class UserDto {
 				.name(this.name)
 				.gender(this.gender)
 				.birthdate(this.birthdate)
+				.face(this.face)
 				.build();
 	}
 	
@@ -34,6 +36,7 @@ public class UserDto {
 				.name(entity.getName())
 				.gender(entity.getGender())
 				.birthdate(entity.getBirthdate())
+				.face(entity.getFace())
 				.pw(null) // 보안상 패스워드는 제외하거나 null 처리
 				.build();
 	}
