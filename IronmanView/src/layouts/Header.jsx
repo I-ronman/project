@@ -118,6 +118,7 @@ const Header = () => {
         )}
         <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
         <img
+        
           src={profileImg}
           alt="프로필"
           className="profile-img"
