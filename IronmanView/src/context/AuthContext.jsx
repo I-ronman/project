@@ -22,6 +22,7 @@ return storedUser || {
   goalWeight: 60,
   flexibility: '중간',
   strength: '보통',
+  face: '/images/default_profile.jpg',
 };
 
 };
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   // 앱 초기화 시 로컬스토리지 상태 유지
   useEffect(() => {
+    console.log('로컬 스토리지에 저장되는 user: ', user);
     localStorage.setItem('user', JSON.stringify(user));
   }, [user]);
 
