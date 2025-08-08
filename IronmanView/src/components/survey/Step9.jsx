@@ -3,13 +3,13 @@ import '../../styles/SurveyPage.css';
 
 const Step9 = ({ workoutFrequency, setWorkoutFrequency, nextStep }) => {
   const options = [
-    { label: '주1회', value: 'week1' },
-    { label: '주2회', value: 'week2' },
-    { label: '주3회', value: 'week3' },
-    { label: '주4회', value: 'week4' },
-    { label: '주5회', value: 'week5' },
-    { label: '주6회', value: 'week6' },
-    { label: '주7회', value: 'week7' },
+    { label: '주1회', value: '주1회' },
+    { label: '주2회', value: '주2회' },
+    { label: '주3회', value: '주3회' },
+    { label: '주4회', value: '주4회' },
+    { label: '주5회', value: '주5회' },
+    { label: '주6회', value: '주6회' },
+    { label: '주7회', value: '주7회' },
   ];
 
   const handleClick = (value) => {

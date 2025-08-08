@@ -213,7 +213,7 @@ const ExerciseExplore = () => {
       const exerciseTime = e.exerciseTime ?? 1;
       const breaktime = e.breaktime ?? 0;
 
-      const time = sets * reps * exerciseTime + (sets - 1) * breaktime;
+      const time = sets * exerciseTime + (sets - 1) * breaktime;
       return acc + time;
     }, 0);
   };

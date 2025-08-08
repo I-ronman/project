@@ -108,11 +108,10 @@ public class RoutineService {
                 int totalExerciseTime = exercises.stream()
                     .mapToInt(e -> {
                         int sets = e.getSets() != null ? e.getSets() : 1;
-                        int reps = e.getReps() != null ? e.getReps() : 1;
                         int time = e.getExerciseTime() != null ? e.getExerciseTime() : 1;
                         int breakTime = e.getBreaktime() != null ? e.getBreaktime() : 0;
                         
-                        int exerciseDuration = sets * reps * time;
+                        int exerciseDuration = sets * time;
                         int totalBreakTime = (sets > 1) ? (sets - 1) * breakTime : 0;
                         
                         return exerciseDuration + totalBreakTime;

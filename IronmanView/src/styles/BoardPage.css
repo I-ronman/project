@@ -23,13 +23,16 @@
 
 /* 개별 포스트 카드 */
 .post-card {
-  background-color: #222;
+  display: flex;
+  background-color: #2c2c2c;
+  border: 1px solid #3a3a3a;
   border-radius: 12px;
   padding: 16px;
   cursor: pointer;
   transition: transform 0.2s ease;
   max-width: 100%; /* 검정 배경 내에서만 보이도록 */
   overflow: hidden;
+  flex-direction: column;
 }
 
 .post-card:hover {
@@ -38,7 +41,7 @@
 
 .post-img {
   width: 100%;
-  height: auto;
+  height: 180px;
   border-radius: 8px;
   margin-bottom: 12px;
   object-fit: cover;
@@ -46,6 +49,8 @@
 
 .post-content {
   font-size: 16px;
+  line-height: 1.5;
+  color: #ddd;
   word-break: break-word;
 }
 

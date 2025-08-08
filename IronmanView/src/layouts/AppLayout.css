@@ -136,7 +136,7 @@ html, body, #root {
 
 
 /* 반응형 - 왼쪽 패널 숨김 */
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 900px) {
   .left-panel {
     display: none;
   }
