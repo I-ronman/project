@@ -8,11 +8,7 @@ function ChatBotPage() {
   const navigate = useNavigate(); // ✅ 추가
 
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: '안녕하세요. 무엇을 도와드릴까요?' },
-    { sender: 'user', text: '아침 운동이 좋아? 저녁 운동이 좋아?' },
-    { sender: 'bot', text: '라이프스타일에 따라 달라요! 꾸준함이 가장 중요하고, 본인에게 맞는 시간대를 찾는 게 좋아요.' },
-    { sender: 'user', text: '나는 아침에 하는 게 좋은 것 같아.' },
-    { sender: 'bot', text: '좋아요! 아침 운동은 하루를 활기차게 시작하는 데 도움이 돼요.' }
+    { sender: 'bot', text: '안녕하세요. 루틴 생성을 도와드리는 챗봇입니다. 원하시는 목표 체형이 무엇인지 알려주세요.' },
   ]);
     
   const [input, setInput] = useState('');
@@ -29,14 +25,14 @@ function ChatBotPage() {
     setMessages(newMessages);
     setInput('');
 
-    fetch('http://localhost:5000/chat', {
+    fetch('http://localhost:456/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: msg })
     })
       .then((res) => res.json())
       .then((data) => {
-        setMessages((prev) => [...prev, { sender: 'bot', text: data.reply }]);
+        setMessages((prev) => [...prev, { sender: 'bot', text: data.result }]);
       })
       .catch((err) => {
         setMessages((prev) => [...prev, { sender: 'bot', text: '에러가 발생했어요.' }]);
@@ -51,7 +47,7 @@ function ChatBotPage() {
 
         <div className="chat-body">
           {messages.map((msg, idx) => (
-            <div key={idx} className={`chat-msg ${msg.sender}`}>
+            <div key={idx} className={`chat-msg ${msg.sender}`} style={{ whiteSpace: 'pre-line' }}>
               {msg.text}
             </div>
           ))}
@@ -64,7 +60,7 @@ function ChatBotPage() {
             </button>
           ))}
         </div>
-
+          
         <div className="chat-input-area">
           <input
             type="text"
