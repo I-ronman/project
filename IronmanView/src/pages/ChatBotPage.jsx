@@ -33,6 +33,7 @@ export default function ChatBotPage() {
     setMessages((prev) => [...prev, { sender: 'user', type: 'text', text: content }]);
     setInput('');
     setIsTyping(true);
+    setIsTyping(true);
 
     fetch('http://localhost:456/chat', {
       method: 'POST',
@@ -42,12 +43,13 @@ export default function ChatBotPage() {
       .then((res) => res.json())
       .then((data) => {
         // 기본 텍스트 응답
-        const botText = data?.result || '응답을 불러오지 못했어요.';
+        const botText = data?.result[0] || '응답을 불러오지 못했어요.';
         setMessages((prev) => [
           ...prev,
           { sender: 'bot', type: 'text', text: botText },
 
           // 예시: 카드형 루틴 제안(데모). 서버에서 카드 데이터를 주면 그걸로 대체 가능
+          
           {
             sender: 'bot',
             type: 'routineCard',
