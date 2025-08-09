@@ -3,35 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import './SideMenu';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useContext(AuthContext);
-  const profileImgSrc = user?.user?.face || './images/default_profile.jpg';
-  const [profileImg, setProfileImg] = useState('./images/default_profile.jpg');
+  const profileImgSrc = user?.face || './images/default_profile.jpg';
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
 
-  // 이미지를 db에서 가져오는 useEffect
-  useEffect(() => {
-  axios
-    .get('http://localhost:329/web/login/user', { withCredentials: true })
-    .then(res => {
-      const { face } = res.data;
-      if (face) {
-        setProfileImg(face);
-      }
-    })
-    .catch(err => {
-      console.error('프로필 이미지 불러오기 실패', err);
-    });
-}, []);
-
-
+ 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 900);
     window.addEventListener('resize', handleResize);
@@ -55,7 +38,7 @@ const Header = () => {
 
   const navItems = [
     { name: '운동하기', path: '/exercise' },
-    { name: '스케줄', path: '/schedulepage' },
+    { name: '스케줄', path: '/schedule' },
     { name: '통계', path: '/statistics' },
     { name: '챗봇', path: '/chatbot' },
     { name: '커뮤니티', path: '/board' },
@@ -118,8 +101,7 @@ const Header = () => {
         )}
         <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
         <img
-        
-          src={profileImg}
+          src={profileImgSrc}
           alt="프로필"
           className="profile-img"
           onClick={() => navigate('/mypage')}

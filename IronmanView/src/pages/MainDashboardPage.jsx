@@ -97,12 +97,12 @@ const MainDashboardPage = () => {
 
       <div className="main-dashboard-wrapper">
         <div className="dark-background">
-        <GalaxyBackground />
+        
           <div className="main-container">
 
             {/* 프로필 카드 */}
             <div className="profile-card clickable-card" onClick={() => navigate('/profile-edit')}>
-              <img src={user?.profileImage || '/default_profile.jpg'} alt="profile" className="profile-img" />
+              <img src={user?.face || 'images/default_profile.jpg'} alt="profile" className="profile-img" />
               <div className="profile-text">
                 <div>환영합니다,</div>
                 <div className="profile-name">{user?.name ?? '홍길동'} 님</div>

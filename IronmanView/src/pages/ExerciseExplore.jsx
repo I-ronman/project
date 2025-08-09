@@ -5,70 +5,67 @@ import axios from 'axios';
 
 
 const dummyExercises = [
-  {
-    exerciseId: 1,
-    exerciseName: '벤치 프레스',
-    part: '상체',
-    image: '/images/exerciseImg/bench_press2.png',
-    description: '벤치에 누워 바벨을 가슴 위로 들어올리는 운동'
-  },
-  {
-    exerciseId: 2,
-    exerciseName: '덤벨 벤치 프레스',
-    part: '상체',
-    image: '/images/exerciseImg/dumbbell_bench_press2.png',
-    description: '벤치에 누워 덤벨을 양손에 들고 가슴 위로 밀어올리는 운동'
-  },
-  {
-    exerciseId: 3,
-    exerciseName: '덤벨 풀오버',
-    part: '상체',
-    image: '/images/exerciseImg/dumbbell_pullover2.png',
-    description: '덤벨을 머리 뒤에서 가슴 방향으로 당겨오는 운동'
-  },
-  {
-    exerciseId: 4,
-    exerciseName: '펙덱 플라이',
-    part: '상체',
-    image: '/images/exerciseImg/pec_deck_fly2.png',
-    description: '기구를 이용해 양 팔을 벌렸다가 모으며 가슴 근육을 수축시키는 운동'
-  },
-  {
-    exerciseId: 5,
-    exerciseName: '스쿼트',
-    part: '하체',
-    image: '/images/exerciseImg/squat2.png',
-    description: '서 있는 자세에서 엉덩이를 낮췄다가 다시 일어나는 하체 운동'
-  },
-  {
-    exerciseId: 6,
-    exerciseName: '런지',
-    part: '하체',
-    image: '/images/exerciseImg/lunge2.png',
-    description: '한쪽 다리를 앞으로 내디뎌 무릎을 굽히며 하체를 단련하는 운동'
-  },
-  {
-    exerciseId: 7,
-    exerciseName: '윗몸 일으키기',
-    part: '코어',
-    image: '/images/exerciseImg/situp2.png',
-    description: '누운 상태에서 양손을 머리 뒤에 두고 복근을 이용해 상체를 일으키는 운동'
-  },
-  {
-    exerciseId: 8,
-    exerciseName: '버드독',
-    part: '코어',
-    image: '/images/exerciseImg/bird_dog2.png',
-    description: '네 발 자세에서 팔과 다리를 교차로 들어올려 코어를 단련하는 운동'
-  },
-  {
-    exerciseId: 9,
-    exerciseName: '사이드 레그 레이즈',
-    part: '코어',
-    image: '/images/exerciseImg/side_leg_raise2.png',
-    description: '옆으로 누워 다리를 들어올리며 옆구리와 엉덩이 근육을 자극하는 운동'
-  }
+  // 기존 9개
+  { exerciseId: 1, exerciseName: '벤치 프레스', part: '상체', image: '/images/exerciseImg/bench_press2.png', description: '벤치에 누워 바벨을 가슴 위로 들어올리는 운동' },
+  { exerciseId: 2, exerciseName: '덤벨 벤치 프레스', part: '상체', image: '/images/exerciseImg/dumbbell_bench_press2.png', description: '벤치에 누워 덤벨을 양손에 들고 가슴 위로 밀어올리는 운동' },
+  { exerciseId: 3, exerciseName: '덤벨 풀오버', part: '상체', image: '/images/exerciseImg/dumbbell_pullover2.png', description: '덤벨을 머리 뒤에서 가슴 방향으로 당겨오는 운동' },
+  { exerciseId: 4, exerciseName: '펙덱 플라이', part: '상체', image: '/images/exerciseImg/pec_deck_fly2.png', description: '기구를 이용해 양 팔을 벌렸다가 모으며 가슴 근육을 수축시키는 운동' },
+  { exerciseId: 5, exerciseName: '스쿼트', part: '하체', image: '/images/exerciseImg/squat2.png', description: '서 있는 자세에서 엉덩이를 낮췄다가 다시 일어나는 하체 운동' },
+  { exerciseId: 6, exerciseName: '런지', part: '하체', image: '/images/exerciseImg/lunge2.png', description: '한쪽 다리를 앞으로 내디뎌 무릎을 굽히며 하체를 단련하는 운동' },
+  { exerciseId: 7, exerciseName: '윗몸 일으키기', part: '코어', image: '/images/exerciseImg/situp2.png', description: '누운 상태에서 양손을 머리 뒤에 두고 복근을 이용해 상체를 일으키는 운동' },
+  { exerciseId: 8, exerciseName: '버드독', part: '코어', image: '/images/exerciseImg/bird_dog2.png', description: '네 발 자세에서 팔과 다리를 교차로 들어올려 코어를 단련하는 운동' },
+  { exerciseId: 9, exerciseName: '사이드 레그 레이즈', part: '코어', image: '/images/exerciseImg/side_leg_raise2.png', description: '옆으로 누워 다리를 들어올리며 옆구리와 엉덩이 근육을 자극하는 운동' },
+
+  // 상체
+  { exerciseId: 10, exerciseName: '풀업', part: '상체', image: '/images/exerciseImg/pullup.png', description: '철봉에 매달려 턱을 올리는 상체 근력 운동' },
+  { exerciseId: 11, exerciseName: '딥스', part: '상체', image: '/images/exerciseImg/dips.png', description: '평행봉에서 팔을 굽혔다 펴며 가슴과 삼두근을 강화하는 운동' },
+  { exerciseId: 12, exerciseName: '푸시업', part: '상체', image: '/images/exerciseImg/pushup.png', description: '바닥에 엎드려 팔을 굽혔다 펴는 전신 근력 운동' },
+  { exerciseId: 13, exerciseName: '다이아몬드 푸시업', part: '상체', image: '/images/exerciseImg/diamond_pushup.png', description: '손을 모아 팔꿈치를 굽혀 삼두근을 강화하는 푸시업 변형' },
+  { exerciseId: 14, exerciseName: '와이드 푸시업', part: '상체', image: '/images/exerciseImg/wide_pushup.png', description: '팔을 넓게 벌려 가슴 근육을 강화하는 푸시업 변형' },
+  { exerciseId: 15, exerciseName: '인클라인 푸시업', part: '상체', image: '/images/exerciseImg/incline_pushup.png', description: '상체를 기울여 팔굽혀펴기를 수행하는 변형 운동' },
+  { exerciseId: 16, exerciseName: '디클라인 푸시업', part: '상체', image: '/images/exerciseImg/decline_pushup.png', description: '발을 높여 상체를 낮춰 팔굽혀펴기를 수행하는 변형 운동' },
+
+  // 하체
+  { exerciseId: 17, exerciseName: '점프 스쿼트', part: '하체', image: '/images/exerciseImg/jump_squat.png', description: '스쿼트 후 점프를 하여 하체 폭발력을 향상시키는 운동' },
+  { exerciseId: 18, exerciseName: '브릿지', part: '하체', image: '/images/exerciseImg/bridge.png', description: '누운 상태에서 엉덩이를 들어올려 둔근과 햄스트링을 강화하는 운동' },
+  { exerciseId: 19, exerciseName: '사이드 런지', part: '하체', image: '/images/exerciseImg/side_lunge.png', description: '옆으로 발을 내딛으며 하체 근육을 발달시키는 운동' },
+  { exerciseId: 20, exerciseName: '리버스 런지', part: '하체', image: '/images/exerciseImg/reverse_lunge.png', description: '뒤로 발을 내딛으며 하체와 균형을 발달시키는 운동' },
+  { exerciseId: 21, exerciseName: '월 싯', part: '하체', image: '/images/exerciseImg/wall_sit.png', description: '벽에 등을 붙이고 앉은 자세를 유지하는 하체 근지구력 운동' },
+  { exerciseId: 22, exerciseName: '불가리안 스플릿 스쿼트', part: '하체', image: '/images/exerciseImg/bulgarian_split_squat.png', description: '한 발을 뒤에 올리고 스쿼트를 수행하는 하체 운동' },
+  { exerciseId: 23, exerciseName: '카프 레이즈', part: '하체', image: '/images/exerciseImg/calf_raise.png', description: '발끝으로 서서 종아리 근육을 강화하는 운동' },
+
+  // 코어
+  { exerciseId: 24, exerciseName: '플랭크', part: '코어', image: '/images/exerciseImg/plank.png', description: '팔꿈치와 발끝으로 몸을 지탱하며 코어를 강화하는 운동' },
+  { exerciseId: 25, exerciseName: '마운틴 클라이머', part: '코어', image: '/images/exerciseImg/mountain_climber.png', description: '팔을 짚고 무릎을 번갈아 빠르게 당겨 복부와 전신을 강화하는 운동' },
+  { exerciseId: 26, exerciseName: '레그 레이즈', part: '코어', image: '/images/exerciseImg/leg_raise.png', description: '누워서 다리를 들어 복부 하부를 자극하는 운동' },
+  { exerciseId: 27, exerciseName: '러시안 트위스트', part: '코어', image: '/images/exerciseImg/russian_twist.png', description: '앉아서 몸통을 좌우로 비틀어 복부 옆 근육을 강화하는 운동' },
+  { exerciseId: 28, exerciseName: '바이시클 크런치', part: '코어', image: '/images/exerciseImg/bicycle_crunch.png', description: '자전거 타듯 다리를 움직이며 상체를 비트는 복부 운동' },
+  { exerciseId: 29, exerciseName: '데드버그', part: '코어', image: '/images/exerciseImg/dead_bug.png', description: '누운 상태에서 팔다리를 번갈아 들어 코어를 안정화하는 운동' },
+  { exerciseId: 30, exerciseName: '플러터 킥', part: '코어', image: '/images/exerciseImg/flutter_kick.png', description: '누워서 다리를 번갈아 위아래로 차는 복부 운동' },
+  { exerciseId: 31, exerciseName: '힐 터치', part: '코어', image: '/images/exerciseImg/heel_touch.png', description: '누운 상태에서 옆으로 굽혀 발목을 터치하는 복부 옆근육 운동' },
+
+  // 유산소
+  { exerciseId: 32, exerciseName: '버피 테스트', part: '유산소', image: '/images/exerciseImg/burpee.png', description: '점프와 푸시업을 결합한 고강도 전신 유산소 운동' },
+  { exerciseId: 33, exerciseName: '점핑잭', part: '유산소', image: '/images/exerciseImg/jumping_jack.png', description: '팔과 다리를 동시에 벌렸다 모으며 전신을 사용하는 유산소 운동' },
+  { exerciseId: 34, exerciseName: '하이 니', part: '유산소', image: '/images/exerciseImg/high_knee.png', description: '무릎을 높이 들어 제자리 달리기하는 유산소 운동' },
+  { exerciseId: 35, exerciseName: '브로드 점프', part: '유산소', image: '/images/exerciseImg/broad_jump.png', description: '멀리 뛰어 하체와 전신을 사용하는 유산소 운동' },
+  { exerciseId: 36, exerciseName: '스케이터 점프', part: '유산소', image: '/images/exerciseImg/skater_jump.png', description: '옆으로 점프하며 착지하는 하체·유산소 운동' },
+  { exerciseId: 37, exerciseName: '스텝박스 점프', part: '유산소', image: '/images/exerciseImg/stepbox_jump.png', description: '박스 위로 점프하고 내려오는 전신 유산소 운동' },
+  { exerciseId: 38, exerciseName: '마운틴 스텝', part: '유산소', image: '/images/exerciseImg/mountain_step.png', description: '계단이나 단상을 오르내리는 유산소 운동' },
+  { exerciseId: 39, exerciseName: '베어 크롤', part: '유산소', image: '/images/exerciseImg/bear_crawl.png', description: '네 발로 기어가며 전신을 사용하는 유산소 운동' },
+  { exerciseId: 40, exerciseName: '크랩 워크', part: '유산소', image: '/images/exerciseImg/crab_walk.png', description: '뒤로 네 발로 이동하며 전신을 사용하는 유산소 운동' },
+
+  // 전신
+  { exerciseId: 41, exerciseName: '스파이더맨 푸시업', part: '전신', image: '/images/exerciseImg/spiderman_pushup.png', description: '푸시업과 동시에 무릎을 옆으로 당기는 전신 운동' },
+  { exerciseId: 42, exerciseName: '잭나이프', part: '전신', image: '/images/exerciseImg/jackknife.png', description: '상체와 하체를 동시에 들어올려 접는 전신 운동' },
+  { exerciseId: 43, exerciseName: '프론트 킥', part: '전신', image: '/images/exerciseImg/front_kick.png', description: '발을 앞으로 차며 하체와 코어를 사용하는 전신 운동' },
+  { exerciseId: 44, exerciseName: '백 킥', part: '전신', image: '/images/exerciseImg/back_kick.png', description: '발을 뒤로 차며 둔근과 코어를 사용하는 전신 운동' },
+  { exerciseId: 45, exerciseName: '버드독 변형', part: '전신', image: '/images/exerciseImg/bird_dog_variation.png', description: '팔과 다리를 들어올리며 균형을 유지하는 전신 운동' },
+  { exerciseId: 46, exerciseName: '윈드밀', part: '전신', image: '/images/exerciseImg/windmill.png', description: '팔을 벌리고 상체를 숙여 반대 손으로 발끝을 터치하는 전신 운동' },
+  { exerciseId: 47, exerciseName: '프론트 런지 트위스트', part: '전신', image: '/images/exerciseImg/front_lunge_twist.png', description: '런지 동작과 상체 비틀기를 결합한 전신 운동' },
+  { exerciseId: 48, exerciseName: '인치웜', part: '전신', image: '/images/exerciseImg/inchworm.png', description: '상체를 숙여 손으로 앞으로 이동 후 복귀하는 전신 운동' }
 ];
+
 
 const bodyParts = ['전체', '상체', '하체', '코어', '유산소', '전신'];
 

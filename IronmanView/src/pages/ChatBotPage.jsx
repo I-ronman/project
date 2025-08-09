@@ -33,6 +33,7 @@ export default function ChatBotPage() {
     setMessages((prev) => [...prev, { sender: 'user', type: 'text', text: content }]);
     setInput('');
     setIsTyping(true);
+    setIsTyping(true);
 
     fetch('http://localhost:456/chat', {
       method: 'POST',

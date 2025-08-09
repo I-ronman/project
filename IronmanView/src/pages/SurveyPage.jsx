@@ -98,7 +98,7 @@ function SurveyPage() {
   ];
 
   return (
-  <PageWrapper>
+  <div className='survey-wrapper'>
     {step > 0 && (
       <div className="progress-bar">
         <div
@@ -130,7 +130,7 @@ function SurveyPage() {
     <div className="survey-content">
       {stepComponents[step] || null}
     </div>
-  </PageWrapper>
+  </div>
 );
 
 }
