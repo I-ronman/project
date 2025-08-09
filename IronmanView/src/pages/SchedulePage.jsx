@@ -44,7 +44,6 @@ const SchedulePage = () => {
   
 
   return (
-    <PageWrapper>
       <div className="schedule-page">
         <div className="profile-section">
           <div className="profile-left">
@@ -80,7 +79,6 @@ const SchedulePage = () => {
           )}
         </div>
       </div>
-    </PageWrapper>
   );
 };
 
