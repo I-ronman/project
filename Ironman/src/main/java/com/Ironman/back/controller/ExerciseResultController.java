@@ -4,6 +4,9 @@ import com.Ironman.back.dto.ExerciseLogDto;
 import com.Ironman.back.service.ExerciseResultService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,12 @@ public class ExerciseResultController {
 
     @PostMapping("/api/exercise/result")
     public ResponseEntity<?> saveExerciseResult(@RequestBody ExerciseLogDto dto) {
-        exerciseResultService.saveLogs(dto);
-        return ResponseEntity.ok("운동 결과 저장 완료");
+        List<Long> logIds = exerciseResultService.saveLogs(dto);
+
+        if (logIds == null || logIds.isEmpty()) {
+            return ResponseEntity.badRequest().body("로그 ID를 생성하지 못했습니다.");
+        }
+
+        return ResponseEntity.ok(logIds);
     }
 }

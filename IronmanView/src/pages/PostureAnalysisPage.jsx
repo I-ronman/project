@@ -1,184 +1,252 @@
-// project/IronmanView/src/pages/PostureAnalysisPage.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import '../styles/PostureAnalysis.css';
 import StatBox from '../components/posture/StatBox';
 import FeedbackToggle from '../components/posture/FeedbackToggle';
-import GuideVideoPlayer from '../components/posture/GuideVideoPlayer';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
 import TrainingCamTest from '../components/TrainingCamTest';
 import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
-import TrainingCam from '../components/TrainingCam';
 import { AuthContext } from '../context/AuthContext';
-import { useContext } from 'react';
 
-
-const PostureAnalysisPage = () => {
-  const [isFeedbackOn, setIsFeedbackOn] = useState(true);
-  const [exerciseList, setExerciseList] = useState([]);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [viewKnee, setViewKnee] = useState(false);
-  const [viewLegHip, setViewLegHip] = useState(false);
-  const [capturedList, setCapturedList] = useState([]);
-  const [reportImg, setReportImg] = useState(""); // 미리보기 용도
-  const navigate = useNavigate();
-  const location = useLocation();
-  const routine = location.state?.routine;
-  const [goodCount, setGoodCount] = useState(0);
-  const [badCount, setBadCount] = useState(0);
-  const [selectedCapture, setSelectedCapture] = useState(null); // 선택한 이미지
-  const { user } = useContext(AuthContext);
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const currentExercise = routine?.exercises?.[currentExerciseIndex];
-  const totalReps = routine?.exercises?.reduce((acc, cur) => {return acc + ((cur.reps ?? 0) * (cur.sets ?? 1));}, 0);
-  const [doneReps, setDoneReps] = useState(0);
-
-
-
-  const toggleFeedback = () => setIsFeedbackOn((prev) => !prev);
-
-  const [remainingTime, setRemainingTime] = useState(0);
-
-useEffect(() => {
-  if (!routine) return;
-
-  const calculatedTime = routine.exercises.reduce((acc, cur) => {
-    const exerciseTime = (cur.exerciseTime ?? 0) * (cur.sets ?? 1);
-    const breakTime = (cur.breaktime ?? 0) * (cur.sets ?? 1);
-    return acc + exerciseTime + breakTime;
+/* ---------------------- utils ---------------------- */
+const calcTotalTime = (routine) =>
+  (routine?.exercises ?? []).reduce((acc, cur) => {
+    const ex = (cur.exerciseTime ?? 0) * (cur.sets ?? 1);
+    const br = (cur.breaktime ?? 0)   * (cur.sets ?? 1);
+    return acc + ex + br;
   }, 0);
 
-  setRemainingTime(calculatedTime);
-
-  const interval = setInterval(() => {
-    setRemainingTime((prev) => {
-      if (prev <= 1) {
-        clearInterval(interval);
-        return 0;
-      }
-      return prev - 1;
-    });
-  }, 1000);
-
-  return () => clearInterval(interval);
-}, [routine]);
-
-
-  useEffect(() => {
-    axios.get('http://localhost:329/web/api/posture/list', {
-      withCredentials: true
-    })
-      .then((res) => {
-        const list = res.data;
-        setExerciseList(list);
-        if (list.length > 0) setSelectedVideo(list[0].videoUrl);
-      })
-      .catch((err) => {
-        console.error('운동 리스트 불러오기 실패:', err);
-      });
-  }, []);
-
-
-const handleRepCounted = (exerciseId) => {
-  setExerciseResults(prev => ({
-    ...prev,
-    [exerciseId]: {
-      ...prev[exerciseId],
-      goodCount: prev[exerciseId]?.goodCount || 0,  // 나중에 실제 good/bad는 show 이벤트에서 따로 들어옴
-      badCount: prev[exerciseId]?.badCount || 0,
-    }
-  }));
-
-  setDoneReps(prev => prev + 1);  // ✅ 진행률 증가
-};
-
-  const handleVideoEnd = async () => {
-  if (doneReps < totalReps) {
-    // 아직 횟수 다 안 채움 → 영상 재시작
-    const videoEl = document.querySelector("video");
-    if (videoEl) videoEl.play();
-    return;
-  }
-
-  console.log("🎬 모든 루틴 완료 → 저장 시작");
-  const now = Date.now() / 1000;
-
-  // ✅ 캡처 저장
-  for (const entry of capturedList) {
-    try {
-      await axios.post(
-        'http://localhost:329/web/api/posture/upload',
-        {
-          singleExerciseLogId: 1,
-          detectedIssue: entry.issue,
-          feedbackImg: entry.img,
-          postureFeedbackcol: '자동 캡처'
-        },
-        { withCredentials: true }
-      );
-    } catch (error) {
-      console.error("❌ 자세 저장 실패:", error);
-    }
-  }
-
-  // ✅ 운동 결과 저장
-  const exerciseLogs = routine.exercises.map((ex) => {
-    const stats = exerciseResults[ex.exerciseId] || {};
+const buildExerciseLogs = (routine, exerciseResults, durationSeconds) =>
+  (routine?.exercises ?? []).map((ex) => {
+    const s = exerciseResults[ex.exerciseId] || {};
     return {
       exerciseId: ex.exerciseId,
-      duration: ex.exerciseTime,
-      endTime: now,
-      goodCount: stats.goodCount || 0,
-      badCount: stats.badCount || 0,
+      duration: ex.exerciseTime ?? 0,
+      endTime: durationSeconds,
+      goodCount: s.goodCount || 0,
+      badCount:  s.badCount  || 0,
       sets: ex.sets,
       reps: ex.reps,
       breaktime: ex.breaktime,
     };
   });
 
-  const payload = {
-    email: user.email,
-    exerciseLogs
+/** 어떤 응답이 와도 exerciseId -> singleExerciseLogId 매핑 생성 */
+const mapLogIds = (resp, reqExerciseLogs) => {
+  // { logs: [{exerciseId, singleExerciseLogId}] }
+  if (resp && Array.isArray(resp.logs)) {
+    const m = {};
+    resp.logs.forEach(it => {
+      if (it && it.exerciseId != null && it.singleExerciseLogId != null) {
+        m[it.exerciseId] = it.singleExerciseLogId;
+      }
+    });
+    if (Object.keys(m).length) return m;
+  }
+  // [123,124,...]
+  if (Array.isArray(resp)) {
+    const m = {};
+    (reqExerciseLogs || []).forEach((ex, idx) => {
+      if (resp[idx] != null && ex?.exerciseId != null) {
+        m[ex.exerciseId] = resp[idx];
+      }
+    });
+    if (Object.keys(m).length) return m;
+  }
+  // { ids: [...] }
+  if (resp && Array.isArray(resp.ids)) {
+    const m = {};
+    (reqExerciseLogs || []).forEach((ex, idx) => {
+      if (resp.ids[idx] != null && ex?.exerciseId != null) {
+        m[ex.exerciseId] = resp.ids[idx];
+      }
+    });
+    if (Object.keys(m).length) return m;
+  }
+  return {};
+};
+
+const PostureAnalysisPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const routine = location.state?.routine;
+
+  const { user } = useContext(AuthContext);
+  const [isFeedbackOn, setIsFeedbackOn] = useState(true);
+  const [exerciseList, setExerciseList] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [viewKnee, setViewKnee] = useState(false);
+  const [viewLegHip, setViewLegHip] = useState(false);
+  const [capturedList, setCapturedList] = useState([]);   // {img, issue, type, exerciseId}
+  const [selectedCapture, setSelectedCapture] = useState(null);
+  const [goodCount, setGoodCount] = useState(0);
+  const [badCount, setBadCount] = useState(0);
+  const [doneReps, setDoneReps] = useState(0);
+  const [isStarted, setIsStarted] = useState(false);
+  const [startAt, setStartAt] = useState(null);
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [liveDots, setLiveDots] = useState([]);
+  const [currentExerciseIndex] = useState(0); 
+  const currentExercise = routine?.exercises?.[currentExerciseIndex];
+  const totalReps = routine?.exercises?.reduce((acc, cur) => acc + ((cur.reps ?? 0) * (cur.sets ?? 1)), 0) ?? 0;
+  const [exerciseResults, setExerciseResults] = useState({}); // { [exerciseId]: {goodCount, badCount} }
+
+  const [reportImg, setReportImg] = useState('');
+  const hasSavedRef = useRef(false);
+
+  const toggleFeedback = () => setIsFeedbackOn(v => !v);
+
+  useEffect(() => { if (routine) setRemainingTime(calcTotalTime(routine)); }, [routine]);
+
+  // 카운트다운
+  useEffect(() => {
+    if (!isStarted || remainingTime <= 0) return;
+    const t = setInterval(() => setRemainingTime(prev => (prev <= 1 ? 0 : prev - 1)), 1000);
+    return () => clearInterval(t);
+  }, [isStarted, remainingTime]);
+
+  // 가이드 영상 목록
+  useEffect(() => {
+    axios.get('http://localhost:329/web/api/posture/list', { withCredentials: true })
+      .then((res) => {
+        const list = res.data || [];
+        setExerciseList(list);
+        if (list.length > 0) setSelectedVideo(list[0].videoUrl);
+      })
+      .catch((err) => console.error('운동 리스트 불러오기 실패:', err));
+  }, []);
+
+  const currentExerciseId = currentExercise?.exerciseId;
+
+  const canCountNow = () =>
+    isStarted && !hasSavedRef.current && currentExerciseId && doneReps < totalReps;
+
+  const clampInc = () => setDoneReps(prev => (prev >= totalReps ? prev : prev + 1));
+
+  const onRepCounted = () => {
+    if (!canCountNow()) return;
+    setExerciseResults(prev => ({
+      ...prev,
+      [currentExerciseId]: {
+        goodCount: prev[currentExerciseId]?.goodCount || 0,
+        badCount:  prev[currentExerciseId]?.badCount  || 0,
+      }
+    }));
+    clampInc();
   };
 
-  try {
-    await axios.post('http://localhost:329/web/api/exercise/result', payload, {
-      withCredentials: true
-    });
-    console.log("✅ 전체 운동 결과 저장 완료!");
-  } catch (err) {
-    console.error("❌ 전체 운동 결과 저장 실패:", err);
-  }
-
-  alert("✅ 모든 운동이 완료되었습니다!");
-  navigate("/main");
-};
-
-
-
-
-const [exerciseResults, setExerciseResults] = useState({});
-
-const handleGoodPosture = (exerciseId) => {
+  const onGoodPosture = () => {
+  if (!canCountNow()) return;
   setExerciseResults(prev => ({
     ...prev,
-    [exerciseId]: {
-      ...prev[exerciseId],
-      goodCount: (prev[exerciseId]?.goodCount || 0) + 1
+    [currentExerciseId]: {
+      goodCount: (prev[currentExerciseId]?.goodCount || 0) + 1,
+      badCount:  (prev[currentExerciseId]?.badCount  || 0),
     }
   }));
-
-  setDoneReps((prev) => prev + 1);
+  setGoodCount(v => v + 1);
+  setLiveDots(d => [...d, { type: 'good', id: Date.now() }].slice(-60));
+  clampInc();
 };
 
+  const onBadPosture = () => {
+  if (!canCountNow()) return;
+  setExerciseResults(prev => ({
+    ...prev,
+    [currentExerciseId]: {
+      goodCount: (prev[currentExerciseId]?.goodCount || 0),
+      badCount:  (prev[currentExerciseId]?.badCount  || 0) + 1,
+    }
+  }));
+  setBadCount(v => v + 1);
+  setLiveDots(d => [...d, { type: 'bad', id: Date.now() }].slice(-60));
+  clampInc();
+};
+
+  // 총 횟수 도달 시 자동 저장
+  useEffect(() => {
+    if (!isStarted || totalReps === 0 || doneReps < totalReps || hasSavedRef.current) return;
+    const videoEl = document.querySelector('video');
+    if (videoEl && !videoEl.paused) videoEl.pause();
+    setIsStarted(false);
+    setRemainingTime(0);
+    handleVideoEnd();
+  }, [doneReps, totalReps, isStarted]);
+
+  const handleVideoEnd = async () => {
+    if (hasSavedRef.current) return;
+
+    if (doneReps < totalReps) {
+      const videoEl = document.querySelector("video");
+      if (videoEl) videoEl.play();
+      return;
+    }
+
+    hasSavedRef.current = true;
+    setIsStarted(false);
+
+    const durationSeconds = startAt ? Math.round((Date.now() - startAt) / 1000) : 0;
+    const exerciseLogs = buildExerciseLogs(routine, exerciseResults, durationSeconds);
+    const payload = { email: user.email, exerciseLogs };
+
+    // 1) 결과 저장
+    let idByExercise = {};
+    try {
+      const { data } = await axios.post(
+        'http://localhost:329/web/api/exercise/result',
+        payload,
+        { withCredentials: true }
+      );
+      console.log('📦 /api/exercise/result 응답:', data);
+
+      idByExercise = mapLogIds(data, exerciseLogs);
+      console.log('🧭 exerciseId→logId 매핑:', idByExercise);
+
+    } catch (err) {
+      console.error('❌ 운동 결과 저장 실패:', err?.response?.data ?? err);
+      alert('운동 결과 저장에 실패했습니다.');
+      navigate('/main');
+      return;
+    }
+
+    try {
+      const jobs = (capturedList ?? [])
+        .filter(e => e?.img && e.img.length > 100)
+        .map(entry => {
+          const base64 = entry.img.includes(',') ? entry.img.split(',')[1] : entry.img;
+          const logId = entry.exerciseId != null ? idByExercise[entry.exerciseId] : undefined;
+          if (logId == null) {
+            console.warn('⏭️ logId 없음 → 해당 캡처 업로드 스킵:', entry);
+            return Promise.resolve();
+          }
+          const body = {
+            singleExerciseLogId: logId,
+            detectedIssue: entry.issue ?? '0',
+            feedbackImg: base64,
+            postureFeedbackcol: entry.type ?? '자동 캡처',
+          };
+          return axios.post('http://localhost:329/web/api/posture/upload', body, { withCredentials: true });
+        });
+
+      await Promise.all(jobs);
+      console.log('✅ 캡처 업로드 완료');
+    } catch (error) {
+      console.error('❌ 캡처 업로드 실패:', error?.response?.data ?? error);
+      alert('캡처 업로드 중 일부가 실패했습니다.');
+      navigate('/main');
+      return;
+    }
+
+    alert('✅ 모든 운동이 완료되었습니다!');
+    navigate('/main');
+  };
+  /* --------------------------------------------------------- */
 
   return (
     <CountContext.Provider value={{
-      goodCount,
-      setGoodCount,
-      badCount,
-      setBadCount,
+      goodCount, setGoodCount,
+      badCount, setBadCount,
       setReportImg,
       setCapturedList
     }}>
@@ -192,7 +260,7 @@ const handleGoodPosture = (exerciseId) => {
             </header>
 
             <div className="posture-stats">
-              <StatBox label="총 횟수" count={goodCount+badCount} />
+              <StatBox label="총 횟수" count={goodCount + badCount} />
               <StatBox label="좋은 자세" count={goodCount} />
               <StatBox label="나쁜 자세" count={badCount} />
             </div>
@@ -211,13 +279,11 @@ const handleGoodPosture = (exerciseId) => {
               ))}
             </div>
 
-            <div className='posture-stats'>
-              <button className="stat-box" onClick={() => setViewKnee(prev => !prev)} style={viewKnee ? { backgroundColor: "gray" } : undefined}>무릎 발끝 수직선 체크</button>
-              <button className="stat-box" onClick={() => setViewLegHip(prev => !prev)} style={viewLegHip ? { backgroundColor: "gray" } : undefined}>무릎 허리 각도보기</button>
+            <div className="posture-stats">
+              <button className="stat-box" onClick={() => setViewKnee(v => !v)} style={viewKnee ? { backgroundColor: 'gray' } : undefined}>무릎 발끝 수직선 체크</button>
+              <button className="stat-box" onClick={() => setViewLegHip(v => !v)} style={viewLegHip ? { backgroundColor: 'gray' } : undefined}>무릎 허리 각도보기</button>
             </div>
 
-
-                   {/* 캡처 이미지 미리보기 영역 */}
             {selectedCapture && (
               <div className="capture-preview">
                 <h4>📷 선택한 캡처 미리보기</h4>
@@ -226,9 +292,8 @@ const handleGoodPosture = (exerciseId) => {
               </div>
             )}
 
-            {/* 썸네일 리스트 */}
             <div className="capture-thumbnails">
-              {capturedList.map((entry, idx) => (
+              {(capturedList ?? []).map((entry, idx) => (
                 <img
                   key={idx}
                   src={entry.img}
@@ -238,37 +303,59 @@ const handleGoodPosture = (exerciseId) => {
                 />
               ))}
             </div>
-              
-
-
           </div>
 
           <div className="posture-right">
-  <div className="video-container">
-    <div className="video-status-bar">
-      <div className="progress-info">
-        <span>진행률: {doneReps} / {totalReps}</span>
-        <progress value={doneReps} max={totalReps}></progress>
-      </div>
-      <div className="timer-info">
-        ⏱ 남은 시간: {Math.floor(remainingTime / 60)}:{String(remainingTime % 60).padStart(2, '0')}
-      </div>
-    </div>
+            <div className="video-container">
+              <div className="video-status-bar">
+                <div className="progress-info">
+                  <span>진행률: {doneReps} / {totalReps}</span>
+                  <progress value={doneReps} max={totalReps}></progress>
+                </div>
+                <div className="timer-info">
+                  ⏱ 남은 시간: {Math.floor(remainingTime / 60)}:{String(remainingTime % 60).padStart(2, '0')}
+                </div>
+              </div>
 
-    <TrainingCamTest
-      viewKnee={viewKnee}
-      viewLegHip={viewLegHip}
-      onVideoEnd={handleVideoEnd}
-      currentExercise={routine?.exercises?.[currentExerciseIndex]}
-      onGoodPosture={handleGoodPosture}         
-      onRepCounted={handleRepCounted}   
-    />
-  </div>
-</div>
+              <TrainingCamTest
+                isStarted={isStarted}
+                viewKnee={viewKnee}
+                viewLegHip={viewLegHip}
+                onVideoEnd={handleVideoEnd}
+                currentExercise={currentExercise}
+                onGoodPosture={onGoodPosture}
+                onBadPosture={onBadPosture}
+                onRepCounted={onRepCounted}
+              />
 
-
-           
-
+              {!isStarted && (
+                <div className="start-overlay">
+                  <button
+                    className="start-btn"
+                    onClick={() => {
+                      if (routine) setRemainingTime(calcTotalTime(routine));
+                      setDoneReps(0);
+                      setGoodCount(0);
+                      setBadCount(0);
+                      setExerciseResults({});
+                      setStartAt(Date.now());
+                      hasSavedRef.current = false;
+                      setIsStarted(true);
+                    }}
+                  >
+                    시작
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          {isStarted && (
+          <div className="live-dots">
+            {liveDots.map((d, i) => (
+              <span key={d.id ?? i} className={`dot ${d.type}`} />
+            ))}
+          </div>
+            )}
 
         </div>
       </PageWrapper>

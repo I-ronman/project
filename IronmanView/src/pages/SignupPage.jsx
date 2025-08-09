@@ -4,9 +4,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/SignupPage.css';
 import logo from '../assets/logo.png';
-import axios from 'axios';
 import PageWrapper from '../layouts/PageWrapper';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../api/api';
 
 function SignupPage() {
   const [name, setName] = useState('');
@@ -29,10 +29,7 @@ function SignupPage() {
   useEffect(() => {
     const fetchOAuthUser = async () => {
       try {
-        const res = await axios.get(
-          'http://localhost:329/web/oauth/userinfo',
-          { withCredentials: true }
-        );
+        const res = await api.get('/oauth/userinfo');
         if (res.data) {
           setName(res.data.name || '');
           setEmail(res.data.email || '');
@@ -45,11 +42,11 @@ function SignupPage() {
 
     fetchOAuthUser();
 
-    // cleanup 함수
+     // cleanup 함수
     return () => {
       if (email) {
-        axios
-          .delete('http://localhost:329/web/email/clear', {
+        api
+          .delete('/email/clear', {
             params: { email },
           })
           .catch((err) => {
@@ -67,11 +64,7 @@ function SignupPage() {
     setEmailError('');
 
     try {
-      await axios.post(
-        'http://localhost:329/web/email/send',
-        { email },
-        { withCredentials: true }
-      );
+      await api.post('/email/send', { email });
       alert('인증코드가 이메일로 발송되었습니다.');
       setShowCodeInput(true);
     } catch (err) {
@@ -89,16 +82,13 @@ function SignupPage() {
 
   const handleEmailVerify = async () => {
     try {
-      const res = await axios.post(
-        'http://localhost:329/web/email/verify',
+      const res = await api.post(
+        '/email/verify',
         {
           email,
           code: emailCode,
         },
-        {
-          withCredentials: true,
-          responseType: 'text',
-        }
+        { responseType: 'text' }
       );
       if (res.status === 200) {
         alert('이메일 인증 완료');
@@ -135,10 +125,7 @@ function SignupPage() {
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:329/web/signup',
-        data
-      );
+      const response = await api.post('/signup', data);
       console.log('회원가입 성공:', response.data);
       alert('회원가입이 완료되었습니다.');
       navigate('/login');

@@ -24,7 +24,7 @@ public class SingleExerciseLogEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "single_exercise_log_id")
-    private Long singleExerciseLogId;
+    private Long singleExerciseLogId; 
 
     @Column(name = "exercise_id", nullable = false)
     private Long exerciseId;

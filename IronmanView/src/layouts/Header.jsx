@@ -10,28 +10,12 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useContext(AuthContext);
-  const profileImgSrc = user?.user?.face || './images/default_profile.jpg';
-  const [profileImg, setProfileImg] = useState('./images/default_profile.jpg');
+  const profileImgSrc = user?.face || './images/default_profile.jpg';
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
 
-  // 이미지를 db에서 가져오는 useEffect
-  useEffect(() => {
-  axios
-    .get('http://localhost:329/web/login/user', { withCredentials: true })
-    .then(res => {
-      const { face } = res.data;
-      if (face) {
-        setProfileImg(face);
-      }
-    })
-    .catch(err => {
-      console.error('프로필 이미지 불러오기 실패', err);
-    });
-}, []);
-
-
+ 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 900);
     window.addEventListener('resize', handleResize);
@@ -55,7 +39,7 @@ const Header = () => {
 
   const navItems = [
     { name: '운동하기', path: '/exercise' },
-    { name: '스케줄', path: '/schedulepage' },
+    { name: '스케줄', path: '/schedule' },
     { name: '통계', path: '/statistics' },
     { name: '챗봇', path: '/chatbot' },
     { name: '커뮤니티', path: '/board' },
@@ -81,29 +65,6 @@ const Header = () => {
         {isMobile && isMenuOpen && (
           <div className="side-menu">
             <div className="close-btn" onClick={() => setIsMenuOpen(false)}>×</div>
-<<<<<<< HEAD
-            <div className="menu-item" onClick={() => handleMove('/exercise')}>
-              <span>운동하기</span>
-            </div>
-            <div className="menu-item" onClick={() => handleMove('/schedulepage')}>
-              <span>스케줄</span>
-            </div>
-            <div className="menu-item" onClick={() => handleMove('/statistics')}>
-              <span>통계</span>
-            </div>
-            <div className="menu-item" onClick={() => handleMove('/chatbot')}>
-              <span>챗봇</span>
-            </div>
-            <div className="menu-item" onClick={() => handleMove('/board')}>
-              <span>커뮤니티</span>
-            </div>
-            <div className="menu-item" onClick={() => handleMove('/survey')}>
-              <span>설문조사</span>
-            </div>
-            <div className="menu-item" onClick={() => handleMove('/mypage')}>
-              <span>마이 페이지</span>
-            </div>
-=======
             {navItems.map((item) => (
               <div
                 key={item.path}
@@ -113,7 +74,6 @@ const Header = () => {
                 {item.name}
               </div>
             ))}
->>>>>>> c10b2e1b25c27a02e2e3f4f1d63299be2004c177
           </div>
         )}
       </div>
@@ -142,8 +102,7 @@ const Header = () => {
         )}
         <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
         <img
-        
-          src={profileImg}
+          src={profileImgSrc}
           alt="프로필"
           className="profile-img"
           onClick={() => navigate('/mypage')}
