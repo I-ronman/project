@@ -29,10 +29,9 @@ const AppLayout = () => {
 
   return (
     <div className={`app-layout ${isMobileView ? 'mobile-layout' : 'web-layout'}`}>
+      {!hideHeaderPaths.includes(location.pathname) && <Header />}
       <div className="right-panel">
         <div className="right-content">
-          {!hideHeaderPaths.includes(location.pathname) && <Header />}
-
           {!hideHeaderPaths.includes(location.pathname) && (
             <div className="page-description">
               {!hideBackButtonPaths.includes(location.pathname) && (

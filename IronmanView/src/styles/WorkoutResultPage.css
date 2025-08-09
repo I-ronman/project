@@ -3,7 +3,9 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #1e1e1e;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -3,7 +3,9 @@
 .auth-container {
     width: 100vw;
     height: 100vh;
-    background-color: #000; /* 전체 배경을 검은색으로 */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
+    background-size: cover;
     display: flex;
     justify-content: center; /* 가로 방향 가운데 정렬 */
     align-items: center;     /* 세로 방향 가운데 정렬 */

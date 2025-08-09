@@ -2,7 +2,9 @@
   /* PageWrapper 안에서 가로를 꽉 채우기 */
   width: 100%;
   padding: 40px 20px;
-  background: #111;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: #fff;
   box-sizing: border-box;
 }
