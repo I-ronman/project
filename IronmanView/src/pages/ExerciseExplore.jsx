@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../styles/ExerciseExplore.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 
 const dummyExercises = [
@@ -88,7 +89,11 @@ const ExerciseExplore = () => {
   const [newRoutineTitle, setNewRoutineTitle] = useState('');
   const [newRoutineSummary, setNewRoutineSummary] = useState('');
   const [showRoutineInputModal, setShowRoutineInputModal] = useState(false);
-
+  
+  // 전역 변수 감지
+  const { surveyDone } = useContext(AuthContext);
+  const leftBtnLabel = surveyDone ? '루틴 추천받기' : '설문조사 하러가기';
+  const leftBtnPath  = surveyDone ? '/chatbot'     : '/survey';
 
   // ✅ 화면 크기 변경 감지
   useEffect(() => {
@@ -579,7 +584,12 @@ const ExerciseExplore = () => {
       )}
 
       {showRoutineInputModal && (
-        <div className="modal-overlay-exp">
+        <div 
+          className="modal-overlay-exp"
+          onClick={(e)=>{ 
+            if (e.target === e.currentTarget) setShowRoutineInputModal(false);
+          }}
+        >
           <div className="routine-create-modal">
             <button className="close-btn-exp" onClick={() => setShowRoutineInputModal(false)}>X</button>
             <h3>새 루틴 만들기</h3>
@@ -595,27 +605,35 @@ const ExerciseExplore = () => {
               onChange={(e) => setNewRoutineSummary(e.target.value)}
               rows={4}
             />
-            <button
-              className="create-btn-exp"
-              onClick={() => {
-                const newRoutine = {
-                  routineId: null,  // 프론트 임시 ID
-                  title: newRoutineTitle || '새 루틴',
-                  summary: newRoutineSummary || '내 운동 루틴',
-                  exercises: [],
-                  isNew: true,
-                };
-                setRoutines((prev) => [...prev, newRoutine]);
-                setExpandedRoutineId(newRoutine.routineId);
-                setSelectedRoutine(newRoutine);
-                setShowRightPanel(true);
-                setShowRoutineInputModal(false);
-                setNewRoutineTitle('새 루틴');
-                setNewRoutineSummary('내 운동 루틴');
-              }}
-            >
-              만들기
-            </button>
+            <div className='create-row-exp'>
+              <button
+                className="secondary-btn-exp"
+                onClick={() => navigate(leftBtnPath)}
+              >
+                {leftBtnLabel}
+              </button>
+              <button
+                className="create-btn-exp"
+                onClick={() => {
+                  const newRoutine = {
+                    routineId: null,  // 프론트 임시 ID
+                    title: newRoutineTitle || '새 루틴',
+                    summary: newRoutineSummary || '내 운동 루틴',
+                    exercises: [],
+                    isNew: true,
+                  };
+                  setRoutines((prev) => [...prev, newRoutine]);
+                  setExpandedRoutineId(newRoutine.routineId);
+                  setSelectedRoutine(newRoutine);
+                  setShowRightPanel(true);
+                  setShowRoutineInputModal(false);
+                  setNewRoutineTitle('새 루틴');
+                  setNewRoutineSummary('내 운동 루틴');
+                }}
+              >
+                만들기
+              </button>
+            </div>
           </div>
         </div>
       )}

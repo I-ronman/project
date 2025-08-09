@@ -18,5 +18,6 @@ public class UserEntity {
     private String name;
     private String gender;
     private String birthdate;
+    @Column(columnDefinition = "TEXT")
     private String face;
 }

@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0 20px;
   box-sizing: border-box;
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
@@ -112,3 +112,96 @@
   max-width: 400px;
 }
 
+.survey-stage {
+  margin-top: 80px;
+  width: 100%;
+  max-width: 1560px;        /* 카드 3개가 들어갈 수 있게 살짝 확대 */
+  margin-left: auto; margin-right: auto;
+  padding: 0 12px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;   /* 현재 카드가 중앙에 오도록 */
+  align-items: flex-start;
+  overflow: visible;
+}
+
+/* 기존 .survey-content의 카드 스타일을 분리해 재사용 */
+.survey-card {
+  position: relative;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;   /* 카드 내부는 세로 정렬 */
+  align-items: center;  
+  flex: 0 0 500px;
+  max-width: 500px;
+  min-width: 360px;
+  height: 600px;
+  background-color: #111;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  padding: 30px 20px;
+  box-sizing: border-box;
+  transition: transform .35s ease, opacity .35s ease, box-shadow .35s ease;
+}
+
+/* 역할별 상태 */
+.survey-card.current {
+  transform: scale(1);
+  opacity: 1;
+  z-index: 2;
+}
+.survey-card.previous,
+.survey-card.next {
+  transform: scale(.92);     /* 작게 */
+  opacity: .6;
+  z-index: 1;
+}
+.survey-card.ghost { visibility: hidden; pointer-events: none; }
+
+/* 현재 카드 내부 좌/우 화살표 */
+.inline-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+  color: #d3ff00;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform .15s ease, opacity .2s ease;
+}
+.inline-arrow:hover:not(:disabled) { transform: translateY(-50%) scale(1.06); }
+.inline-arrow:disabled { opacity: .35; cursor: default; }
+
+/* 카드 바깥쪽 가장자리에 살짝 붙여두기 */
+.inline-arrow.left  { left: 10px; }   /* 필요하면 -값으로 더 붙이기 */
+.inline-arrow.right { right: 10px; }
+
+/* 애니메이션 */
+@keyframes enterRight {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes enterLeft {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+.anim-enter-right { animation: enterRight .35s ease; }
+.anim-enter-left  { animation: enterLeft  .35s ease; }
+
+/* 반응형: 화면이 좁으면 1개만 보이도록 */
+@media (max-width: 880px) {
+  .survey-stage { max-width: 520px; }
+  .survey-card.previous,
+  .survey-card.next { display: none; }
+}
+
+/* 모바일/좁은 화면에서는 숨김 */
+@media (max-width: 880px) {
+  .inline-arrow { display: none; }
+}
