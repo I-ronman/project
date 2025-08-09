@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { CountContext } from '../context/CountContext';
 import axios from 'axios';
+import { getSpeech } from "../utils/getSpeach";
 
 function TrainingCamTest({
   //  isStarted, onGoodPosture, onBadPosture 추가
@@ -13,6 +14,7 @@ function TrainingCamTest({
   onGoodPosture,
   onBadPosture
 }) {
+  const [value, setValue] = useState("")
   const wsRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -107,6 +109,9 @@ function TrainingCamTest({
         await axios.post("http://localhost:456/short_feed", {
           image: `data:image/jpeg;base64,${data.img}`,
           exercise: data.exercise
+        }).then((res) => {
+          setValue(res.result);
+          getSpeech(value);
         });
       } catch (e) {
     
