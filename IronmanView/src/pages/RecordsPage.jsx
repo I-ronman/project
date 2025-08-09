@@ -1,54 +1,59 @@
-import React, { useState, useRef } from 'react';
+// src/pages/RecordsPage.jsx
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
 import { FaCalendarAlt } from 'react-icons/fa';
 import 'react-datepicker/dist/react-datepicker.css';
 import PageWrapper from '../layouts/PageWrapper';
-import PostureFeedbackPage from './PostureFeedbackPage';
 import '../styles/RecordsPage.css';
+import { fetchDailyRecords } from '../api/recordsApi';
+import { colorForTag } from '../utils/tagColor';
+import { AuthContext } from '../context/AuthContext';
 
 registerLocale('ko', ko);
 
-const dummyRecords = [
-  { id: 1, date: '2025-08-12', type: 'routine', title: '루틴 B', exercises: ['런지', '버피'] },
-  { id: 2, date: '2025-08-11', type: 'individual', exercises: ['플랭크', '푸쉬업'] },
-  { id: 3, date: '2025-08-10', type: 'routine', title: '루틴 A', exercises: ['스쿼트', '푸쉬업', '플랭크'] },
-];
-
 const RecordsPage = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
   const startPickerRef = useRef(null);
   const endPickerRef = useRef(null);
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [allRecords] = useState([...dummyRecords].sort((a, b) => b.date.localeCompare(a.date)));
-  const [records, setRecords] = useState(allRecords);
-  const [feedbackRecordId, setFeedbackRecordId] = useState(null);
-  const [expandedRecords, setExpandedRecords] = useState({});
+  // 기본 기간: 최근 14일
+  const today = useMemo(() => new Date(), []);
+  const twoWeeksAgo = useMemo(() => {
+    const d = new Date(); d.setDate(d.getDate() - 13);
+    d.setHours(0,0,0,0);
+    return d;
+  }, []);
 
-  const onSearch = () => {
-    if (!startDate || !endDate) {
-      setRecords(allRecords);
-      return;
+  const [startDate, setStartDate] = useState(twoWeeksAgo);
+  const [endDate, setEndDate] = useState(today);
+
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState({}); // 날짜별 상세 토글
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchDailyRecords({
+        userId: user?.id ?? 1,
+        startDate, endDate
+      });
+      setRecords(data);
+    } finally {
+      setLoading(false);
     }
-    setRecords(
-      allRecords.filter(r => {
-        const d = new Date(r.date);
-        return d >= startDate && d <= endDate;
-      })
-    );
   };
+
+  useEffect(() => { load(); }, []); // 최초 1회
+
+  const onSearch = () => load();
 
   const goStats = () => {
     navigate('/statistics', { state: { startDate, endDate } });
-  };
-
-  const closeFeedback = () => setFeedbackRecordId(null);
-
-  const toggleExpand = id => {
-    setExpandedRecords(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   return (
@@ -64,11 +69,9 @@ const RecordsPage = () => {
               dateFormat="yyyy.MM.dd"
               placeholderText="시작일"
               selected={startDate}
-              onChange={date => {
+              onChange={(date) => {
                 setStartDate(date);
-                if (!endDate) {
-                  setTimeout(() => endPickerRef.current.setOpen(true), 200);
-                }
+                if (!endDate) setTimeout(() => endPickerRef.current?.setOpen(true), 140);
               }}
               className="records-date-picker-input"
               ref={startPickerRef}
@@ -82,62 +85,78 @@ const RecordsPage = () => {
               dateFormat="yyyy.MM.dd"
               placeholderText="종료일"
               selected={endDate}
-              onChange={date => setEndDate(date)}
-              onFocus={() => {
-                if (!startDate) {
-                  startPickerRef.current.setOpen(true);
-                } else {
-                  endPickerRef.current.setOpen(true);
-                }
-              }}
+              onChange={(date) => setEndDate(date)}
+              onFocus={() => !startDate ? startPickerRef.current?.setOpen(true) : endPickerRef.current?.setOpen(true)}
               className="records-date-picker-input"
               ref={endPickerRef}
             />
           </div>
-          <button className="records-btn-search" onClick={onSearch}>검색</button>
+          <button className="records-btn-search" onClick={onSearch} disabled={loading}>
+            {loading ? '불러오는 중…' : '검색'}
+          </button>
           <button className="records-btn-stat" onClick={goStats}>통계 확인</button>
         </div>
 
         <div className="records-list">
-          {records.length ? (
-            records.map(rec => (
+          {records.length ? records.map((rec) => {
+            const isOpen = expanded[rec.date] ?? true; // 기본 펼침
+            return (
               <div key={rec.id} className="record-item">
+                {/* 헤더: 날짜 + 총 시간 */}
                 <div className="record-header">
-                  <span className="record-date">{rec.date}</span>
-                  <button className="btn-feedback" onClick={() => setFeedbackRecordId(rec.id)}>상세보기</button>
+                  <div className="record-date">{rec.date}</div>
+                  <div className="record-tags">
+                    {rec.tags?.map((t,i)=>(
+                      <span key={i} className="tag-pill"
+                        style={{ background: `${colorForTag(t)}22`, borderColor: colorForTag(t) }}
+                      >{t}</span>
+                    ))}
+                  </div>
+                  <div className="record-total">{rec.totalMinutes}분</div>
                 </div>
-                <div className="record-body">
-                  {rec.type === 'routine' && (
-                    <button className="routine-toggle" onClick={() => toggleExpand(rec.id)}>
-                      {expandedRecords[rec.id] ? '▼' : '▶'}
-                    </button>
-                  )}
-                  {rec.type === 'routine'
-                    ? <span className="routine-label">{rec.title}</span>
-                    : <span className="indiv-label">{rec.exercises.join(', ')}</span>
-                  }
+
+                {/* 본문: (루틴명 / 개별) + 토글 */}
+                <div className="record-title-row">
+                  <button
+                    className="routine-toggle"
+                    onClick={() => setExpanded(prev => ({ ...prev, [rec.date]: !isOpen }))}
+                    aria-label="상세 토글"
+                  >
+                    {isOpen ? '▼' : '▶'}
+                  </button>
+                  <div className="record-title">
+                    {rec.type === 'routine' ? (rec.title ?? '루틴') : '개별 운동'}
+                  </div>
                 </div>
-                {rec.type === 'routine' && expandedRecords[rec.id] && (
-                  <ul className="exercise-list">
-                    {rec.exercises.map((ex, i) => <li key={i}>{ex}</li>)}
-                  </ul>
+
+                {/* 상세: 운동별 시간 + 카테고리 */}
+                {isOpen && (
+                  <div className="entry-table">
+                    <div className="entry-head">
+                      <div>운동</div>
+                      <div>카테고리</div>
+                      <div className="ta-right">시간(분)</div>
+                    </div>
+                    {rec.entries?.map((e, idx) => (
+                      <div className="entry-row" key={idx}>
+                        <div className="entry-name">{e.name}</div>
+                        <div className="entry-cat">
+                          <span className="tag-pill" style={{ background: `${colorForTag('#'+e.category)}22`, borderColor: colorForTag('#'+e.category) }}>
+                            #{e.category}
+                          </span>
+                        </div>
+                        <div className="entry-min ta-right">{e.minutes}</div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
-            ))
-          ) : (
-            <p className="no-records">해당 기간의 기록이 없습니다.</p>
+            );
+          }) : (
+            <p className="no-records">{loading ? '불러오는 중…' : '해당 기간의 기록이 없습니다.'}</p>
           )}
         </div>
       </div>
-
-      {feedbackRecordId != null && (
-        <div className="modal-backdrop" onClick={closeFeedback}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeFeedback}>×</button>
-            <PostureFeedbackPage recordId={feedbackRecordId} />
-          </div>
-        </div>
-      )}
     </PageWrapper>
   );
 };

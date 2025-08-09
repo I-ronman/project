@@ -38,7 +38,7 @@ const Header = () => {
 
   const navItems = [
     { name: '운동하기', path: '/exercise' },
-    { name: '스케줄', path: '/schedule' },
+    { name: '스케줄', path: '/schedulepage' },
     { name: '통계', path: '/statistics' },
     { name: '챗봇', path: '/chatbot' },
     { name: '커뮤니티', path: '/board' },

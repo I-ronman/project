@@ -3,7 +3,7 @@
 .survey-wrapper {
   width: 100%;
   min-width: 320px;
-  height: 100%;
+  height: 100vh;
   background-color: #000;
   color: #fff;
   display: flex;

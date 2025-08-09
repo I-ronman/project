@@ -186,7 +186,7 @@ const handleGoodPosture = (exerciseId) => {
         <div className="posture-container">
           <div className="posture-left">
             <header className="posture-header">
-              <div className="logo">💪 언맨</div>
+              <img className= 'logo' src='./images/ironman_logo.png'></img>
               <h2>운동 및 자세분석</h2>
               <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
             </header>
@@ -245,24 +245,26 @@ const handleGoodPosture = (exerciseId) => {
 
           <div className="posture-right">
   <div className="video-container">
-    <div className="video-status-bar">
-      <div className="progress-info">
-        <span>진행률: {doneReps} / {totalReps}</span>
-        <progress value={doneReps} max={totalReps}></progress>
+    <div className="cam-viewport">
+      <div className="video-status-bar">
+        <div className="progress-info">
+          <span>진행률: {doneReps} / {totalReps}</span>
+          <progress value={doneReps} max={totalReps}></progress>
+        </div>
+        <div className="timer-info">
+          ⏱ 남은 시간: {Math.floor(remainingTime / 60)}:{String(remainingTime % 60).padStart(2, '0')}
+        </div>
       </div>
-      <div className="timer-info">
-        ⏱ 남은 시간: {Math.floor(remainingTime / 60)}:{String(remainingTime % 60).padStart(2, '0')}
-      </div>
-    </div>
 
-    <TrainingCamTest
-      viewKnee={viewKnee}
-      viewLegHip={viewLegHip}
-      onVideoEnd={handleVideoEnd}
-      currentExercise={routine?.exercises?.[currentExerciseIndex]}
-      onGoodPosture={handleGoodPosture}         
-      onRepCounted={handleRepCounted}   
-    />
+      <TrainingCamTest
+        viewKnee={viewKnee}
+        viewLegHip={viewLegHip}
+        onVideoEnd={handleVideoEnd}
+        currentExercise={routine?.exercises?.[currentExerciseIndex]}
+        onGoodPosture={handleGoodPosture}         
+        onRepCounted={handleRepCounted}   
+      />
+    </div>
   </div>
 </div>
 

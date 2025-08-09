@@ -1,4 +1,11 @@
 /*project/IronmanView/src/layouts/AppLayout.css*/
+
+:root{
+  --header-h: 90px; /* Header.css의 min-height와 동일 */
+  --desc-h: 56px;   /* page-description 대략 높이 */
+}
+
+
 /* 구글 폰트 import */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
@@ -10,32 +17,21 @@ html, body, #root {
   min-height: 100%;
 }
 
-/* 전체 레이아웃 설정 */
 .app-layout {
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
   background-color: black;
-  background-image: url('/images/background1.jpg'); /* 전체 배경으로 이동 */
-  background-size: auto;
-  background-position: center;
-  background-repeat: repeat-y;
+
   padding: 0;
   box-sizing: border-box;
 }
 
 .app-layout::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: url('/images/background3.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.3; /* ✅ 투명도 조절 */
-  z-index: 0;
+  display: none;
 }
 
 .app-layout > * {
@@ -43,32 +39,15 @@ html, body, #root {
 }
 
 
-/* 왼쪽 소개 영역 */
-.left-panel {
-  width: 30vw;
-  min-width: 530px;
-  max-width: 530px;
-  height: 100vh;
-
-  display: flex;
-  justify-content: center;   /* ⬅ 수평 중앙 */
-  align-items: center;       /* ⬆ 수직 중앙 */
-  background-size: cover;
-  background-repeat: repeat-y;
-  background-position: center;
-  position: relative;
-  background-color: transparent;
-  padding: 0 40px; /* 좌우 여백 동시에 주기 (필요시) */
-}
-
 .right-panel {
   width: 100vw;
-  height: 100vh;
-  background-color: #121212;
+  min-height: 100vh;
+  background: black;
   color: white;
   display: flex;
+  flex-direction: column;
   justify-content: center;     /* ⬅ 가로 중앙 */
-  align-items: center;         /* ⬆ 세로 중앙 */
+  align-items: stretch;         /* ⬆ 세로 중앙 */
   box-sizing: border-box;
   padding: 0;
 }
@@ -76,14 +55,16 @@ html, body, #root {
 .right-content {
   width: 100%;
   max-width: none;
-  height: 100%;
+  min-height: calc(100dvh - (var(--header-h) + var(--desc-h)));
   box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
   align-items: stretch;       /* 내부 요소 가운데 정렬 */
   justify-content: flex-start;
-
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
+  background-size: cover;
   padding: 0;
 }
 
@@ -144,7 +125,7 @@ html, body, #root {
   .right-panel {
     margin: 0;
     border-radius: 0;
-    height: 100vh;
+    height: 90vh;
   }
 
   .app-layout {
@@ -152,23 +133,6 @@ html, body, #root {
   }
 }
 
-/* 반응형 - 모바일 화면 최적화 */
-@media screen and (max-width: 480px) {
-  .right-panel {
-    width: 100%;
-    padding: 16px;
-  }
-}
-
-.page-description {
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  color: #ccc;
-  border-bottom: 1px solid #333;
-  text-align: center;
-  box-sizing: border-box;
-}
 .page-description {
   width: 100%;
   padding: 16px 20px;
@@ -202,4 +166,30 @@ html, body, #root {
 
 .back-icon {
   font-size: 14px;
+}
+
+@media screen and (max-width: 1000px){
+  .right-panel{
+    height: auto;         /* ← 기존 90vh 제거 */
+    min-height: calc(100dvh - (var(--header-h) + var(--desc-h)));
+  }
+}
+
+/* 반응형 - 모바일 화면 최적화 */
+@media screen and (max-width: 480px) {
+  .right-panel {
+    width: 100%;
+    padding: 16px;
+  }
+}
+
+.page-description {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  background-color: black;
+  color: #ccc;
+  border-bottom: 1px solid #333;
+  text-align: center;
+  box-sizing: border-box;
 }
