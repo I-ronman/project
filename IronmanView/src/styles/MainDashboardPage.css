@@ -1,15 +1,15 @@
 /* 전체 페이지 배경 - 은하수 이미지 + 어두운 오버레이 */
 .dark-background {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-              url('/images/bg-home.jpg') no-repeat center center fixed;
+              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   color: white;
   font-family: 'Pretendard', sans-serif;
   padding: 20px;
-  border-radius: 10px;
-  margin: 20px auto;
-  max-width: 1400px;
+  border-radius: 0px;
+  margin: 0;
+  width: 100%;
   z-index: 1;
   position: relative;
 }

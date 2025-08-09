@@ -13,6 +13,9 @@
   justify-content: center;
   padding: 0 20px;
   box-sizing: border-box;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+            url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 .survey-header {
   position: absolute;
@@ -86,13 +89,18 @@
   flex: 1;
   margin-top: 80px; /* 헤더 + 프로그레스바 공간 확보 */
   width: 100%;
-  padding-top: 60px; /* 헤더 공간 확보 */
+  max-width: 500px;
+  margin: 80px auto 40px auto; /* 헤더 + 하단 여백 */
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   gap: 20px;
   box-sizing: border-box;
+  background-color: #111;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
 .option-group {

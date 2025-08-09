@@ -20,7 +20,7 @@ const StepFinal = ({ surveyData }) => {
 
       if (response.ok) {
         completeSurvey();
-        navigate('/routine');
+        navigate('/chatbot');
       } else {
         alert('설문 전송 실패');
       }

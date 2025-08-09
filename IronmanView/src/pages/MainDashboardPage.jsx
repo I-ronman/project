@@ -97,7 +97,7 @@ const MainDashboardPage = () => {
 
       <div className="main-dashboard-wrapper">
         <div className="dark-background">
-        <GalaxyBackground />
+        
           <div className="main-container">
 
             {/* 프로필 카드 */}
