@@ -60,7 +60,7 @@ def analyze(data):
     exercise_name = data["exerciseName"]
     
     key = (sid, exercise_name)
-
+    
     # 분석기 인스턴스가 없으면 새로 생성
     if key not in analyzer_map:
         analyzer_map[key] = analyzer_class_map[exercise_name]()
