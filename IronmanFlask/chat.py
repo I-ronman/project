@@ -256,12 +256,12 @@ def make_routine(question):
         if yes_or_no == "yes":
             data = routine_parsing(response.choices[0].message.content)
             print(data)
-            return response.choices[0].message.content,data
+            return [response.choices[0].message.content,data]
         else: 
             
-            return response.choices[0].message.content
+            return [response.choices[0].message.content,]
     else:
-        return chat_history[-1]["content"]
+        return [chat_history[-1]["content"],]
 
 @app.route("/chat",methods = ['POST','OPTIONS'])
 @cross_origin(origins="http://localhost:5173")

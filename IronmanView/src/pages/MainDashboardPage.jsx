@@ -223,7 +223,7 @@ const MainDashboardPage = () => {
         {/* 루틴 짜기/추천받기 */}
         <motion.div
           className="card dark-card builder-card clickable-card"
-          onClick={() => navigate('/routine')}
+          onClick={() => navigate('/exercise')}
           whileHover={{ scale: 1.02 }}
         >
           <FaClipboardList className="card-icon" />
