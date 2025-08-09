@@ -241,7 +241,6 @@ const PostureAnalysisPage = () => {
     alert('✅ 모든 운동이 완료되었습니다!');
     navigate('/main');
   };
-  /* --------------------------------------------------------- */
 
   return (
     <CountContext.Provider value={{
@@ -254,7 +253,7 @@ const PostureAnalysisPage = () => {
         <div className="posture-container">
           <div className="posture-left">
             <header className="posture-header">
-              <div className="logo">💪 언맨</div>
+              <img className= 'logo' src='./images/ironman_logo.png'></img>
               <h2>운동 및 자세분석</h2>
               <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
             </header>

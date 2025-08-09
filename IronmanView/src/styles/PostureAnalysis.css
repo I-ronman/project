@@ -4,7 +4,9 @@
     display: flex;
     width: 100vw;
     height: 100vh;
-    background-color: #1e1e1e;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
+    background-size: cover;
     color: white;
   }
   
@@ -12,7 +14,10 @@
   .posture-left {
     width: 430px;
     padding: 16px;
-    background-color: #2a2a2a;
+    background: linear-gradient(
+      rgba(0, 0, 0, 0.4), 
+      rgba(0, 0, 0, 0.4)
+    );
     display: flex;
     flex-direction: column;
   }
@@ -26,7 +31,8 @@
   }
   
   .logo {
-    font-size: 20px;
+    width: 60px;
+    height: auto;
   }
   
   .settings-icon {
@@ -41,11 +47,15 @@
   }
   
   .stat-box {
-    background-color: #444;
+    background: rgba(0,0,0,.35);         /* was #1e1e1e */
+    border: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border-radius: 8px;
     padding: 8px;
     flex: 1;
     text-align: center;
+    color: white;
   }
   
   .stat-label {
@@ -63,7 +73,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #444;
+    background: rgba(0,0,0,.35);         /* was #1e1e1e */
+    border: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     padding: 8px 12px;
     border-radius: 8px;
     margin-bottom: 10px;
@@ -124,6 +137,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;   /* 안쪽 여백 */
+    margin: 20px;    /* 바깥 여백 */
+    box-sizing: border-box; /* 패딩 포함해서 크기 계산 */
+    border-radius: 8px; /* 모서리 둥글게(선택) */
+    position: relative;
+    overflow: visible;
   }
   
   .camera-placeholder {
@@ -201,15 +220,31 @@
 }
 
 .video-container {
-  position: relative;
+  position: static;
   display: inline-block;
   width: fit-content;
+  
+}
+
+.cam-viewport {
+  position: static;
+  display: inline-block;   /* 내용(비디오/캔버스) 너비에 맞춤 */
+  overflow: visible;
+}
+
+/* 비디오/캔버스가 블록으로 잡히게 */
+.cam-viewport video,
+.cam-viewport canvas {
+  display: block;
+  max-width: 100%;
 }
 
 .video-status-bar {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: clamp(8px, 2vw, 16px);  /* 화면 줄어들면 자동으로 살짝 붙게 */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
   display: flex;
   gap: 20px;
   background-color: rgba(0, 0, 0, 0.6);

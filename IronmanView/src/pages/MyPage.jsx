@@ -5,7 +5,6 @@ import SurveyBlurOverlay from '../components/SurveyBlurOverlay';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../layouts/PageWrapper';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 const MyPage = () => {
@@ -30,24 +29,6 @@ const MyPage = () => {
     });
   const isToday = d => d === todayDate;
   const hasRecord = d => workoutDates.includes(d);
-
-  // 사용자 정보 로드
-  useEffect(() => {
-    axios
-      .get('http://localhost:329/web/login/user', { withCredentials: true })
-      .then(res => {
-        const { name, email, birthdate, gender, face } = res.data;
-        setUser(prev => ({
-          ...prev,
-          name,
-          email,
-          birthdate,
-          gender,
-          face,
-        }));
-      })
-      .catch(() => navigate('/login'));
-  }, [setUser, navigate]);
 
   return (
     <PageWrapper>

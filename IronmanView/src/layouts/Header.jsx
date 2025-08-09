@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import './SideMenu';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
 const Header = () => {

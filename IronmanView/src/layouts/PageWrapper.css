@@ -4,7 +4,7 @@
   padding: 0;
   padding-top: 0;
   box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.596);
+  background: transparent;
   color: white;
   display: flex;
   justify-content: fles-start; /* 가로 방향 가운데 정렬 */
