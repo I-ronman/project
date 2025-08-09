@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Ironman.back.dto.PostureFeedbackDto;
 import com.Ironman.back.entity.PostureFeedbackEntity;
+import com.Ironman.back.entity.SingleExerciseLogEntity;
 import com.Ironman.back.repo.PostureFeedbackRepository;
+import com.Ironman.back.repo.SingleExerciseLogRepository;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class PostureFeedbackController {
 
     private final PostureFeedbackRepository postureFeedbackRepository;
-
+    private final SingleExerciseLogRepository singleExerciseLogRepository;
+    
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPostureFeedback(@RequestBody PostureFeedbackDto dto, HttpSession session) {
         Object user = session.getAttribute("user");
@@ -32,14 +35,22 @@ public class PostureFeedbackController {
         }
 
         try {
-            // ✅ DB에 저장
-            postureFeedbackRepository.save(dto.toEntity());
+            // ✅ 운동 로그 먼저 조회
+            SingleExerciseLogEntity log = singleExerciseLogRepository.findById(dto.getSingleExerciseLogId())
+                .orElseThrow(() -> new RuntimeException("해당 운동 로그를 찾을 수 없습니다."));
+
+            // ✅ 운동 로그 엔티티를 dto.toEntity()에 전달
+            PostureFeedbackEntity entity = dto.toEntity(log);
+
+            postureFeedbackRepository.save(entity);
             return ResponseEntity.ok("이미지 저장 성공");
+
         } catch (Exception e) {
             e.printStackTrace();  // 콘솔에 예외 출력
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 저장 실패");
         }
     }
+
     
     @GetMapping("/list")
     public ResponseEntity<?> getPostureFeedbackList(HttpSession session) {

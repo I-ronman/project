@@ -14,7 +14,7 @@ from birddog import BirddogAnalyzer
 
 # 운동 분석기
 analyzer_class_map = {
-    'squat': SquatAnalyzer,
+    '스쿼트': SquatAnalyzer,
     'birddog':BirddogAnalyzer
 }
 
