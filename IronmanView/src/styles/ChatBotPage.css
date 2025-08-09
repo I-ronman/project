@@ -1,115 +1,78 @@
-/* project/IronmanView/src/styles/ChatBotPage.css */
-.chat-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f4f4f4;
-    height: 90vh;
-  }
-  
-  .chat-container {
-    width: 100%;
-    max-width: 430px;
-    height: 80vh;
-    background-color: #111;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .chat-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px;
-    background: #1a1a1a;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  .chat-logo {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .chat-exit {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .chat-body {
-    flex: 1;
-    padding: 12px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .chat-msg {
-    max-width: 80%;
-    padding: 10px 14px;
-    border-radius: 16px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  
-  .chat-msg.bot {
-    background-color: #2c2c2c;
-    align-self: flex-start;
-  }
-  
-  .chat-msg.user {
-    background-color: #f5ff00;
-    color: black;
-    align-self: flex-end;
-  }
-  
-  .chat-recommend {
-    padding: 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .rec-btn {
-    background-color: #2d2d2d;
-    color: white;
-    padding: 8px 14px;
-    font-size: 14px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-  }
-  
-  .chat-input-area {
-    display: flex;
-    padding: 10px;
-    background-color: #1a1a1a;
-    gap: 8px;
-  }
-  
-  .chat-input-area input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    font-size: 14px;
-  }
-  
-  .chat-input-area button {
-    background-color: #f5ff00;
-    color: black;
-    border: none;
-    border-radius: 10px;
-    padding: 0 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
+:root{
+  --bg:#0e0e0e; --panel:#141414; --bubble:#2c2c2c; --brand:#f5ff00;
+  --text:#eaeaea; --muted:#9a9a9a; --stroke:#222;
+}
+
+/* 전체 레이아웃 */
+.coach-layout {
+  display:flex; gap:16px; padding:20px;
+  height:calc(100vh - 64px); /* 헤더 높이만큼 보정 */
+  background:#000;
+}
+.coach-panel {
+  width:320px; background:var(--panel); color:var(--text);
+  border-radius:12px; padding:16px; overflow:auto;
+}
+.chat-surface { flex:1; display:flex; flex-direction:column; min-width:0; }
+.chat-topbar {
+  height:48px; display:flex; align-items:center; justify-content:center;
+  color:#ddd; border-bottom:1px solid var(--stroke);
+  background:#0f0f0f; border-radius:12px 12px 0 0;
+}
+
+/* 패널 */
+.panel-card { background:#111; border:1px solid #1f1f1f; border-radius:12px; padding:14px; margin-bottom:12px; }
+.panel-title { font-weight:700; margin-bottom:8px; }
+.goals { margin:0 0 8px 16px; }
+.panel-actions { display:flex; gap:8px; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; }
+.chip { background:#2b2b2b; color:#fff; border:none; padding:6px 10px; border-radius:999px; cursor:pointer; }
+
+/* 대화 피드 */
+.chat-feed {
+  flex:1; overflow:auto; padding:16px; background:var(--bg);
+  border:1px solid #1f1f1f; border-top:none; border-radius:0 0 12px 12px;
+  scroll-behavior:smooth;
+}
+.bubble {
+  max-width:70%; padding:10px 14px; border-radius:16px; margin:8px 0; line-height:1.5;
+}
+.bubble.bot { background:var(--bubble); color:var(--text); }
+.bubble.user { background:var(--brand); color:#000; margin-left:auto; }
+
+/* 카드형 응답 */
+.bot-card { background:#131313; border:1px solid #242424; border-radius:14px; padding:14px; margin:12px 0; }
+.card-head h4 { margin:0 0 4px; color:#fff; }
+.card-list { margin:8px 0 12px 16px; color:#ddd; }
+.card-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.btn { background:#2b2b2b; color:#fff; border:none; padding:8px 12px; border-radius:10px; cursor:pointer; }
+.btn-brand { background:var(--brand); color:#000; font-weight:700; }
+
+/* 입력 영역 */
+.composer { border-top:1px solid #1f1f1f; background:#0f0f0f; padding:10px; border-radius:0 0 12px 12px; }
+.quickchips { display:flex; gap:8px; margin-bottom:8px; overflow:auto; }
+.composer-row { display:flex; gap:8px; }
+.composer-row input {
+  flex:1; padding:10px; border-radius:10px; border:1px solid #262626;
+  background:#171717; color:var(--text); font-size:14px;
+}
+
+/* 타이핑 인디케이터 */
+.typing { display:flex; gap:4px; margin:8px 0; }
+.typing i { width:6px; height:6px; background:#555; border-radius:50%; display:block; animation:bounce 1s infinite ease-in-out; }
+.typing i:nth-child(2){ animation-delay:.15s } .typing i:nth-child(3){ animation-delay:.3s }
+@keyframes bounce { 0%,80%,100%{ transform:scale(0.6); opacity:.5 } 40%{ transform:scale(1); opacity:1 } }
+
+/* 스크롤바 커스텀 */
+.chat-feed::-webkit-scrollbar { width:10px; }
+.chat-feed::-webkit-scrollbar-track { background:#141414; }
+.chat-feed::-webkit-scrollbar-thumb { background:#2f2f2f; border-radius:12px; border:2px solid #141414; }
+.chat-feed::-webkit-scrollbar-thumb:hover { background:#444; }
+.chat-feed { scrollbar-width:thin; scrollbar-color:#2f2f2f #141414; }
+
+/* 반응형 */
+@media (max-width:1024px){
+  .coach-panel{ display:none; }
+  .coach-layout{ padding:12px; }
+  .chat-topbar{ border-radius:12px 12px 0 0; }
+}
