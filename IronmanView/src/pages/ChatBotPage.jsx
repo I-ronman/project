@@ -4,6 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/ChatBotPage.css';
 import PageWrapper from '../layouts/PageWrapper';
 
+function hasJsonPayload(v) {
+  if (v == null) return false;
+  if (typeof v === 'object') return true; // 이미 객체
+  if (typeof v === 'string') {
+    const s = v.trim();
+    if (!(s.startsWith('{') || s.startsWith('['))) return false;
+    try { JSON.parse(s); return true; } catch { return false; }
+  }
+  return false;
+}
+
 export default function ChatBotPage() {
   const navigate = useNavigate();
 
@@ -44,13 +55,15 @@ export default function ChatBotPage() {
       .then((data) => {
         // 기본 텍스트 응답
         const botText = data?.result[0] || '응답을 불러오지 못했어요.';
+        const showCard = hasJsonPayload(data?.result?.[1]); // ✅ JSON 오면만 true
+        
         setMessages((prev) => [
           ...prev,
           { sender: 'bot', type: 'text', text: botText },
 
           // 예시: 카드형 루틴 제안(데모). 서버에서 카드 데이터를 주면 그걸로 대체 가능
           
-          {
+          ...(showCard ? [{
             sender: 'bot',
             type: 'routineCard',
             title: '초보 하체 루틴 (35분)',
@@ -60,7 +73,7 @@ export default function ChatBotPage() {
               '런지 3×10 · 휴식 60초',
               '레그 레이즈 3×15 · 휴식 45초',
             ],
-          },
+          }] : []),
         ]);
       })
       .catch((err) => {
@@ -177,3 +190,4 @@ export default function ChatBotPage() {
     </PageWrapper>
   );
 }
+
