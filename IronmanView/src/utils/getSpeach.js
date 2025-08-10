@@ -14,7 +14,7 @@ export const getSpeech = (text) => {
   }
 
   const speech = (txt) => {
-    const lang = "ko-KR";
+    const lang = "Google 한국의";
     const utterThis = new SpeechSynthesisUtterance(txt);
 
     utterThis.lang = lang;
@@ -23,7 +23,7 @@ export const getSpeech = (text) => {
        디바이스 별로 한국어는 ko-KR 또는 ko_KR로 voice가 정의되어 있다.
     */
     const kor_voice = voices.find(
-      (elem) => elem.lang === lang || elem.lang === lang.replace("-", "_")
+      (elem) => elem.voiceURI === lang
     );
 
     //힌국어 voice가 있다면 ? utterance에 목소리를 설정한다 : 리턴하여 목소리가 나오지 않도록 한다.
