@@ -35,12 +35,11 @@ const statsData = [
 ];
 
 const exerciseColors = {
-  upper: '#FBD157', // 상체
-  core:  '#A5EB47', // 코어
-  lower: '#00C9FF', // 하체
+  upper: '#FBD157',
+  core:  '#A5EB47',
+  lower: '#00C9FF',
 };
 
-// 최근 기록
 const recentRecords = [
   { date: '08-07', minutes: 20, tags: ['#하체', '#유산소'] },
   { date: '08-06', minutes: 35, tags: ['#상체', '#코어'] },
@@ -58,7 +57,6 @@ const previewTop3 = [
   { id: 3, name: '김건우', score: 92 },
 ];
 
-// 주간 달성률(도넛)
 const percentage = 72;
 const weekData = [
   { dayLabel: '월', exercised: true },
@@ -70,7 +68,7 @@ const weekData = [
   { dayLabel: '일', exercised: false, hasRoutine: true },
 ];
 
-// 오늘의 루틴 예시
+// 오늘의 루틴(더미)
 const todayRoutine = { name: '상체+코어 집중 루틴' };
 
 /* ----------------------- Recharts 커스텀 툴팁 ----------------------- */
@@ -96,24 +94,24 @@ const ChartTooltip = ({ active, payload, label }) => {
     </div>
   );
 };
-
 /* =================================================================== */
 
 const MainDashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
+  // 설문 완료 여부에 따라 중앙(center)에 설문/빌더를 배치
   const needSurvey = useMemo(() => !user?.hasSurvey, [user]);
   const gridClass = needSurvey ? 'has-survey' : 'no-survey';
   const hasTodayRoutine = Boolean(todayRoutine?.name);
 
-  // ✅ Y축 “적당히 축소” — 데이터 합계의 최대값을 기준으로 여유 5~10분만 추가
+  // 통계축 최대치 보정
   const yMax = useMemo(() => {
     const maxTotal = Math.max(
       ...statsData.map(d => (d.upper || 0) + (d.core || 0) + (d.lower || 0))
     );
-    const padded = Math.ceil((maxTotal + 8) / 5) * 5; // 5분 단위 라운딩
-    return Math.max(25, padded); // 최소 25분
+    const padded = Math.ceil((maxTotal + 8) / 5) * 5;
+    return Math.max(25, padded);
   }, []);
 
   return (
@@ -133,7 +131,7 @@ const MainDashboardPage = () => {
           />
           <div>
             <div className="card-subtitle" style={{ opacity: 0.9 }}>환영합니다,</div>
-            <div className="profile-name">{user?.name ?? '홍길동'} 님</div>
+            <div className="profile-name">{user?.name ?? '조인혁'} 님</div>
           </div>
         </motion.div>
 
@@ -154,7 +152,7 @@ const MainDashboardPage = () => {
           )}
         </motion.div>
 
-        {/* 주간 달성률(도넛) */}
+        {/* 주간 달성률 (우상단) */}
         <motion.div className="card dark-card donut-card" whileHover={{ scale: 1.01 }}>
           <div className="card-header">
             <FaCalendarAlt className="card-icon" />
@@ -162,7 +160,7 @@ const MainDashboardPage = () => {
             <span className="card-subtitle">8월 1주차</span>
           </div>
           <div className="calendar-progress" aria-label={`달성률 ${percentage}%`}>
-            <svg width="120" height="120" viewBox="0 0 120 120" role="img">
+            <svg width="96" height="96" viewBox="0 0 120 120" role="img">
               <g transform="rotate(-90,60,60)">
                 <circle cx="60" cy="60" r="44" stroke="#333" strokeWidth="12" fill="none" />
                 <circle
@@ -196,7 +194,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* ✅ 설문 카드(크기만 소폭 축소) */}
+        {/* 중앙 설문 카드 (설문 필요 시) */}
         {needSurvey && (
           <motion.div
             className="card dark-card survey-card clickable-card"
@@ -213,9 +211,9 @@ const MainDashboardPage = () => {
           </motion.div>
         )}
 
-        {/* 루틴 빌더 */}
+        {/* 설문이 없을 때 중앙을 채울 빌더 카드 */}
         <motion.div
-          className="card dark-card builder-card clickable-card"
+          className="card dark-card builder-card clickable-card center-on-empty"
           onClick={() => navigate('/exercise')}
           whileHover={{ scale: 1.02 }}
         >
@@ -226,21 +224,21 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 통계 보기 — ✅ Y축 축소 적용 */}
+        {/* 통계 (도넛 아래로 붙여 빈공간 최소화) */}
         <motion.div
           className="card dark-card stats-card clickable-card"
           onClick={() => navigate('/statistics')}
           whileHover={{ scale: 1.02 }}
         >
           <FaChartBar className="card-icon" />
-          <div className="card-title" style={{ marginBottom: 8 }}>통계 보기</div>
+          <div className="card-title" style={{ marginBottom: 6 }}>통계 보기</div>
           <div className="card-subtitle" style={{ marginBottom: 6 }}>날짜별 운동시간(분) — 항목별 스택</div>
-          <ResponsiveContainer width="100%" height={180}>
+          <ResponsiveContainer width="100%" height={172}>
             <BarChart data={statsData} margin={{ left: 4, right: 8, top: 4, bottom: 0 }}>
               <XAxis dataKey="date" tick={{ fill: '#e0e0e0' }} />
               <YAxis
                 tick={{ fill: '#e0e0e0' }}
-                domain={[0, yMax]}                 // ✅ 축소된 범위
+                domain={[0, yMax]}
                 tickCount={5}
                 allowDecimals={false}
                 label={{ value: '시간(분)', angle: -90, position: 'insideLeft', fill: '#e0e0e0' }}
@@ -254,7 +252,7 @@ const MainDashboardPage = () => {
           </ResponsiveContainer>
         </motion.div>
 
-        {/* 운동 기록 */}
+        {/* 운동 기록 (넓게 배치) */}
         <motion.div
           className="card dark-card records-card clickable-card"
           onClick={() => navigate('/records')}
@@ -265,7 +263,12 @@ const MainDashboardPage = () => {
           <div className="card-subtitle">누적 기록을 한눈에 확인하세요.</div>
           <div className="sparkbar" aria-hidden>
             {recentRecords.map((r, idx) => (
-              <div key={r.date + idx} className="sparkbar-bar" style={{ height: Math.max(14, Math.min(56, r.minutes)) }} title={`${r.date} • ${r.minutes}분`} />
+              <div
+                key={r.date + idx}
+                className="sparkbar-bar"
+                style={{ height: Math.max(14, Math.min(56, r.minutes)) }}
+                title={`${r.date} • ${r.minutes}분`}
+              />
             ))}
           </div>
           <div className="recent-list">
@@ -314,7 +317,7 @@ const MainDashboardPage = () => {
           <p className="my-rank">17등 / 전체</p>
         </motion.div>
 
-        {/* AI 챗봇 */}
+        {/* AI 챗봇 카드 */}
         <motion.div
           className="card dark-card chatbot-card clickable-card"
           onClick={() => navigate('/chatbot')}
@@ -326,7 +329,7 @@ const MainDashboardPage = () => {
         </motion.div>
       </div>
 
-      {/* 우하단 챗봇 버튼 */}
+      {/* 우하단 플로팅 챗봇 버튼 */}
       <div className="chatbot-section" onClick={() => navigate('/chatbot')} aria-label="AI 챗봇 열기">
         <div className="chatbot-bubble"><FaRobot /></div>
         <p className="chatbot-label">I봇</p>
