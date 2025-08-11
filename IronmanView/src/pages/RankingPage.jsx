@@ -12,10 +12,10 @@ const RankingPage = () => {
   const [modalSearch, setModalSearch] = useState('');
   const [allData, setAllData] = useState([
     // — 더미 데이터 유지 —
-    { id: 1, name: '김철수', score: 98 },
-    { id: 2, name: '이영희', score: 92 },
-    { id: 3, name: '박민준', score: 89 },
-    { id: 4, name: '최수정', score: 85 },
+    { id: 1, name: '대상혁', score: 100 },
+    { id: 2, name: '정지훈', score: 96 },
+    { id: 3, name: '김건우', score: 92 },
+    { id: 4, name: '김허수', score: 89 },
     { id: 5, name: '정하늘', score: 82 },
     { id: 6, name: '오지훈', score: 78 },
     { id: 7, name: '한유진', score: 75 },
