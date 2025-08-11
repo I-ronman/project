@@ -92,8 +92,8 @@ const ExerciseExplore = () => {
   
   // 전역 변수 감지
   const { surveyDone } = useContext(AuthContext);
-  const leftBtnLabel = surveyDone ? '루틴 추천받기' : '설문조사 하러가기';
-  const leftBtnPath  = surveyDone ? '/chatbot'     : '/survey';
+  const leftBtnLabel = '루틴 추천받기';
+  const leftBtnPath  = '/chatbot';
 
   // ✅ 화면 크기 변경 감지
   useEffect(() => {
@@ -608,7 +608,14 @@ const ExerciseExplore = () => {
             <div className='create-row-exp'>
               <button
                 className="secondary-btn-exp"
-                onClick={() => navigate(leftBtnPath)}
+                onClick={() => {
+                  navigate(leftBtnPath);
+                }}
+                disabled={!surveyDone} // 🔹 설문 미완료 시 버튼 비활성화
+                style={{
+                  opacity: surveyDone ? 1 : 0.5, // 🔹 시각적으로 흐리게
+                  cursor: surveyDone ? "pointer" : "not-allowed"
+                }}
               >
                 {leftBtnLabel}
               </button>
@@ -616,7 +623,7 @@ const ExerciseExplore = () => {
                 className="create-btn-exp"
                 onClick={() => {
                   const newRoutine = {
-                    routineId: null,  // 프론트 임시 ID
+                    routineId: null,  
                     title: newRoutineTitle || '새 루틴',
                     summary: newRoutineSummary || '내 운동 루틴',
                     exercises: [],
@@ -634,6 +641,19 @@ const ExerciseExplore = () => {
                 만들기
               </button>
             </div>
+            {/* ✅ 설문 유도 문구 (설문 안 했을 때만) */}
+            {!surveyDone && (
+              <p className="survey-hint-exp">
+                설문조사를 해야 루틴을 추천받을 수 있습니다.
+                <button
+                  className="survey-link-exp"
+                  onClick={() => navigate('/survey',{ state: { from: '/exercise' } })}
+                  type="button"
+                >
+                  설문조사 하러가기
+                </button>
+              </p>
+            )}
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 // project/IronmanView/src/pages/SurveyPage.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import StepIntro from '../components/survey/StepIntro';
 import Step1 from '../components/survey/Step1';
 import Step2 from '../components/survey/Step2';
@@ -21,7 +21,10 @@ function SurveyPage() {
   const [step, setStep] = useState(0);
   const totalSteps = 11;
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // location.state?.from 이 없으면 기본값을 '/main'
+  const fromPage = location.state?.from || '/main';
   
   const [direction, setDirection] = useState('forward');
 
@@ -104,6 +107,7 @@ function SurveyPage() {
     />,
     <StepFinal
       surveyData={surveyData}
+      fromPage={fromPage}
     />
   ];
 

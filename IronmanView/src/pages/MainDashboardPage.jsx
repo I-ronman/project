@@ -200,7 +200,7 @@ const MainDashboardPage = () => {
         {needSurvey && (
           <motion.div
             className="card dark-card survey-card clickable-card"
-            onClick={() => navigate('/survey')}
+            onClick={() => navigate('/survey', { state: { from: '/main' } })}
             whileHover={{ scale: 1.01 }}
           >
             <span className="survey-badge">필수</span>
