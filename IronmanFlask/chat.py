@@ -8,7 +8,7 @@ from flask_cors import CORS,cross_origin
 import pymysql
 from collections import deque
 from user_answer import user_answer
-
+import json
 db = pymysql.connect(
 	host='project-db-cgi.smhrd.com',
     port=3307,
@@ -225,7 +225,7 @@ def routine_parsing(data):
     ]
     
     )
-    return jsonify(response.choices[0].message.function_call.arguments)
+    return json.loads(response.choices[0].message.function_call.arguments)
 
 
 def make_routine(question):
