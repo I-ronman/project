@@ -1,287 +1,220 @@
 /*project/IronmanView/src/styles/PostureAnalysis.css*/
-/* 메인 컨테이너 */
+
+/* ===== 메인 컨테이너 ===== */
 .posture-container {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: white;
-  }
-  
-  /* 좌측 패널 */
-  .posture-left {
-    width: 430px;
-    padding: 16px;
-    background: linear-gradient(
-      rgba(0, 0, 0, 0.4), 
-      rgba(0, 0, 0, 0.4)
-    );
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* 헤더 */
-  .posture-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  
-  .logo {
-    width: 60px;
-    height: auto;
-  }
-  
-  .settings-icon {
-    font-size: 18px;
-  }
-  
-  /* 운동/실패 횟수 */
-  .posture-stats {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .stat-box {
-    background: rgba(0,0,0,.35);         /* was #1e1e1e */
-    border: 1px solid rgba(255,255,255,.08);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border-radius: 8px;
-    padding: 8px;
-    flex: 1;
-    text-align: center;
-    color: white;
-  }
-  
-  .stat-label {
-    font-size: 14px;
-    color: #ccc;
-  }
-  
-  .stat-count {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  /* 피드백 음성 */
-  .feedback-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0,0,0,.35);         /* was #1e1e1e */
-    border: 1px solid rgba(255,255,255,.08);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .feedback-button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: white;
-    cursor: pointer;
-  }
-  
-  /* 운동 버튼 목록 */
-  .exercise-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  
-  .exercise-btn {
-    background-color: #333;
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .exercise-btn.active {
-    background-color: #fbd157;
-    color: #000;
-  }
-  
-  /* 가이드 영상 */
-  .guide-video {
-    width: 100%;
-    aspect-ratio: 1 / 1.2;
-    background-color: black;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  
-  .video-placeholder {
-    text-align: center;
-    padding: 40px 0;
-    background-color: #333;
-    border-radius: 12px;
-  }
-  
-  /* 우측 카메라 영역 */
-  .posture-right {
-    flex: 1;
-    background-color: #2f2f2f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;   /* 안쪽 여백 */
-    margin: 20px;    /* 바깥 여백 */
-    box-sizing: border-box; /* 패딩 포함해서 크기 계산 */
-    border-radius: 8px; /* 모서리 둥글게(선택) */
-    position: relative;
-    overflow: visible;
-  }
-  
-  .camera-placeholder {
-    width: 90%;
-    height: 90%;
-    background-color: #aaa;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #222;
-  }
-  
-  .capture-thumbnails {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('/images/bg/fitness_center5.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
 }
 
-.thumbnail-img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  cursor: pointer;
-  border: 2px solid transparent;
+/* ===== 좌측 패널 ===== */
+.posture-left {
+  width: 430px;
+  padding: 16px;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+  display: flex;
+  flex-direction: column;
 }
 
-.thumbnail-img:hover {
-  border-color: #aaa;
+/* 헤더 */
+.posture-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
+.logo { width: 60px; height: auto; }
+.settings-icon { font-size: 18px; }
 
-.capture-preview {
-  margin-top: 4px;
+/* 통계 박스 */
+.posture-stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.stat-box {
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 8px;
+  padding: 8px;
+  flex: 1;
   text-align: center;
+  color: white;
 }
+.stat-label { font-size: 14px; color: #ccc; }
+.stat-count { font-size: 18px; font-weight: bold; }
 
-.preview-img {
-  width: 400px;
-  max-width: 100%;
-  border: 1px solid #ccc;
-  margin-bottom: 8px;
-}
-
-.video-status-bar {
+/* 피드백 토글 */
+.feedback-toggle {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1e1e1e;
-  color: white;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   padding: 8px 12px;
-  border-radius: 5px;
+  border-radius: 8px;
   margin-bottom: 10px;
 }
-
-.progress-info {
-  flex-grow: 1;
-}
-
-.progress-info span {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-
-.progress-info progress {
-  width: 100%;
-  height: 8px;
-}
-
-.timer-info {
-  font-size: 14px;
-  white-space: nowrap;
-  margin-left: 12px;
-}
-
-.video-container {
-  position: static;
-  display: inline-block;
-  width: fit-content;
-  
-}
-
-.cam-viewport {
-  position: static;
-  display: inline-block;   /* 내용(비디오/캔버스) 너비에 맞춤 */
-  overflow: visible;
-}
-
-/* 비디오/캔버스가 블록으로 잡히게 */
-.cam-viewport video,
-.cam-viewport canvas {
-  display: block;
-  max-width: 100%;
-}
-
-.video-status-bar {
-  position: absolute;
-  top: clamp(8px, 2vw, 16px);  /* 화면 줄어들면 자동으로 살짝 붙게 */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  display: flex;
-  gap: 20px;
-  background-color: rgba(0, 0, 0, 0.6);
+.feedback-button {
+  background: none;
+  border: none;
+  font-size: 20px;
   color: white;
-  padding: 8px 14px;
-  border-radius: 8px;
-  z-index: 10;
-  align-items: center;
-  font-weight: bold;
-  font-size: 16px;
+  cursor: pointer;
 }
 
-.video-status-bar progress {
-  width: 100px;
-  height: 10px;
-  margin-left: 8px;
-}
-
-.progress-info {
+/* 운동 버튼 목록 */
+.exercise-buttons {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.exercise-btn {
+  background-color: #333;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.exercise-btn.active {
+  background-color: #fbd157;
+  color: #000;
 }
 
-.start-overlay {
-  position: absolute;
-  inset: 0;
+/* 가이드 영상 프레임 (좌측 패널 내부용, 필요 시 사용) */
+.guide-video {
+  width: 100%;
+  aspect-ratio: 1 / 1.2;
+  background-color: black;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.video-placeholder {
+  text-align: center;
+  padding: 40px 0;
+  background-color: #333;
+  border-radius: 12px;
+}
+
+/* ===== 우측 카메라 영역 ===== */
+.posture-right {
+  flex: 1;
+  background-color: #2f2f2f;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;   
+  margin: 20px;    
+  box-sizing: border-box;
+  border-radius: 8px;
+  position: relative;
+  overflow: visible;
+}
+.camera-placeholder {
+  width: 90%;
+  height: 90%;
+  background-color: #aaa;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #222;
+}
+
+.video-container { position: static; display: inline-block; width: fit-content; }
+.cam-viewport { position: static; display: inline-block; overflow: visible; }
+.cam-viewport video, .cam-viewport canvas { display: block; max-width: 100%; }
+
+/* 시작 오버레이 */
+.start-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
   backdrop-filter: blur(2px);
 }
 .start-btn {
-  font-size: 24px;
-  padding: 12px 28px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+  font-size: 24px; padding: 12px 28px;
+  border-radius: 8px; border: none; cursor: pointer;
 }
+
+/* ===== 캡처 썸네일 ===== */
+.capture-thumbnails { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.thumbnail-img { width: 80px; height: 80px; object-fit: cover; cursor: pointer; border: 2px solid transparent; }
+.thumbnail-img:hover { border-color: #aaa; }
+.capture-preview { margin-top: 4px; text-align: center; }
+.preview-img { width: 400px; max-width: 100%; border: 1px solid #ccc; margin-bottom: 8px; }
+
+/* ===== 실시간 자세 막대 (운동 중에만 표시) ===== */
+.realtime-pills-card {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #1f2937;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.realtime-row {
+  display: flex;
+  flex-wrap: wrap;      /* 길면 자동 줄바꿈 */
+  gap: 6px 8px;
+  margin-bottom: 0;
+}
+.pill-seg {
+  width: 16px; height: 10px;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  opacity: 0.95;
+}
+.pill-seg.good { background: #22c55e; }  
+.pill-seg.bad  { background: #ef4444; }  
+
+/* =====  진행률/타이머 바  ===== */
+.video-status-bar-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f2937;                
+  padding: 10px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  color: #f3f4f6;
+  font-size: 20px;
+  gap: 20px;
+}
+.progress-container { flex: 1; }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-weight: 600; margin-bottom: 6px;
+}
+.progress-percent { color: #10b981; }   
+.progress-bar {
+  position: relative;
+  background: #374151;
+  height: 20px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+.progress-text { margin-top: 1px; font-size: 16px; opacity: 0.8; }
+
+.timer-container {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 700; color: #facc15; 
+}
+.timer-icon { font-size: 18px; }
+
 

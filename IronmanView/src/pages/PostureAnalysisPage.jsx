@@ -92,6 +92,7 @@ const PostureAnalysisPage = () => {
   const currentExercise = routine?.exercises?.[currentExerciseIndex];
   const totalReps = routine?.exercises?.reduce((acc, cur) => acc + ((cur.reps ?? 0) * (cur.sets ?? 1)), 0) ?? 0;
   const [exerciseResults, setExerciseResults] = useState({}); // { [exerciseId]: {goodCount, badCount} }
+  const [poseHistory, setPoseHistory] = useState([]);
 
   const [reportImg, setReportImg] = useState('');
   const hasSavedRef = useRef(false);
@@ -106,17 +107,6 @@ const PostureAnalysisPage = () => {
     const t = setInterval(() => setRemainingTime(prev => (prev <= 1 ? 0 : prev - 1)), 1000);
     return () => clearInterval(t);
   }, [isStarted, remainingTime]);
-
-  // 가이드 영상 목록
-  useEffect(() => {
-    axios.get('http://localhost:329/web/api/posture/list', { withCredentials: true })
-      .then((res) => {
-        const list = res.data || [];
-        setExerciseList(list);
-        if (list.length > 0) setSelectedVideo(list[0].videoUrl);
-      })
-      .catch((err) => console.error('운동 리스트 불러오기 실패:', err));
-  }, []);
 
   const currentExerciseId = currentExercise?.exerciseId;
 
@@ -147,11 +137,11 @@ const PostureAnalysisPage = () => {
     }
   }));
   setGoodCount(v => v + 1);
-  setLiveDots(d => [...d, { type: 'good', id: Date.now() }].slice(-60));
+  setPoseHistory(prev => [...prev, { type: 'good', id: Date.now() }]);
   clampInc();
 };
 
-  const onBadPosture = () => {
+const onBadPosture = () => {
   if (!canCountNow()) return;
   setExerciseResults(prev => ({
     ...prev,
@@ -161,9 +151,10 @@ const PostureAnalysisPage = () => {
     }
   }));
   setBadCount(v => v + 1);
-  setLiveDots(d => [...d, { type: 'bad', id: Date.now() }].slice(-60));
+  setPoseHistory(prev => [...prev, { type: 'bad', id: Date.now() }]);
   clampInc();
 };
+
 
   // 총 횟수 도달 시 자동 저장
   useEffect(() => {
@@ -266,6 +257,15 @@ const PostureAnalysisPage = () => {
             </div>
 
             <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
+               {isStarted && (
+                  <div className="realtime-pills-card">
+                    <div className="realtime-row">
+                      {poseHistory.map((p, i) => (
+                        <span key={p.id ?? i} className={`pill-seg ${p.type}`} />
+                      ))}
+                    </div>
+                  </div>
+                )}
 
             <div className="exercise-buttons">
               {exerciseList.map((exercise, idx) => (
@@ -307,15 +307,33 @@ const PostureAnalysisPage = () => {
 
           <div className="posture-right">
             <div className="video-container">
-              <div className="video-status-bar">
-                <div className="progress-info">
-                  <span>진행률: {doneReps} / {totalReps}</span>
-                  <progress value={doneReps} max={totalReps}></progress>
+              <div className="video-status-bar-modern">
+              <div className="progress-container">
+                <div className="progress-label">
+                  <span>📊 진행률</span>
+                  <span className="progress-percent">
+                    {Math.round((doneReps / totalReps) * 100)}%
+                  </span>
                 </div>
-                <div className="timer-info">
-                  ⏱ 남은 시간: {Math.floor(remainingTime / 60)}:{String(remainingTime % 60).padStart(2, '0')}
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${(doneReps / totalReps) * 100}%` }}
+                  ></div>
+                </div>
+                <div className="progress-text">
+                  {doneReps} / {totalReps} 회
                 </div>
               </div>
+              <div className="timer-container">
+                <span className="timer-icon">⏱</span>
+                <span className="timer-text">
+                  {Math.floor(remainingTime / 60)}:
+                  {String(remainingTime % 60).padStart(2, '0')}
+                </span>
+              </div>
+            
+            </div>
 
               <TrainingCamTest
                 isStarted={isStarted}
@@ -349,14 +367,6 @@ const PostureAnalysisPage = () => {
               )}
             </div>
           </div>
-          {isStarted && (
-          <div className="live-dots">
-            {liveDots.map((d, i) => (
-              <span key={d.id ?? i} className={`dot ${d.type}`} />
-            ))}
-          </div>
-            )}
-        
         </div>
       </PageWrapper>
     </CountContext.Provider>
