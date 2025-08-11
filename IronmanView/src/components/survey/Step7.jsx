@@ -14,7 +14,9 @@ const Step7 = ({ squatLevel, setSquatLevel, nextStep }) => {
 
   const handleClick = (value) => {
     setSquatLevel(value);
-    nextStep();
+    if(value){
+      nextStep();
+    }
   };
 
   return (

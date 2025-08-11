@@ -139,14 +139,24 @@
 
 /* 시작 오버레이 */
 .start-overlay {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  backdrop-filter: blur(2px);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999; 
+  pointer-events: auto; 
 }
+
 .start-btn {
-  font-size: 24px; padding: 12px 28px;
-  border-radius: 8px; border: none; cursor: pointer;
+  z-index: 10000; 
 }
+
 
 /* ===== 캡처 썸네일 ===== */
 .capture-thumbnails { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -227,6 +237,109 @@
   background: rgba(0,0,0,0.75);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
+}
+
+.exercise-now-next {
+  position: absolute;
+  top: 10px;       
+  left: 10px;     
+  display: flex;
+  gap: 10px;
+  z-index: 9999;   
+}
+
+.exercise-now-next .card {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  min-width: 120px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.exercise-now-next .label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.exercise-now-next .title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.exercise-now-next .info {
+  font-size: 13px;
+}
+
+.exercise-now-next .card.active {
+  background: #fff;
+  color: #000;
+  text-shadow: none;
+}
+.exercise-now-next .card.active .label {
+  color: #000;
+}
+.exercise-now-next .card.active .title {
+  color: #000;
+}
+.exercise-now-next .card.active .info {
+  color: #000;
+}
+
+/* ⬇️ 이 블록으로 교체 */
+.exercise-carousel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 9999;
+
+  --card-w: 180px;   
+  --gap: 10px;       
+  width: calc(var(--card-w) * 3 + var(--gap) * 2);
+
+  display: block;
+  overflow-x: auto;      
+  overflow-y: hidden;
+  white-space: normal;
+  padding-bottom: 6px;
+  scroll-behavior: smooth; 
+}
+
+.exercise-carousel .carousel-track {
+  display: flex;
+  gap: var(--gap);
+}
+
+.exercise-now-next .card {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  min-width: 140px; 
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.exercise-now-next .card {
+  flex: 0 0 var(--card-w);
+  width: var(--card-w);
+  min-width: var(--card-w);
+}
+
+.exercise-now-next .card.active {
+  background: #fff;
+  color: #000;
+  text-shadow: none;
+}
+.exercise-now-next .card.active .label,
+.exercise-now-next .card.active .title,
+.exercise-now-next .card.active .info {
+  color: #000;
+}
+
+.exercise-carousel::-webkit-scrollbar { height: 6px; }
+.exercise-carousel::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 999px;
 }
 
 .end-card{

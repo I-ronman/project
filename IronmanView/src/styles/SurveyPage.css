@@ -202,7 +202,3 @@
   .survey-card.next { display: none; }
 }
 
-/* 모바일/좁은 화면에서는 숨김 */
-@media (max-width: 880px) {
-  .inline-arrow { display: none; }
-}

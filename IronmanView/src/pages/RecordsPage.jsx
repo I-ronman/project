@@ -280,11 +280,26 @@ const RecordsPage = () => {
       {/* 상세 모달 */}
       {modalOpen && modalRecord && (
         <div className="modal-backdrop" onClick={closeModal}>
-          <div className="modal-card" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-            {/* ✖ 위치는 그대로(우상단 고정) */}
-            <button className="modal-close" onClick={closeModal} aria-label="닫기">×</button>
+          <div
+            className="modal-card"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* ✖ 버튼 - z-index 보강 + type 명시 */}
+            <button
+              type="button"
+              className="modal-close"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeModal();
+              }}
+              aria-label="닫기"
+            >
+              ×
+            </button>
 
-            {/* ✅ 헤더를 좌우 배치로 변경: 좌측 제목, 우측에 날짜(✖과 겹치지 않도록 우측 패딩 확보) */}
+            {/* ✅ 헤더를 좌우 배치로: 좌측 제목, 우측 날짜(✖과 겹치지 않도록 우측 패딩 확보) */}
             <div className="modal-header">
               <h3>자세 확인하기</h3>
               <div className="modal-date">날짜: {modalRecord.date}</div>
@@ -297,6 +312,7 @@ const RecordsPage = () => {
                 onClick={() => { setModalTab('good'); setSlideIndex(0); }}
                 role="tab"
                 aria-selected={modalTab === 'good'}
+                type="button"
               >
                 좋은 자세
               </button>
@@ -305,6 +321,7 @@ const RecordsPage = () => {
                 onClick={() => { setModalTab('bad'); setSlideIndex(0); }}
                 role="tab"
                 aria-selected={modalTab === 'bad'}
+                type="button"
               >
                 나쁜 자세
               </button>
@@ -316,8 +333,12 @@ const RecordsPage = () => {
 
               {currentSlides.length > 1 && (
                 <>
-                  <button className="gallery-nav nav-prev" onClick={prevSlide} aria-label="이전">&lsaquo;</button>
-                  <button className="gallery-nav nav-next" onClick={nextSlide} aria-label="다음">&rsaquo;</button>
+                  <button className="gallery-nav nav-prev" onClick={prevSlide} aria-label="이전" type="button">
+                    &lsaquo;
+                  </button>
+                  <button className="gallery-nav nav-next" onClick={nextSlide} aria-label="다음" type="button">
+                    &rsaquo;
+                  </button>
                 </>
               )}
 
