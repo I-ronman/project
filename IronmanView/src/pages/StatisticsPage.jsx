@@ -51,7 +51,7 @@ const StatisticsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    // 예: axios.get(`/web/api/stats?...`).then(res => setData(res.data))
+    // TODO: 백엔드 연동 시 axios로 교체
     setData(dummyData);
   }, []);
 
@@ -64,7 +64,7 @@ const StatisticsPage = () => {
     });
   }, [data, startDate, endDate]);
 
-  // 이번 기간 등장 운동별 합계
+  // 운동별 합계(시간)
   const exerciseTotals = useMemo(() => {
     const acc = {};
     filteredData.forEach(d => {
@@ -73,26 +73,27 @@ const StatisticsPage = () => {
     return acc;
   }, [filteredData]);
 
-  // 라벨은 많이 한 순으로(가독성)
-  const chartLabels = useMemo(() => (
-    Object.entries(exerciseTotals).sort((a,b)=>b[1]-a[1]).map(([name]) => name)
-  ), [exerciseTotals]);
+  // 라벨: 많이 한 순
+  const chartLabels = useMemo(
+    () => Object.entries(exerciseTotals).sort((a,b)=>b[1]-a[1]).map(([name]) => name),
+    [exerciseTotals]
+  );
 
-  // ✅ 시그니처: "기간(시작~끝) + 현재 라벨셋" → 이 값이 바뀌면 팔레트 셔플/재배치
+  // 팔레트 시그니처(기간+라벨셋)
   const signature = useMemo(() => {
     const startSig = startDate ? startDate.toISOString().slice(0,10) : '';
     const endSig = endDate ? endDate.toISOString().slice(0,10) : '';
     return `${startSig}_${endSig}__${chartLabels.join('|')}`;
   }, [startDate, endDate, chartLabels]);
 
-  // ✅ 동적 색 매핑 (팔레트 셔플 + 부족분 HSL 생성)
+  // 동적 색상 매핑
   const colorMap = useMemo(() => buildColorMap(chartLabels, signature), [chartLabels, signature]);
 
   // 차트 데이터
   const chartData = useMemo(() => {
     const values = chartLabels.map((label) => exerciseTotals[label]);
     const bg = chartLabels.map((label) => colorMap[label]);
-    const borders = bg.map((c) => c.startsWith('#') ? hexToRgba(c, 0.35) : lightenHsl(c, 8));
+    const borders = bg.map((c) => c.startsWith('#') ? hexToRgba(c, 0.45) : lightenHsl(c, 6));
     return {
       labels: chartLabels,
       datasets: [{
@@ -249,7 +250,7 @@ const StatisticsPage = () => {
         </div>
       </div>
 
-      {/* 🔎 기간/라벨셋 기반 동적 커스텀 레전드 */}
+      {/* 커스텀 레전드 */}
       <div className="dynamic-legend">
         {chartLabels.map((label) => (
           <button

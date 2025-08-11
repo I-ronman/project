@@ -24,14 +24,13 @@ import {
 } from 'recharts';
 
 /* ----------------------- 더미 데이터 (프론트용) ----------------------- */
-// 날짜별(최근 7일) 상체/코어/하체 각각 소요 시간(분)
 const statsData = [
-  { date: '08-01', upper: 18, core: 6,  lower: 8 },
+  { date: '08-01', upper: 18, core: 6,  lower: 8  },
   { date: '08-02', upper: 12, core: 10, lower: 14 },
-  { date: '08-03', upper: 20, core: 8,  lower: 8 },
+  { date: '08-03', upper: 20, core: 8,  lower: 8  },
   { date: '08-04', upper: 9,  core: 5,  lower: 22 },
   { date: '08-05', upper: 14, core: 6,  lower: 12 },
-  { date: '08-06', upper: 16, core: 12, lower: 9 },
+  { date: '08-06', upper: 16, core: 12, lower: 9  },
   { date: '08-07', upper: 8,  core: 4,  lower: 10 },
 ];
 
@@ -41,27 +40,25 @@ const exerciseColors = {
   lower: '#00C9FF', // 하체
 };
 
-// 최근 운동 기록(간단 리스트 + 스파크바)
+// 최근 기록
 const recentRecords = [
   { date: '08-07', minutes: 20, tags: ['#하체', '#유산소'] },
   { date: '08-06', minutes: 35, tags: ['#상체', '#코어'] },
   { date: '08-05', minutes: 30, tags: ['#코어', '#전신'] },
 ];
 
-// 커뮤니티 프리뷰
 const posts = [
   { title: '오늘 첫 운동 완료했어요!', content: '스트레칭부터 유산소까지 알차게 했습니다' },
   { title: '오운완 인증합니다!', content: '푸쉬업, 플랭크, 스쿼트 루틴 돌림!' },
 ];
 
-// 랭킹 프리뷰
 const previewTop3 = [
   { id: 1, name: '대상혁', score: 100 },
   { id: 2, name: '정지훈', score: 96 },
   { id: 3, name: '김건우', score: 92 },
 ];
 
-// 주간 달성률/도넛 예시
+// 주간 달성률(도넛)
 const percentage = 72;
 const weekData = [
   { dayLabel: '월', exercised: true },
@@ -73,22 +70,16 @@ const weekData = [
   { dayLabel: '일', exercised: false, hasRoutine: true },
 ];
 
-// 오늘의 루틴 예시 (null이면 없음)
-const todayRoutine = {
-  name: '상체+코어 집중 루틴',
-  // name: null, // <- 루틴 없을 때 테스트
-};
+// 오늘의 루틴 예시
+const todayRoutine = { name: '상체+코어 집중 루틴' };
 
 /* ----------------------- Recharts 커스텀 툴팁 ----------------------- */
 const ChartTooltip = ({ active, payload, label }) => {
   if (!active || !payload || payload.length === 0) return null;
-
   const items = payload
     .map((p) => ({ name: p.name, value: p.value, color: p.fill }))
     .filter((i) => i.value > 0);
-
   const total = items.reduce((acc, cur) => acc + cur.value, 0);
-
   return (
     <div className="recharts-tooltip">
       <div className="tooltip-title">{label}</div>
@@ -114,8 +105,16 @@ const MainDashboardPage = () => {
 
   const needSurvey = useMemo(() => !user?.hasSurvey, [user]);
   const gridClass = needSurvey ? 'has-survey' : 'no-survey';
-
   const hasTodayRoutine = Boolean(todayRoutine?.name);
+
+  // ✅ Y축 “적당히 축소” — 데이터 합계의 최대값을 기준으로 여유 5~10분만 추가
+  const yMax = useMemo(() => {
+    const maxTotal = Math.max(
+      ...statsData.map(d => (d.upper || 0) + (d.core || 0) + (d.lower || 0))
+    );
+    const padded = Math.ceil((maxTotal + 8) / 5) * 5; // 5분 단위 라운딩
+    return Math.max(25, padded); // 최소 25분
+  }, []);
 
   return (
     <div className="main-container dark-background">
@@ -148,20 +147,14 @@ const MainDashboardPage = () => {
           <div className="start-title">
             오늘의 루틴 <span className="start-accent">시작하기</span>
           </div>
-
           {hasTodayRoutine ? (
-            <div className="start-desc">
-              오늘 예정된 루틴: <strong>{todayRoutine.name}</strong>
-            </div>
+            <div className="start-desc">오늘 예정된 루틴: <strong>{todayRoutine.name}</strong></div>
           ) : (
-            <div className="start-desc">
-              오늘의 루틴이 없습니다. <br />
-              루틴을 직접 만들거나 추천받아보세요.
-            </div>
+            <div className="start-desc">오늘의 루틴이 없습니다. <br />루틴을 직접 만들거나 추천받아보세요.</div>
           )}
         </motion.div>
 
-        {/* 주간 달성률 */}
+        {/* 주간 달성률(도넛) */}
         <motion.div className="card dark-card donut-card" whileHover={{ scale: 1.01 }}>
           <div className="card-header">
             <FaCalendarAlt className="card-icon" />
@@ -203,7 +196,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 설문 카드 */}
+        {/* ✅ 설문 카드(크기만 소폭 축소) */}
         {needSurvey && (
           <motion.div
             className="card dark-card survey-card clickable-card"
@@ -220,7 +213,7 @@ const MainDashboardPage = () => {
           </motion.div>
         )}
 
-        {/* 루틴 짜기/추천받기 */}
+        {/* 루틴 빌더 */}
         <motion.div
           className="card dark-card builder-card clickable-card"
           onClick={() => navigate('/exercise')}
@@ -233,7 +226,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 통계 보기 */}
+        {/* 통계 보기 — ✅ Y축 축소 적용 */}
         <motion.div
           className="card dark-card stats-card clickable-card"
           onClick={() => navigate('/statistics')}
@@ -245,7 +238,13 @@ const MainDashboardPage = () => {
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={statsData} margin={{ left: 4, right: 8, top: 4, bottom: 0 }}>
               <XAxis dataKey="date" tick={{ fill: '#e0e0e0' }} />
-              <YAxis tick={{ fill: '#e0e0e0' }} label={{ value: '시간(분)', angle: -90, position: 'insideLeft', fill: '#e0e0e0' }} />
+              <YAxis
+                tick={{ fill: '#e0e0e0' }}
+                domain={[0, yMax]}                 // ✅ 축소된 범위
+                tickCount={5}
+                allowDecimals={false}
+                label={{ value: '시간(분)', angle: -90, position: 'insideLeft', fill: '#e0e0e0' }}
+              />
               <RechartsTooltip content={<ChartTooltip />} />
               <Legend wrapperStyle={{ color: '#e0e0e0' }} />
               <Bar dataKey="upper" name="상체" stackId="s" fill={exerciseColors.upper} />
