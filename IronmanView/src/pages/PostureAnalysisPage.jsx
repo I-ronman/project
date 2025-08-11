@@ -254,9 +254,9 @@ const PostureAnalysisPage = () => {
         <div className="posture-container">
           <div className="posture-left">
             <header className="posture-header">
-              <img className= 'logo' src='./images/ironman_logo.png'></img>
+              <img className= 'logo' src='./images/ironman_logo4.png' alt="로고" onClick={()=>navigate('/main')} style={{cursor: 'pointer'}}></img>
               <h2>운동 및 자세분석</h2>
-              <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
+              <div className="settings-icon" onClick={() => navigate('/settings')} style={{cursor: 'pointer'}}>⚙️</div>
             </header>
 
             <div className="posture-stats">

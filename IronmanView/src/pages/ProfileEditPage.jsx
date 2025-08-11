@@ -114,27 +114,32 @@ const ProfileEditPage = () => {
   };
 
   return (
-    <PageWrapper>
+    <div className='profile-edit-page'>
       <div className="profile-edit-container">
-
+      
         {/* 프로필 헤더 */}
         <div className="profile-header">
-          <div className="image-container">
-            <label htmlFor="profileImageInput">
-              <img
-                src={previewImage}
-                alt="프로필"
-                className="profile-img"
+          <div className='image-stock'>
+            <div className="image-container">
+              <label htmlFor="profileImageInput">
+                <img
+                  src={previewImage}
+                  alt="프로필"
+                  className="profile-img"
+                />
+                <div className="image-hover-overlay">사진 변경하기</div>
+              </label>
+              <input
+                id="profileImageInput"
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
               />
-              <div className="image-hover-overlay">사진 변경하기</div>
-            </label>
-            <input
-              id="profileImageInput"
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={handleImageChange}
-            />
+            </div>
+            <button className="profile-save-button" onClick={handleProfileSave}>
+              프로필 사진 저장
+            </button>
           </div>
           <div className="basic-info-card">
             <p>이름: {user.name}</p>
@@ -148,9 +153,7 @@ const ProfileEditPage = () => {
             </p>
             <p>생년월일: {user.birthdate}</p>
           </div>
-          <button className="profile-save-button" onClick={handleProfileSave}>
-            프로필 사진 저장
-          </button>
+          
         </div>
 
         {/* 신체 정보 & 설문 */}
@@ -340,7 +343,7 @@ const ProfileEditPage = () => {
           저장하기
         </button>
       </div>
-    </PageWrapper>
+    </div>
   );
 };
 

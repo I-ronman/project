@@ -37,7 +37,6 @@
 
 .survey-back-button,
 .right-label {
-  min-width: 30px;
   text-align: center;
   white-space: nowrap;
 }
@@ -46,6 +45,7 @@
   transform: translateX(-4px);  /* ✅ 왼쪽으로 살짝 움직임 */
   color: #d3ff00;               /* ✅ 강조 색상 (형광 노랑 등) */
 }
+
 
 .header-title {
   position: absolute;
@@ -60,6 +60,7 @@
   white-space: nowrap;
   cursor: pointer;
   transition: transform 0.2s ease;
+  
 }
 
 .right-label:hover {
@@ -176,7 +177,7 @@
   transition: transform .15s ease, opacity .2s ease;
 }
 .inline-arrow:hover:not(:disabled) { transform: translateY(-50%) scale(1.06); }
-.inline-arrow:disabled { opacity: .35; cursor: default; }
+.inline-arrow:disabled { opacity: .35; cursor: not-allowed; pointer-events: all; }
 
 /* 카드 바깥쪽 가장자리에 살짝 붙여두기 */
 .inline-arrow.left  { left: 10px; }   /* 필요하면 -값으로 더 붙이기 */
