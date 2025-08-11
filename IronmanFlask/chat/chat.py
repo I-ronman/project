@@ -192,6 +192,35 @@ def analyze_pose_with_image(img, question):
 
     return response.choices[0].message.content
 
+def chat_short(img, question,exercise):
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system",
+                "content": f"당신은 스포츠센터 헬스케어 트레이너 입니다. {exercise}의 자세를 보고 문제점이 있다면 짧게 한마디정도로 어디가 어떻고 어떻게 해야할지 피드백해줘  "
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": question
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": img
+                        }
+                    }
+                ]
+            }
+        ],
+        max_tokens=1000
+    )
+
+    return response.choices[0].message.content
+
 def check_routine(assitant_message):
     response = client.chat.completions.create(
         model="gpt-4o",
@@ -329,8 +358,9 @@ def short_feed():
     try:
         data = request.get_json()
         img = data.get('image')
-        question = f"이 운동의 이름은 {data.get('exercise')} (이)야 자세를 보고 자세에서 문제점이 있다면 무엇인지 판단하고 지적한 다음 어떻게 개선해야할지 한두마디 정도로 짧게 피드백해줘"
-        result = analyze_pose_with_image(img,question)
+        question = "자세를 보고 자세에서 문제점이 있다면 무엇인지 판단하고 지적한 다음 어떻게 개선해야할지 한마디 정도로 짧게 피드백해줘 "
+        "예) 좀 더 깊이 앉으세요. 엉덩이를 더 뒤로 빼세요. 무릎이 너무 앞으로 나갔어요. 어깨 무게 중심이 무너졌어요."
+        result = chat_short(img,question,{data.get('exercise')})
         tts_opts = data.get("tts", {}) or {}
         voice_name = tts_opts.get("voiceName", "ko-KR-Standard-A")
         speaking_rate = float(tts_opts.get("speakingRate", 1.0))
@@ -367,8 +397,8 @@ def analysis():
     img = data.get('image')
     question = f"이 운동의 이름은 {data.get('exercise')} (이)야 자세를 분석하고 현재 자세가 어디가 좋은지 어디가 나쁜지 평가해줘."
     result = analyze_pose_with_image(img, question)
-    print("\nGPT 자세 분석 결과:")
-    print(result)
+    # print("\nGPT 자세 분석 결과:")
+    # print(result)
     sendData = {"result":result,"img":img}
 
     return sendData

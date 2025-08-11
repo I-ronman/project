@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import csv
-from calcData import get_angle,draw_angle_arc
+from IronmanFlask.exercise.calcData import get_angle,draw_angle_arc
 import math
 class base_line(object):
      def __init__(self,x,y):

@@ -22,6 +22,7 @@ function SurveyPage() {
   const totalSteps = 11;
   const navigate = useNavigate();
 
+  
   const [direction, setDirection] = useState('forward');
 
   const slots = [step -1, step, step + 1];
@@ -39,7 +40,7 @@ function SurveyPage() {
   });
 
   const nextStep = () => {
-    if (step < totalSteps - 1) {
+    if (step < totalSteps - 1 && canProceed(step, surveyData)) {
       setDirection('forward');
       setStep(s => s + 1);
     }
@@ -109,6 +110,38 @@ function SurveyPage() {
   // ⬇️ 화면에 보일 패널(최대 2개): [직전, 현재]
   const visible = [step - 1, step, step + 1].filter(i => i >= 0 && i < totalSteps);
 
+  // ▶도 내용이 체워져야만 눌러질 수 있도록
+  const isPositiveNumber = (v) => v !== '' && !isNaN(v) && Number(v) > 0;
+
+  const canProceed = (step, data) => {
+    switch (step) {
+      case 0: // 인트로
+        return true;
+      case 1: // 키
+        return isPositiveNumber(data.height);
+      case 2: // 몸무게
+        return isPositiveNumber(data.weight);
+      case 3: // 목표 체중
+        return isPositiveNumber(data.goalWeight);
+      case 4: // 활동량
+        return !!data.activityLevel;
+      case 5: // 푸쉬업
+        return !!data.pushUp;
+      case 6: // 플랭크
+        return !!data.plank;
+      case 7: // 스쿼트
+        return !!data.squat;
+      case 8: // 유연성
+        return !!data.pliability;
+      case 9: // 주당 운동 빈도
+        return !!data.workoutFrequency;
+      case 10: // 최종 확인 화면
+        return true;
+      default:
+        return false;
+    }
+  };
+
   return (
   <div className='survey-wrapper'>
     {step > 0 && (
@@ -129,12 +162,12 @@ function SurveyPage() {
       </span>
       <span className="header-title">설문 조사</span>
       <img
-        src="/images/ironman_logo.png"
+        src="/images/ironman_logo3.png"
         alt="메인으로"
         className="right-label"
         onClick={() => navigate('/main')}
         style={{
-          height: '30px',
+          height: '70px',
           cursor: 'pointer',
         }}
       />
@@ -170,7 +203,7 @@ function SurveyPage() {
                 <button
                   className="inline-arrow right"
                   onClick={nextStep}
-                  disabled={step === totalSteps - 1}
+                  disabled={step === totalSteps - 1 || !canProceed(step, surveyData)}
                   aria-label="다음으로"
                 >▶</button>
               </>

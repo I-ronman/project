@@ -12,6 +12,8 @@ function TrainingCamTest({
   currentExercise,
   onGoodPosture,
   onBadPosture
+  ,viewShoulder,
+  viewUpper
 }) {
   const [value, setValue] = useState("")
   const wsRef = useRef(null);
@@ -43,13 +45,17 @@ function TrainingCamTest({
 
   const viewKneeRef = useRef(viewKnee);
   const viewLegHipRef = useRef(viewLegHip);
+  const viewUpperRef = useRef(viewUpper);
+  const viewShoulderRef = useRef(viewShoulder);
 
   useEffect(() => {
     viewKneeRef.current = viewKnee;
     viewLegHipRef.current = viewLegHip;
+    viewShoulderRef.current = viewShoulder;
+    viewUpperRef.current = viewUpper;
     goodCountRef.current = goodCount;
     badCountRef.current = badCount;
-  }, [viewKnee, viewLegHip, goodCount, badCount]);
+  }, [viewKnee, viewLegHip,viewUpper,viewShoulder, goodCount, badCount]);
 
   
   //  소켓 연결 
@@ -111,9 +117,8 @@ function TrainingCamTest({
           tts: { voiceName: "ko-KR-Standard-A", speakingRate: 1.0, pitch: 0.0, audioEncoding: "MP3" }
         })
         .then((data) =>{
-          console.log(data)
-          if (data.audioContent) {
-            const audio = new Audio(`data:${data.mimeType};base64,${data.audioContent}`);
+          if (data.data.audioContent) {
+            const audio = new Audio(`data:${data.data.mimeType};base64,${data.data.audioContent}`);
             audio.play().catch(err => console.warn('audio play blocked:', err));
             setValue(data.result);
           }
@@ -177,8 +182,8 @@ function TrainingCamTest({
       view: {
         knee: viewKneeRef.current,
         leg_hip_angle: viewLegHipRef.current,
-        center_of_gravity: false,
-        upper_body_slope: false,
+        center_of_gravity: viewShoulderRef.current,
+        upper_body_slope: viewUpperRef.current,
       },
     };
 

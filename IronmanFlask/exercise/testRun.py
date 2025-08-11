@@ -1,13 +1,10 @@
 from flask import Flask,jsonify,request
 from flask_socketio import SocketIO
-from flask_cors import CORS
 import base64
 import cv2
 import numpy as np
 import mediapipe as mp
-from calcData import get_angle,draw_angle_arc
 import socketio
-from draw import draw_squat
 from encoding import encoding,decoding
 from squat import SquatAnalyzer
 from birddog import BirddogAnalyzer

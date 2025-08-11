@@ -4,6 +4,7 @@ import axios from 'axios'
 import '../styles/Auth.css'
 import PageWrapper from '../layouts/PageWrapper';
 import { AuthContext } from '../context/AuthContext';
+import { api } from '../api/api';
 
 
 function LoginPage() {
@@ -14,7 +15,7 @@ function LoginPage() {
 
 
   useEffect(() => {
-  axios.get('http://localhost:329/web/login/check', { withCredentials: true })
+  axios.get('/login/check', { withCredentials: true })
     .then(res => {
       if (res.data.loggedIn) {
         console.log(res.data);
@@ -32,7 +33,7 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      await axios.post('http://localhost:329/web/login', {
+      await api.post('/login', {
         email,
         pw
       }, {
@@ -43,7 +44,7 @@ function LoginPage() {
         // 로그인 성공 시 리디렉션
       if (res.data && res.data.email) {
         // 로그인 성공 후 사용자 정보 불러오기
-        axios.get('http://localhost:329/web/login/user', { withCredentials: true })
+        api.get('/login/user', { withCredentials: true })
           .then(userRes => {
             const { name, email, gender, birthdate, face } = userRes.data;
             login({

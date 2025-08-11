@@ -87,8 +87,10 @@ class SquatAnalyzer:
                     self.bad_pose = True
                     # print(bad_pose)
             if view["center_of_gravity"]:
-                cv2.line(frame,to_pixel(lm[31]),(to_pixel(lm[31])[0],0),(0,255,0),2)
-                cv2.line(frame,to_pixel(lm[29]),(to_pixel(lm[29])[0],0),(0,255,0),2)
+                if lm[11].x < lm[31].x or lm[11].x > lm[29].x:
+                    cv2.circle(frame,to_pixel(lm[11]),10,(0,255,0),5)
+                cv2.line(frame,to_pixel(lm[31]),(to_pixel(lm[31])[0],0),(0,0,255),2)
+                cv2.line(frame,to_pixel(lm[29]),(to_pixel(lm[29])[0],0),(0,0,255),2)
 
             # 상체 기울기가 앞으로 너무 많이 쏠리진 않았는지
             bl = base_line(lm[11],lm[23])
@@ -103,7 +105,7 @@ class SquatAnalyzer:
                     self.bad_pose = True
                     # print(bad_pose)
             if view["upper_body_slope"]:
-                cv2.line(frame,(0,to_pixel(bl)[1]),to_pixel(lm[23]),(0,255,0),thickness = 10)
+                cv2.line(frame,(0,to_pixel(bl)[1]),to_pixel(lm[23]),(0,255,0),thickness = 3)
                 draw_angle_arc(frame,h,w,bl,lm[23],lm[11],self.upper_body_angle,40,(0,255,0))
 
             # print(f"diff_angle: {diff_angle} 무릎각도 : {l_leg_ang} 엉덩이 각도: {l_hip_ang} 굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot}",f"upper_body : {upper_body_angle}")

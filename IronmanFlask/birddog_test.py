@@ -1,8 +1,8 @@
 import cv2
 import mediapipe as mp
-from calcData import get_angle,draw_angle_arc
+from IronmanFlask.exercise.calcData import get_angle,draw_angle_arc
 import math
-from draw import draw_birddog
+from IronmanFlask.exercise.draw import draw_birddog
 import numpy as np
 
 class base_line(object):

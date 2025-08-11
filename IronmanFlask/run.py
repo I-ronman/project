@@ -5,12 +5,12 @@ import base64
 import cv2
 import numpy as np
 import mediapipe as mp
-from calcData import get_angle,draw_angle_arc
+from IronmanFlask.exercise.calcData import get_angle,draw_angle_arc
 import socketio
-from draw import draw_squat
-from encoding import encoding,decoding
-from squat import SquatAnalyzer
-from base_line import base_line
+from IronmanFlask.exercise.draw import draw_squat
+from IronmanFlask.exercise.encoding import encoding,decoding
+from IronmanFlask.exercise.squat import SquatAnalyzer
+from IronmanFlask.exercise.base_line import base_line
 
 
 good_cnt = 0

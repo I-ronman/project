@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import math
-from calcData import getAngle,getDistance
+from IronmanFlask.exercise.calcData import getAngle,getDistance
 
 mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
