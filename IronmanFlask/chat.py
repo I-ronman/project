@@ -1,7 +1,7 @@
 import openai
-from dotenv import load_dotenv
+from dotenv import load_dotenv,find_dotenv
 import os
-import base64
+import base64,io
 from flask import Flask,request,jsonify
 from flask_socketio import SocketIO
 from flask_cors import CORS,cross_origin
@@ -9,6 +9,8 @@ import pymysql
 from collections import deque
 from user_answer import user_answer
 import json
+from google.cloud import texttospeech
+
 db = pymysql.connect(
 	host='project-db-cgi.smhrd.com',
     port=3307,
@@ -18,10 +20,15 @@ db = pymysql.connect(
     charset='utf8'
 )
 cursor = db.cursor()
-load_dotenv()
-openai_api_key = os.getenv('OPENAI_API_KEY')
+load_dotenv(find_dotenv(), override=True)
 
+openai_api_key = os.getenv('OPENAI_API_KEY')
+p = (os.getenv("GOOGLE_APPLICATION_CREDENTIALS") or "").strip().strip('"').strip("'")
+if p:
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = p
 client = openai.OpenAI(api_key=openai_api_key)
+
+tts_client = texttospeech.TextToSpeechClient()
 
 app = Flask(__name__)
 CORS(app, origins =['http://localhost:5173'])
@@ -107,6 +114,47 @@ Volume (운동량): 주간 총 시간이나 총 에너지 소비량
 
 """
 
+def synthesize_tts(text: str,
+                   language_code: str = "ko-KR",
+                   voice_name: str = "ko-KR-Standard-A",
+                   speaking_rate: float = 1.0,
+                   pitch: float = 0.0,
+                   audio_encoding: str = "MP3"):
+    """Google TTS로 text를 오디오(base64)로 변환 후 (base64, mime) 반환"""
+    if not text or not text.strip():
+        return None, None
+
+    synth_input = texttospeech.SynthesisInput(text=text)
+
+    voice = texttospeech.VoiceSelectionParams(
+        language_code=language_code,
+        name=voice_name
+    )
+
+    enc_map = {
+        "MP3": texttospeech.AudioEncoding.MP3,
+        "LINEAR16": texttospeech.AudioEncoding.LINEAR16,
+        "OGG_OPUS": texttospeech.AudioEncoding.OGG_OPUS,
+    }
+    audio_enc = enc_map.get(audio_encoding.upper(), texttospeech.AudioEncoding.MP3)
+
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=audio_enc,
+        speaking_rate=speaking_rate,
+        pitch=pitch,
+    )
+
+    resp = tts_client.synthesize_speech(
+        input=synth_input, voice=voice, audio_config=audio_config
+    )
+
+    mime = "audio/mpeg" if audio_enc == texttospeech.AudioEncoding.MP3 else \
+           "audio/wav" if audio_enc == texttospeech.AudioEncoding.LINEAR16 else \
+           "audio/ogg"
+
+    b64 = base64.b64encode(resp.audio_content).decode("utf-8")
+    return b64, mime
+
 
 
 def encode_image_to_base64(image_path):
@@ -171,6 +219,7 @@ def check_answer(question,answer):
                 "content": "너는 너가 한 질문에 대해 사용자가 관련된 대답을 했는지 판단하는 역할을 가진 봇이야. 줄임말이나 은어가 나왔을 때 한번 더 생각해보고 의미파악을 해 질문에 관련된 대답을 했다면 'yes'만 말하고 그렇지 않다면 'no'만 말해."
                 "나쁜 대답) 추상적이고 구분하기 어려운 대답. 예) 나 휴가철에 해변에 가면 여자들이 다 쳐다 볼만한 몸을 갖고 싶어"
                 "좋은 대답) 구체적이거나 한번에 구별하기 좋은 대답.  예)"
+                "없다고 대답하면 없는거니까 'yes'라고 말해"
             },
             { 
                 "role":"assistant",
@@ -277,12 +326,39 @@ def chat():
 @app.route("/short_feed", methods=['POST','OPTIONS'])
 @cross_origin(origins="http://localhost:5173")
 def short_feed():
-    data = request.get_json()
-    img = data.get('image')
-    question = f"이 운동의 이름은 {data.get('exercise')} (이)야 자세를 보고 자세에서 문제점이 있다면 무엇인지 판단하고 지적한 다음 어떻게 개선해야할지 한두마디 정도로 짧게 피드백해줘"
-    result = analyze_pose_with_image(img,question)
-    print("\nGPT 자세 분석 결과:")
-    return {"result":result}
+    try:
+        data = request.get_json()
+        img = data.get('image')
+        question = f"이 운동의 이름은 {data.get('exercise')} (이)야 자세를 보고 자세에서 문제점이 있다면 무엇인지 판단하고 지적한 다음 어떻게 개선해야할지 한두마디 정도로 짧게 피드백해줘"
+        result = analyze_pose_with_image(img,question)
+        tts_opts = data.get("tts", {}) or {}
+        voice_name = tts_opts.get("voiceName", "ko-KR-Standard-A")
+        speaking_rate = float(tts_opts.get("speakingRate", 1.0))
+        pitch = float(tts_opts.get("pitch", 0.0))
+        audio_encoding = tts_opts.get("audioEncoding", "MP3")
+
+        # ✅ Google TTS 합성
+        audio_b64, mime = synthesize_tts(
+            text=result,
+            language_code="ko-KR",
+            voice_name=voice_name,
+            speaking_rate=speaking_rate,
+            pitch=pitch,
+            audio_encoding=audio_encoding
+        )
+        print(result)
+        if not audio_b64:
+            return jsonify({"error": "TTS 합성 실패"}), 500
+
+        # ✅ 텍스트 + 오디오(base64) 동시 반환
+        return jsonify({
+            "text": result,
+            "audioContent": audio_b64,
+            "mimeType": mime
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/report", methods=['POST','OPTIONS'])
 @cross_origin(origins="http://localhost:5173")

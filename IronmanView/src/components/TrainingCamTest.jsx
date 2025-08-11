@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { CountContext } from '../context/CountContext';
 import axios from 'axios';
-import { getSpeech } from "../utils/getSpeach";
 
 function TrainingCamTest({
   //  isStarted, onGoodPosture, onBadPosture 추가
@@ -108,10 +107,16 @@ function TrainingCamTest({
       try {
         await axios.post("http://localhost:456/short_feed", {
           image: `data:image/jpeg;base64,${data.img}`,
-          exercise: data.exercise
-        }).then((res) => {
-          setValue(res.result);
-          getSpeech(value);
+          exercise: data.exercise,
+          tts: { voiceName: "ko-KR-Standard-A", speakingRate: 1.0, pitch: 0.0, audioEncoding: "MP3" }
+        })
+        .then((data) =>{
+          console.log(data)
+          if (data.audioContent) {
+            const audio = new Audio(`data:${data.mimeType};base64,${data.audioContent}`);
+            audio.play().catch(err => console.warn('audio play blocked:', err));
+            setValue(data.result);
+          }
         });
       } catch (e) {
     

@@ -42,7 +42,7 @@ def handle_connect():
 
 @socket_io.on('disconnect')
 def handle_disconnect():
-    sid = socket_io.server.environ[socket_io.server.eio_sid]['sid']
+    sid = request.sid
     
     # 해당 세션 ID에 해당하는 모든 운동 삭제
     keys_to_remove = [key for key in analyzer_map if key[0] == sid]
