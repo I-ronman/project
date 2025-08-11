@@ -1,4 +1,4 @@
-/*project/IronmanView/src/styles/PostureAnalysis.css*/
+/* project/IronmanView/src/styles/PostureAnalysis.css */
 
 /* ===== 메인 컨테이너 ===== */
 .posture-container {
@@ -217,4 +217,87 @@
 }
 .timer-icon { font-size: 18px; }
 
+/* ============================== */
+/* ===== 운동 종료 안내 모달 ===== */
+/* ============================== */
+.end-overlay{
+  position: fixed; inset: 0;
+  z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
 
+.end-card{
+  width: min(480px, 92vw);
+  background: rgba(17,17,17,0.95);
+  color: #eaeaea;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+  text-align: center;
+}
+
+.end-title{
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.end-desc{
+  margin: 0 0 14px;
+  color: #bbbbbb;
+  font-size: 14px;
+}
+
+.end-progress{
+  display: flex; flex-direction: column; gap: 6px; align-items: center;
+  margin-top: 6px;
+}
+
+.end-progress-bar{
+  width: 100%;
+  height: 10px;
+  background: #171717;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #2b2b2b;
+}
+
+.end-progress-fill{
+  height: 100%;
+  background: linear-gradient(90deg, #FBD157, #ffe08c);
+  transition: width .3s ease;
+}
+
+.end-count{
+  font-size: 12px; color: #aaa;
+}
+
+.end-actions{
+  display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap;
+}
+
+.end-btn{
+  background: #161616; color: #fff;
+  border: 1px solid #2b2b2b;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: transform .12s ease, background .12s ease;
+}
+.end-btn:hover{ background:#1c1c1c; transform: translateY(-1px); }
+
+.end-btn-primary{
+  background:#222; color:#000; border:1px solid #2b2b2b;
+  position: relative; overflow: hidden;
+}
+.end-btn-primary::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background: linear-gradient(90deg, #FBD157, #ffe08c);
+  opacity:.92;
+}
+.end-btn-primary:hover{ transform: translateY(-1px); }

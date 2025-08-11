@@ -1,3 +1,4 @@
+// src/pages/PostureAnalysisPage.jsx
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import '../styles/PostureAnalysis.css';
 import StatBox from '../components/posture/StatBox';
@@ -68,12 +69,33 @@ const mapLogIds = (resp, reqExerciseLogs) => {
   return {};
 };
 
+// 더미 계산식: 세션 지표 → 결과 화면용
+const estimateCalories = (good, bad, totalSeconds) => {
+  // (총카운트 * 0.9kcal) + (시간(분) * 3.5kcal), 최소 50
+  const total = good + bad;
+  const timeMin = Math.max(1, Math.round(totalSeconds / 60));
+  return Math.max(50, Math.round(total * 0.9 + timeMin * 3.5));
+};
+const buildRadarDummy = (good, bad) => {
+  const total = Math.max(1, good + bad);
+  const pct = (v) => Math.min(100, Math.round((v / total) * 100));
+  return [
+    { subject: '상체 근력', value: pct(good * 0.6 + bad * 0.3) },
+    { subject: '하체 근력', value: pct(good * 0.4 + bad * 0.4) },
+    { subject: '유연성',   value: pct(good * 0.3 + bad * 0.2) },
+    { subject: '체력 종합', value: pct(good * 0.5 + bad * 0.5) },
+    { subject: '체력균형', value: pct(good * 0.35 + bad * 0.25) },
+    { subject: '근지구력', value: Math.min(100, good * 2 + 30) },
+  ];
+};
+
 const PostureAnalysisPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routine = location.state?.routine;
   getSpeech();
   const { user } = useContext(AuthContext);
+
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
   const [exerciseList, setExerciseList] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -88,7 +110,7 @@ const PostureAnalysisPage = () => {
   const [startAt, setStartAt] = useState(null);
   const [remainingTime, setRemainingTime] = useState(0);
   const [liveDots, setLiveDots] = useState([]);
-  const [currentExerciseIndex] = useState(0); 
+  const [currentExerciseIndex] = useState(0);
   const currentExercise = routine?.exercises?.[currentExerciseIndex];
   const totalReps = routine?.exercises?.reduce((acc, cur) => acc + ((cur.reps ?? 0) * (cur.sets ?? 1)), 0) ?? 0;
   const [exerciseResults, setExerciseResults] = useState({}); // { [exerciseId]: {goodCount, badCount} }
@@ -96,6 +118,11 @@ const PostureAnalysisPage = () => {
 
   const [reportImg, setReportImg] = useState('');
   const hasSavedRef = useRef(false);
+
+  // ✅ 추가: 종료 안내 오버레이 & 카운트다운
+  const [showEndOverlay, setShowEndOverlay] = useState(false);
+  const [countdown, setCountdown] = useState(10);
+  const resultPayloadRef = useRef(null); // workoutresult로 넘길 state 보관
 
   const toggleFeedback = () => setIsFeedbackOn(v => !v);
 
@@ -128,35 +155,34 @@ const PostureAnalysisPage = () => {
   };
 
   const onGoodPosture = () => {
-  if (!canCountNow()) return;
-  setExerciseResults(prev => ({
-    ...prev,
-    [currentExerciseId]: {
-      goodCount: (prev[currentExerciseId]?.goodCount || 0) + 1,
-      badCount:  (prev[currentExerciseId]?.badCount  || 0),
-    }
-  }));
-  setGoodCount(v => v + 1);
-  setPoseHistory(prev => [...prev, { type: 'good', id: Date.now() }]);
-  clampInc();
-};
+    if (!canCountNow()) return;
+    setExerciseResults(prev => ({
+      ...prev,
+      [currentExerciseId]: {
+        goodCount: (prev[currentExerciseId]?.goodCount || 0) + 1,
+        badCount:  (prev[currentExerciseId]?.badCount  || 0),
+      }
+    }));
+    setGoodCount(v => v + 1);
+    setLiveDots(d => [...d, { type: 'good', id: Date.now() }].slice(-60));
+    clampInc();
+  };
 
-const onBadPosture = () => {
-  if (!canCountNow()) return;
-  setExerciseResults(prev => ({
-    ...prev,
-    [currentExerciseId]: {
-      goodCount: (prev[currentExerciseId]?.goodCount || 0),
-      badCount:  (prev[currentExerciseId]?.badCount  || 0) + 1,
-    }
-  }));
-  setBadCount(v => v + 1);
-  setPoseHistory(prev => [...prev, { type: 'bad', id: Date.now() }]);
-  clampInc();
-};
+  const onBadPosture = () => {
+    if (!canCountNow()) return;
+    setExerciseResults(prev => ({
+      ...prev,
+      [currentExerciseId]: {
+        goodCount: (prev[currentExerciseId]?.goodCount || 0),
+        badCount:  (prev[currentExerciseId]?.badCount  || 0) + 1,
+      }
+    }));
+    setBadCount(v => v + 1);
+    setLiveDots(d => [...d, { type: 'bad', id: Date.now() }].slice(-60));
+    clampInc();
+  };
 
-
-  // 총 횟수 도달 시 자동 저장
+  // 총 횟수 도달 시 자동 저장 → (바로 navigate X) → 안내 오버레이 + 10초 후 자동 이동
   useEffect(() => {
     if (!isStarted || totalReps === 0 || doneReps < totalReps || hasSavedRef.current) return;
     const videoEl = document.querySelector('video');
@@ -190,11 +216,7 @@ const onBadPosture = () => {
         payload,
         { withCredentials: true }
       );
-      console.log('📦 /api/exercise/result 응답:', data);
-
       idByExercise = mapLogIds(data, exerciseLogs);
-      console.log('🧭 exerciseId→logId 매핑:', idByExercise);
-
     } catch (err) {
       console.error('❌ 운동 결과 저장 실패:', err?.response?.data ?? err);
       alert('운동 결과 저장에 실패했습니다.');
@@ -202,16 +224,14 @@ const onBadPosture = () => {
       return;
     }
 
+    // 2) 캡처 업로드(선택)
     try {
       const jobs = (capturedList ?? [])
         .filter(e => e?.img && e.img.length > 100)
         .map(entry => {
           const base64 = entry.img.includes(',') ? entry.img.split(',')[1] : entry.img;
           const logId = entry.exerciseId != null ? idByExercise[entry.exerciseId] : undefined;
-          if (logId == null) {
-            console.warn('⏭️ logId 없음 → 해당 캡처 업로드 스킵:', entry);
-            return Promise.resolve();
-          }
+          if (logId == null) return Promise.resolve();
           const body = {
             singleExerciseLogId: logId,
             detectedIssue: entry.issue ?? '0',
@@ -222,16 +242,101 @@ const onBadPosture = () => {
         });
 
       await Promise.all(jobs);
-      console.log('✅ 캡처 업로드 완료');
     } catch (error) {
       console.error('❌ 캡처 업로드 실패:', error?.response?.data ?? error);
-      alert('캡처 업로드 중 일부가 실패했습니다.');
-      navigate('/main');
-      return;
     }
 
-    alert('✅ 모든 운동이 완료되었습니다!');
+    // 3) 결과 요약(프론트 상태) → WorkoutResultPage로 전달할 payload만 준비
+    const calories = estimateCalories(goodCount, badCount, durationSeconds);
+    const radarData = buildRadarDummy(goodCount, badCount);
+    const sessionSummary = {
+      email: user.email,
+      doneReps,
+      totalReps,
+      goodCount,
+      badCount,
+      totalSeconds: durationSeconds,
+      exerciseLogs,
+      routineMeta: {
+        routineId: routine?.routineId ?? null,
+        routineName: routine?.name ?? '오늘의 루틴',
+      },
+    };
+
+    // 이동 payload를 ref에 보관하고, 안내 오버레이 오픈 + 카운트다운 시작
+    resultPayloadRef.current = {
+      from: '/postureanalysis',
+      radarData,
+      caloriesBurned: calories,
+      mistakeCount: badCount,
+      session: sessionSummary,
+    };
+    setCountdown(10);
+    setShowEndOverlay(true);
+  };
+
+  // ✅ 안내 오버레이 카운트다운 타이머
+  useEffect(() => {
+    if (!showEndOverlay) return;
+    if (countdown <= 0) {
+      // 자동 이동
+      if (resultPayloadRef.current) {
+        navigate('/workoutresult', { state: resultPayloadRef.current });
+      } else {
+        navigate('/main');
+      }
+      return;
+    }
+    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [showEndOverlay, countdown, navigate]);
+
+  const goResultNow = () => {
+    if (resultPayloadRef.current) {
+      setShowEndOverlay(false);
+      navigate('/workoutresult', { state: resultPayloadRef.current });
+    }
+  };
+  const goHomeNow = () => {
+    setShowEndOverlay(false);
     navigate('/main');
+  };
+
+  // 간단한 인라인 스타일(새 CSS 파일 수정 없이 최소 변경)
+  const overlayStyles = {
+    overlay: {
+      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      zIndex: 10000
+    },
+    card: {
+      width: 'min(480px, 92vw)', background: '#101010', color: '#eaeaea',
+      border: '1px solid #1f1f1f', borderRadius: 16, padding: 20,
+      boxShadow: '0 24px 60px rgba(0,0,0,0.45)', textAlign: 'center'
+    },
+    title: { margin: '0 0 8px', fontSize: 18, fontWeight: 800 },
+    desc: { margin: '0 0 14px', color: '#bbbbbb', fontSize: 14 },
+    ctaRow: { display: 'flex', gap: 8, justifyContent: 'center', marginTop: 8, flexWrap: 'wrap' },
+    btn: {
+      background: '#161616', color: '#fff', border: '1px solid #2b2b2b',
+      padding: '10px 14px', borderRadius: 12, cursor: 'pointer', fontWeight: 800
+    },
+    primary: {
+      background: '#222', color: '#000', border: '1px solid #2b2b2b',
+      position: 'relative', overflow: 'hidden'
+    },
+    progressWrap: {
+      display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center', marginTop: 6
+    },
+    progressBar: {
+      width: '100%', height: 8, background: '#171717', borderRadius: 999, overflow: 'hidden',
+      border: '1px solid #2b2b2b'
+    },
+    progressFill: (pct) => ({
+      width: `${pct}%`, height: '100%',
+      background: 'linear-gradient(90deg, #FBD157, #ffe08c)'
+    }),
+    countText: { fontSize: 12, color: '#aaa' }
   };
 
   return (
@@ -245,7 +350,7 @@ const onBadPosture = () => {
         <div className="posture-container">
           <div className="posture-left">
             <header className="posture-header">
-              <img className= 'logo' src='./images/ironman_logo.png'></img>
+              <img className='logo' src='./images/ironman_logo.png' alt="logo" />
               <h2>운동 및 자세분석</h2>
               <div className="settings-icon" onClick={() => navigate('/settings')}>⚙️</div>
             </header>
@@ -257,15 +362,15 @@ const onBadPosture = () => {
             </div>
 
             <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
-               {isStarted && (
-                  <div className="realtime-pills-card">
-                    <div className="realtime-row">
-                      {poseHistory.map((p, i) => (
-                        <span key={p.id ?? i} className={`pill-seg ${p.type}`} />
-                      ))}
-                    </div>
-                  </div>
-                )}
+            {isStarted && (
+              <div className="realtime-pills-card">
+                <div className="realtime-row">
+                  {poseHistory.map((p, i) => (
+                    <span key={p.id ?? i} className={`pill-seg ${p.type}`} />
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="exercise-buttons">
               {exerciseList.map((exercise, idx) => (
@@ -308,32 +413,30 @@ const onBadPosture = () => {
           <div className="posture-right">
             <div className="video-container">
               <div className="video-status-bar-modern">
-              <div className="progress-container">
-                <div className="progress-label">
-                  <span>📊 진행률</span>
-                  <span className="progress-percent">
-                    {Math.round((doneReps / totalReps) * 100)}%
+                <div className="progress-container">
+                  <div className="progress-label">
+                    <span>📊 진행률</span>
+                    <span className="progress-percent">
+                      {totalReps > 0 ? Math.round((doneReps / totalReps) * 100) : 0}%
+                    </span>
+                  </div>
+                  <div className="progress-bar">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${totalReps > 0 ? (doneReps / totalReps) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                  <div className="progress-text">
+                    {doneReps} / {totalReps} 회
+                  </div>
+                </div>
+                <div className="timer-container">
+                  <span className="timer-icon">⏱</span>
+                  <span className="timer-text">
+                    {Math.floor(remainingTime / 60)}:{String(remainingTime % 60).padStart(2, '0')}
                   </span>
                 </div>
-                <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${(doneReps / totalReps) * 100}%` }}
-                  ></div>
-                </div>
-                <div className="progress-text">
-                  {doneReps} / {totalReps} 회
-                </div>
               </div>
-              <div className="timer-container">
-                <span className="timer-icon">⏱</span>
-                <span className="timer-text">
-                  {Math.floor(remainingTime / 60)}:
-                  {String(remainingTime % 60).padStart(2, '0')}
-                </span>
-              </div>
-            
-            </div>
 
               <TrainingCamTest
                 isStarted={isStarted}
@@ -367,7 +470,46 @@ const onBadPosture = () => {
               )}
             </div>
           </div>
+
+          {isStarted && (
+            <div className="live-dots">
+              {liveDots.map((d, i) => (
+                <span key={d.id ?? i} className={`dot ${d.type}`} />
+              ))}
+            </div>
+          )}
         </div>
+
+        {/* ✅ 운동 종료 안내 오버레이 */}
+ 
+          {showEndOverlay && (
+            <div className="end-overlay">
+              <div className="end-card">
+                <h3 className="end-title">운동이 종료되었습니다</h3>
+                <p className="end-desc">
+                  <strong>운동결과페이지</strong>로 이동합니다. ({countdown}초 후 자동 이동)
+                </p>
+
+                <div className="end-progress">
+                  <div className="end-progress-bar">
+                    <div
+                      className="end-progress-fill"
+                      style={{ width: `${((10 - countdown) / 10) * 100}%` }}
+                    />
+                  </div>
+                  <div className="end-count">자동 이동까지 {countdown}초</div>
+                </div>
+
+                <div className="end-actions">
+                  <button className="end-btn" onClick={goHomeNow}>홈으로 가기</button>
+                  <button className="end-btn end-btn-primary" onClick={goResultNow}>
+                    운동결과페이지로 가기
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
       </PageWrapper>
     </CountContext.Provider>
   );
