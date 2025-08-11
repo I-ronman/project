@@ -513,6 +513,7 @@ const PostureAnalysisPage = () => {
       </PageWrapper>
     </CountContext.Provider>
   );
+  
 };
 
 export default PostureAnalysisPage;
