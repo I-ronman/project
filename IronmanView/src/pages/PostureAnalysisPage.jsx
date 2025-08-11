@@ -8,6 +8,7 @@ import TrainingCamTest from '../components/TrainingCamTest';
 import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
 import { AuthContext } from '../context/AuthContext';
+import { getSpeech } from "../utils/getSpeach";
 
 /* ---------------------- utils ---------------------- */
 const calcTotalTime = (routine) =>
@@ -71,7 +72,7 @@ const PostureAnalysisPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routine = location.state?.routine;
-
+  getSpeech();
   const { user } = useContext(AuthContext);
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
   const [exerciseList, setExerciseList] = useState([]);
@@ -282,7 +283,7 @@ const PostureAnalysisPage = () => {
               <button className="stat-box" onClick={() => setViewKnee(v => !v)} style={viewKnee ? { backgroundColor: 'gray' } : undefined}>무릎 발끝 수직선 체크</button>
               <button className="stat-box" onClick={() => setViewLegHip(v => !v)} style={viewLegHip ? { backgroundColor: 'gray' } : undefined}>무릎 허리 각도보기</button>
             </div>
-
+            <button onClick={()=>{getSpeech("박머혁 여기 코드 왜 이렇게 해놨어?");}}>박머혁은 소리키고 이거 눌러라</button>
             {selectedCapture && (
               <div className="capture-preview">
                 <h4>📷 선택한 캡처 미리보기</h4>
@@ -355,7 +356,7 @@ const PostureAnalysisPage = () => {
             ))}
           </div>
             )}
-
+        
         </div>
       </PageWrapper>
     </CountContext.Provider>

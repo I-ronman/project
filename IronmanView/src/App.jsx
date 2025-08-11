@@ -40,7 +40,7 @@ import RecordsPage            from './pages/RecordsPage';
 import ExerciseExplore        from './pages/ExerciseExplore';
 import ModalWrapper           from './components/ModalWrapper';
 import GalaxyBackground       from './components/GalaxyBackground';
-
+import OnDeviceASRDemo from './components/OnDeviceASRDemo';
 const AppRoutes = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -90,6 +90,7 @@ const AppRoutes = () => {
           <Route path="edit/:id"           element={<EditPostPage />} />
           <Route path="records"            element={<RecordsPage />} />
           <Route path="exercise"           element={<ExerciseExplore />} />
+          <Route path="voice"           element={<OnDeviceASRDemo />} />
         </Route>
 
         <Route path="postureanalysis" element={<PostureAnalysisPage />} />
