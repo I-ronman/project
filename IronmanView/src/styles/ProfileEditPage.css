@@ -8,6 +8,13 @@
   box-sizing: border-box;
 }
 
+/* 페이지 전체 배경 */
+.profile-edit-page {
+  min-height: 300vh; /* 화면 전체 높이 */
+  background: linear-gradient(rgba(0,0,0,.66), rgba(0,0,0,.66)),
+              url('/images/bg/fitness_center5.jpg') no-repeat center/cover fixed;
+}
+
 /* ── 프로필 헤더 카드 ── */
 .profile-header {
   display: flex;
@@ -28,6 +35,34 @@
   overflow: hidden;
   flex-shrink: 0;
 }
+
+/* 이미지 + 버튼 세로 스택 */
+.image-stock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* 버튼을 이미지 중앙 아래에 정렬 */
+  gap: 2px;
+}
+
+/* 저장 버튼 모양 살짝 다듬기 */
+.profile-save-button {
+  padding: 8px 10px;
+  font-size: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: #fff;      /* 다크 배경에서 보이도록 */
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .2s ease;
+}
+.profile-save-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  opacity: .95;
+}
+
+
 
 /* 이미지와 오버레이를 컨테이너에 꽉 채우기 */
 .profile-header .profile-img,
@@ -71,7 +106,7 @@
 }
 .profile-header .basic-info-card p {
   margin: 4px 0;
-  font-size: 14px;
+  font-size: 15px;
   color: #fff;                          /* 다크 배경에 대비되는 흰색 텍스트 */
 }
 
