@@ -105,6 +105,8 @@
   background:none; border:none; color:#fff; font-size: 28px; line-height: 1;
   width: 36px; height: 36px; display:flex; align-items:center; justify-content:center;
   cursor:pointer; opacity:.9;
+  z-index: 20;            /* 🔧 가장 위로 올려 클릭 가능하도록 */
+  pointer-events: auto;   /* 🔧 클릭 막힘 방지 */
 }
 .modal-close:hover{ opacity: 1; transform: scale(1.06); }
 

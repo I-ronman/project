@@ -142,8 +142,8 @@
 
 /* 토글 버튼: 달력 아래 중앙 정렬 */
 .toggle-btn{
-  display: block;               /* 블록으로 만들어 */
-  margin: 16px auto 0;          /* 가운데 정렬 */
+  display: block;
+  margin: 16px auto 0;
   background: transparent;
   color: var(--accent);
   font-size: 20px;
@@ -161,14 +161,24 @@
   background: var(--accent); color:#111; border:none; padding:8px 12px;
   border-radius:10px; font-weight:900; box-shadow:0 6px 16px rgba(251,209,87,.35); cursor:pointer;
 }
+
+/* ✅ 오버레이용 래퍼: 카드 위에 오버레이를 안전하게 깔기 위한 기준 */
+.body-info-wrap{
+  position: relative;           /* 오버레이 절대배치 기준점 */
+  border-radius: 12px;          /* 오버레이 라운드와 맞추기 */
+}
+
+/* 기존 카드 스타일 유지 */
 .body-info-card{
   background: rgba(255,255,255,.08);
   border:1px solid var(--card-bd);
   border-radius:12px;
   padding:16px;
-  position:relative;
+  position: relative;           /* 기존 유지(툴팁 등 대비) */
   overflow:hidden;
 }
+
+/* 기존 블러: 이 카드 ‘내부’만 비활성 + 블러 처리 */
 .blurred{ filter: blur(3px); pointer-events:none; }
 
 /* ===================== 설정 ===================== */
@@ -189,7 +199,7 @@
 /* ===================== 반응형 ===================== */
 @media (max-width: 960px){
   .mypage-grid{ grid-template-columns: 1fr; }
-  .right-column{ order: -1; } /* 프로필+요약+연속일수 카드가 위로 */
+  .right-column{ order: -1; }
   .summary-row.in-right{ margin-top: 8px; }
 }
 @media (max-width: 600px){
