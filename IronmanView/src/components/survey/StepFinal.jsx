@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 
-const StepFinal = ({ surveyData }) => {
+const StepFinal = ({ surveyData, fromPage = '/main' }) => {
   const navigate = useNavigate();
   const {completeSurvey} = useContext(AuthContext);
 
@@ -20,7 +20,7 @@ const StepFinal = ({ surveyData }) => {
 
       if (response.ok) {
         completeSurvey();
-        navigate('/chatbot');
+        navigate(fromPage);
       } else {
         alert('설문 전송 실패');
       }

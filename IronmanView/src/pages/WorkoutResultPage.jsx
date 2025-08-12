@@ -14,12 +14,12 @@ import {
 import PageWrapper from '../layouts/PageWrapper';
 
 const DEFAULT_RADAR = [
-  { subject: '상체 근력', value: 60 },
-  { subject: '하체 근력', value: 75 },
-  { subject: '유연성',   value: 40 },
-  { subject: '체력 종합', value: 50 },
-  { subject: '체력균형', value: 30 },
-  { subject: '근지구력', value: 90 },
+  { subject: '상체', value: 60 },
+  { subject: '하체', value: 75 },
+  { subject: '유산소',   value: 40 },
+  { subject: '코어', value: 50 },
+  { subject: '전신', value: 30 },
+  { subject: '종합', value: 90 },
 ];
 
 function formatDuration(sec) {
@@ -163,11 +163,11 @@ export default function WorkoutResultPage() {
               <span>{totalCount}회</span>
             </div>
             <div className="info-box">
-              <span>성공 횟수</span>
+              <span>좋은 자세</span>
               <span>{goodCount}회</span>
             </div>
             <div className="info-box mistakes">
-              <span>틀린 횟수</span>
+              <span>나쁜 자세</span>
               <span>{badCount}회</span>
             </div>
             <div className="info-box">

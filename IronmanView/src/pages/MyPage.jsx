@@ -147,12 +147,19 @@ const MyPage = () => {
                             정보 수정
                           </button>
                         </div>
-                        <div className={`body-info-card ${!surveyDone ? 'blurred' : ''}`}>
-                          <p>키: {user?.height || '160cm'}</p>
-                          <p>몸무게: {user?.weight || '52kg'}</p>
-                          <p>체지방률: {user?.fat || '24%'}</p>
+
+                        {/* ✅ 오버레이가 카드 ‘위’에 올라오도록 래퍼 추가 */}
+                        <div className="body-info-wrap">
+                          <div className={`body-info-card ${!surveyDone ? 'blurred' : ''}`}>
+                            <p>키: {user?.height || '160cm'}</p>
+                            <p>몸무게: {user?.weight || '52kg'}</p>
+                            <p>체지방률: {user?.fat || '24%'}</p>
+                          </div>
+
+                          {/* 오버레이는 카드의 형제이자 같은 래퍼 안에서 절대배치 → 블러 위에 표시됨 */}
                           {!surveyDone && <SurveyBlurOverlay />}
                         </div>
+
                         <button
                           className="toggle-btn"
                           onClick={() => setShowBodyInfo(false)}

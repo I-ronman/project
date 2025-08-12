@@ -1,29 +1,61 @@
 /* project/IronmanView/src/styles/ProfileEditPage.css */
 
-/* 1) 페이지 상단 여백 축소 */
-.profile-edit-container {
-  margin: 32px auto 0;    /* 헤더 바로 아래에 붙도록 줄임 */
-  max-width: 480px;
-  padding: 24px;
-  box-sizing: border-box;
+/* ===== 공통 톤(다른 페이지와 통일) ===== */
+:root{
+  --bg:#0e0e0e;
+  --panel:#0f0f0f;
+  --card:#101010;
+  --stroke:#1f1f1f;
+  --text:#eaeaea;
+  --muted:#9a9a9a;
+  --brand:#FBD157;
+  --brand-strong:#e6b845;
 }
 
-/* 페이지 전체 배경 */
+/* 페이지 전체 배경 (Main/ChatBot과 유사한 다크톤) */
 .profile-edit-page {
-  min-height: 300vh; /* 화면 전체 높이 */
-  background: linear-gradient(rgba(0,0,0,.66), rgba(0,0,0,.66)),
-              url('/images/bg/fitness_center5.jpg') no-repeat center/cover fixed;
+  min-height: calc(100vh - 64px);
+  background:
+    radial-gradient(900px 400px at 0% 0%, rgba(0,201,255,.05), transparent 60%),
+    radial-gradient(800px 400px at 100% 0%, rgba(251,209,87,.05), transparent 60%),
+    var(--bg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px 48px;
+  box-sizing: border-box;
 }
 
-/* ── 프로필 헤더 카드 ── */
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  background: #222;                    /* 신체정보 카드와 동일한 다크 배경 */
-  padding: 16px;
-  border-radius: 12px;
+/* 메인 컨테이너 폭 */
+.profile-edit-container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
   box-sizing: border-box;
+}
+
+/* ── 프로필 헤더 카드(다른 카드와 톤/테두리 통일) ── */
+.profile-header {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  color: var(--text);
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+@media (max-width: 860px){
+  .profile-header { grid-template-columns: 1fr; }
+}
+
+/* 이미지 + 버튼 세로 스택 */
+.image-stock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 /* 프로필 이미지 컨테이너 (120×120) */
@@ -34,177 +66,180 @@
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
 }
 
-/* 이미지 + 버튼 세로 스택 */
-.image-stock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;   /* 버튼을 이미지 중앙 아래에 정렬 */
-  gap: 2px;
-}
-
-/* 저장 버튼 모양 살짝 다듬기 */
-.profile-save-button {
-  padding: 8px 10px;
-  font-size: 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.15);
-  background: #fff;      /* 다크 배경에서 보이도록 */
-  color: #111;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform .12s ease, box-shadow .12s ease, opacity .2s ease;
-}
-.profile-save-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0,0,0,.25);
-  opacity: .95;
-}
-
-
-
-/* 이미지와 오버레이를 컨테이너에 꽉 채우기 */
+/* 이미지와 오버레이 */
 .profile-header .profile-img,
 .profile-header .image-hover-overlay {
   position: absolute;
-  top: 0; left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   box-sizing: border-box;
 }
 
-/* 실제 프로필 이미지 */
 .profile-header .profile-img {
   object-fit: cover;
-  border: 2px solid #444;              /* 다크 배경에 어울리게 테두리 색 변경 */
+  border: 2px solid #333;
   cursor: pointer;
 }
 
-/* 호버 시 뜨는 “사진 변경하기” 오버레이 */
 .profile-header .image-hover-overlay {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, .55);
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity .2s ease;
 }
-.profile-header .image-container:hover .image-hover-overlay {
-  opacity: 1;
+.profile-header .image-container:hover .image-hover-overlay { opacity: 1; }
+
+/* 저장 버튼(브랜드 컬러) */
+.profile-save-button {
+  padding: 10px 14px;
+  font-size: 13px;
+  border-radius: 10px;
+  border: none;
+  background: var(--brand);
+  color: #222;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+.profile-save-button:hover {
+  transform: translateY(-1px);
+  background: var(--brand-strong);
 }
 
-/* 기본정보 카드: 다크 배경에 맞춰 텍스트 색상 조정 */
-.profile-header .basic-info-card {
-  flex: 1;
-  background: transparent;              /* 카드 배경은 헤더 카드가 담당 */
-  padding: 0;
-  box-shadow: none;
+/* 기본정보 카드: 리스트형 줄맞춤 */
+.basic-info-card {
+  align-self: center;
+  background: #111;
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
 }
-.profile-header .basic-info-card p {
-  margin: 4px 0;
-  font-size: 15px;
-  color: #fff;                          /* 다크 배경에 대비되는 흰색 텍스트 */
+.basic-info-card p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: var(--text);
 }
 
 /* ── 신체정보 카드 ── */
 .body-info-card {
-  margin-top: 32px;
-  padding: 24px;
-  background: #222;
-  color: #fff;
-  border-radius: 12px;
+  margin-top: 18px;
+  padding: 20px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
   width: 100%;
   box-sizing: border-box;
   position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
 }
 .body-info-card.blurred {
-  filter: blur(4px);
+  filter: blur(2px);
   pointer-events: none;
 }
 .body-info-card h3 {
-  margin-top: 0;
-  text-align: center;
-  font-size: 18px;
+  margin: 0 0 12px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* 숫자 입력 3열 정렬 */
+.field-row{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+@media (max-width: 720px){
+  .field-row{ grid-template-columns: 1fr; }
 }
 
 /* ── 입력 그룹 ── */
 .field-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 .field-group label,
 .field-group legend {
   display: block;
   margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  color: #d2d2d2;
 }
 .field-group input[type="number"] {
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #333;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  background: #141414;
   color: #fff;
   box-sizing: border-box;
+  outline: none;
 }
 
 /* ── 라디오 그룹 ── */
 .radio-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   padding: 12px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  background: #111;
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  background: #121212;
   box-sizing: border-box;
 }
 .radio-group label {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
 }
 .radio-group input {
-  accent-color: #FBD157;
+  accent-color: var(--brand);
 }
 
 /* ── 설문 미완료 오버레이 ── */
 .overlay-message {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.9);
-  padding: 14px 24px;
-  border-radius: 8px;
-  color: #333;
-  font-weight: 700;
-  text-align: center;
-  box-sizing: border-box;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.88);
+  color: #111;
+  font-weight: 900;
+  border-radius: 14px;
+  border: 1px solid #eee;
 }
 
 /* ── 저장 버튼 ── */
 .save-button {
   display: block;
   width: 100%;
-  margin-top: 32px;
+  margin-top: 16px;
   padding: 14px 0;
-  background: #FBD157;
+  background: var(--brand);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
   color: #222;
   cursor: pointer;
-  transition: background 0.2s;
-  box-sizing: border-box;
+  transition: background 0.2s, transform .12s ease;
 }
 .save-button:hover {
-  background: #e6b845;
+  background: var(--brand-strong);
+  transform: translateY(-1px);
 }

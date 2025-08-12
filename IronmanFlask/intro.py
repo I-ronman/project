@@ -2,7 +2,7 @@
 
 from flask import Flask,send_from_directory,send_file,request,jsonify
 
-from chatgpt import ask_gpt
+from IronmanFlask.chat.chatgpt import ask_gpt
 
 app = Flask(__name__)
 

@@ -1,5 +1,7 @@
 package com.Ironman.back.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.Ironman.back.dto.SurveyDto;
@@ -29,5 +31,30 @@ public class UserInfoService {
         if (dto.getActivityLevel() != null) userInfo.setActivityLevel(dto.getActivityLevel());
         userInfoRepository.save(userInfo);
     }
+    
+ // UserInfoService.java
+    public boolean hasSurvey(String email) {
+        return userInfoRepository.existsByEmail(email); // ✅ 존재만 보면 됨
+    }
+
+    public Optional<SurveyDto> findSurveyByEmail(String email) {
+        return userInfoRepository.findByEmail(email)
+                .map(entity -> {
+                    SurveyDto dto = new SurveyDto();
+                    dto.setHeight(entity.getHeight());
+                    dto.setWeight(entity.getWeight());
+                    dto.setGoalWeight(entity.getGoalWeight());
+                    dto.setPushUp(entity.getPushUp());
+                    dto.setPlank(entity.getPlank());
+                    dto.setSquat(entity.getSquat());
+                    dto.setPliability(entity.getPliability());
+                    dto.setWorkoutFrequency(entity.getWorkoutFrequency());
+                    dto.setActivityLevel(entity.getActivityLevel());
+                    return dto;
+                });
+    }
+
+    
+    
 }
 

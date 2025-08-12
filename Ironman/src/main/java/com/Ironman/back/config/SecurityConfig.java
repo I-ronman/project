@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/oauth/**", "/css/**", "/js/**", "/images/**", "/email/**",
                     "/signup", "/login", "/login/check", "/login/user",
-                    "/api/routine/**", "/api/survey", "/api/posture/**", "/api/exercise/**"
+                    "/api/routine/**", "/api/survey/**", "/api/posture/**", "/api/exercise/**"
                 ).permitAll()
 
                 // 그 외 인증 필요

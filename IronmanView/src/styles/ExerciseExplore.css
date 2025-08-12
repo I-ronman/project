@@ -82,6 +82,7 @@
   gap: 12px;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
   border-bottom: 1px solid #1a1a1a;
+  cursor: pointer;
 }
 
 .exercise-card-exp img {
@@ -725,4 +726,26 @@
   .right-panel-exp.visible {
     transform: translateX(0); 
   }
+}
+
+.survey-hint-exp {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #cfcfcf;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.survey-hint-exp .survey-link-exp {
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  color: #8ec5ff; /* 테마에 맞게 조정 가능 */
+  font-size: 0.9rem;
+}
+.survey-hint-exp .survey-link-exp:hover {
+  opacity: .9;
 }
