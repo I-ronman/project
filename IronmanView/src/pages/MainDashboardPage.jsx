@@ -100,7 +100,6 @@ const MainDashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
-  // 설문 완료 여부에 따라 중앙(center)에 설문/빌더를 배치
   const needSurvey = useMemo(() => !user?.hasSurvey, [user]);
   const gridClass = needSurvey ? 'has-survey' : 'no-survey';
   const hasTodayRoutine = Boolean(todayRoutine?.name);
@@ -135,9 +134,9 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 오늘의 루틴 시작하기 */}
+        {/* 오늘의 루틴 시작하기 — 1순위 히어로 */}
         <motion.div
-          className={`card dark-card start-card clickable-card ${!hasTodayRoutine ? 'disabled-card' : ''}`}
+          className={`card dark-card start-card hero clickable-card ${!hasTodayRoutine ? 'disabled-card' : ''}`}
           onClick={() => hasTodayRoutine && navigate('/exercise')}
           whileHover={hasTodayRoutine ? { scale: 1.01 } : {}}
         >
@@ -152,7 +151,7 @@ const MainDashboardPage = () => {
           )}
         </motion.div>
 
-        {/* 주간 달성률 (우상단) */}
+        {/* 주간 달성률 */}
         <motion.div className="card dark-card donut-card" whileHover={{ scale: 1.01 }}>
           <div className="card-header">
             <FaCalendarAlt className="card-icon" />
@@ -160,7 +159,7 @@ const MainDashboardPage = () => {
             <span className="card-subtitle">8월 1주차</span>
           </div>
           <div className="calendar-progress" aria-label={`달성률 ${percentage}%`}>
-            <svg width="96" height="96" viewBox="0 0 120 120" role="img">
+            <svg width="120" height="120" viewBox="0 0 120 120" role="img">
               <g transform="rotate(-90,60,60)">
                 <circle cx="60" cy="60" r="44" stroke="#333" strokeWidth="12" fill="none" />
                 <circle
@@ -194,7 +193,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 중앙 설문 카드 (설문 필요 시) */}
+        {/* 설문 카드 (필요 시만) */}
         {needSurvey && (
           <motion.div
             className="card dark-card survey-card clickable-card"
@@ -211,9 +210,9 @@ const MainDashboardPage = () => {
           </motion.div>
         )}
 
-        {/* 설문이 없을 때 중앙을 채울 빌더 카드 */}
+        {/* 루틴 빌더 — 2순위 */}
         <motion.div
-          className="card dark-card builder-card clickable-card center-on-empty"
+          className="card dark-card builder-card clickable-card"
           onClick={() => navigate('/exercise')}
           whileHover={{ scale: 1.02 }}
         >
@@ -224,7 +223,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 통계 (도넛 아래로 붙여 빈공간 최소화) */}
+        {/* 통계 */}
         <motion.div
           className="card dark-card stats-card clickable-card"
           onClick={() => navigate('/statistics')}
@@ -252,7 +251,7 @@ const MainDashboardPage = () => {
           </ResponsiveContainer>
         </motion.div>
 
-        {/* 운동 기록 (넓게 배치) */}
+        {/* 운동 기록 */}
         <motion.div
           className="card dark-card records-card clickable-card"
           onClick={() => navigate('/records')}
