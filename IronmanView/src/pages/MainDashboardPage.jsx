@@ -100,14 +100,42 @@ const MainDashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
-  const needSurvey = useMemo(() => !user?.hasSurvey, [user]);
+  /**
+   * ✅ 설문 완료 여부 계산 로직을 보다 견고하게 수정
+   * - AuthContext의 다양한 필드명(hasSurvey/surveyCompleted 등) 모두 체크
+   * - 로컬스토리지 플래그(hasSurvey/surveyCompleted)도 보조 신호로 사용
+   * - useMemo로 캐시하지 않고 매 렌더마다 평가하여 최신 상태 반영
+   */
+  const hasCompletedSurveyFromContext =
+    typeof user?.hasSurvey === 'boolean'
+      ? user.hasSurvey
+      : typeof user?.surveyCompleted === 'boolean'
+      ? user.surveyCompleted
+      : typeof user?.profile?.hasSurvey === 'boolean'
+      ? user.profile.hasSurvey
+      : undefined;
+
+  let hasCompletedSurvey = false;
+  if (typeof hasCompletedSurveyFromContext === 'boolean') {
+    hasCompletedSurvey = hasCompletedSurveyFromContext;
+  } else {
+    try {
+      const lsVal =
+        localStorage.getItem('surveyCompleted') ?? localStorage.getItem('hasSurvey');
+      hasCompletedSurvey = lsVal ? JSON.parse(lsVal) : false;
+    } catch {
+      hasCompletedSurvey = false;
+    }
+  }
+
+  const needSurvey = !hasCompletedSurvey; // ← 이 값으로 카드 노출/그리드 전환
   const gridClass = needSurvey ? 'has-survey' : 'no-survey';
   const hasTodayRoutine = Boolean(todayRoutine?.name);
 
   // 통계축 최대치 보정
   const yMax = useMemo(() => {
     const maxTotal = Math.max(
-      ...statsData.map(d => (d.upper || 0) + (d.core || 0) + (d.lower || 0))
+      ...statsData.map((d) => (d.upper || 0) + (d.core || 0) + (d.lower || 0)),
     );
     const padded = Math.ceil((maxTotal + 8) / 5) * 5;
     return Math.max(25, padded);
@@ -193,7 +221,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 설문 카드 (필요 시만) */}
+        {/* 설문 카드 (설문이 필요한 경우에만 표시) */}
         {needSurvey && (
           <motion.div
             className="card dark-card survey-card clickable-card"
