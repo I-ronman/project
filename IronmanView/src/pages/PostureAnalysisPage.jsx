@@ -9,12 +9,7 @@ import TrainingCamTest from '../components/TrainingCamTest';
 import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
 import { AuthContext } from '../context/AuthContext';
-<<<<<<< HEAD
-
-=======
-import { getSpeech } from "../utils/getSpeach";
 import { AnimatePresence, motion } from "framer-motion";
->>>>>>> b389a607abf4872c8c89c8e76f86e3c260e9c548
 /* ---------------------- utils ---------------------- */
 const calcTotalTime = (routine) =>
   (routine?.exercises ?? []).reduce((acc, cur) => {
@@ -97,12 +92,6 @@ const PostureAnalysisPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routine = location.state?.routine;
-<<<<<<< HEAD
-=======
-  console.log("📋 루틴 목록:", routine?.exercises);
-
-  getSpeech();
->>>>>>> b389a607abf4872c8c89c8e76f86e3c260e9c548
   const { user } = useContext(AuthContext);
 
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
