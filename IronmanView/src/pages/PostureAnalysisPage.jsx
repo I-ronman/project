@@ -9,7 +9,8 @@ import TrainingCamTest from '../components/TrainingCamTest';
 import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
 import { AuthContext } from '../context/AuthContext';
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from 'framer-motion';
+import TrainingCam from '../components/TrainingCam';
 /* ---------------------- utils ---------------------- */
 const calcTotalTime = (routine) =>
   (routine?.exercises ?? []).reduce((acc, cur) => {
@@ -92,6 +93,8 @@ const PostureAnalysisPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routine = location.state?.routine;
+  console.log("📋 루틴 목록:", routine?.exercises);
+
   const { user } = useContext(AuthContext);
 
   const [isFeedbackOn, setIsFeedbackOn] = useState(true);
@@ -308,18 +311,18 @@ useEffect(() => {
     const calories = estimateCalories(goodCount, badCount, durationSeconds);
     const radarData = buildRadarDummy(goodCount, badCount);
     const sessionSummary = {
-      email: user.email,
-      doneReps,
-      totalReps,
-      goodCount,
-      badCount,
-      totalSeconds: durationSeconds,
-      exerciseLogs,
-      routineMeta: {
-        routineId: routine?.routineId ?? null,
-        routineName: routine?.name ?? '오늘의 루틴',
-      },
-    };
+   email: user.email,
+   doneReps: doneOverall,
+   totalReps,
+   goodCount,
+   badCount,
+   totalSeconds: durationSeconds,
+   exerciseLogs,
+   routineMeta: {
+     routineId: routine?.routineId ?? null,
+     routineName: routine?.name ?? '오늘의 루틴',
+   },
+ };
 
     // 이동 payload를 ref에 보관하고, 안내 오버레이 오픈 + 카운트다운 시작
     resultPayloadRef.current = {
@@ -490,7 +493,7 @@ useEffect(() => {
                 </div>
               </div>
 
-              <TrainingCamTest
+              <TrainingCam
                 isStarted={isStarted}
                 viewKnee={viewKnee}
                 viewLegHip={viewLegHip}
@@ -527,7 +530,7 @@ useEffect(() => {
                 </div>
               )}
             </div>
-          <div></div>
+          </div>
              <div
   className="exercise-now-next exercise-carousel"
   ref={carouselRef}
@@ -595,36 +598,35 @@ useEffect(() => {
           )}
         </div>
 
-        {/* ✅ 운동 종료 안내 오버레이 */}
- 
-          {showEndOverlay && (
-            <div className="end-overlay">
-              <div className="end-card">
-                <h3 className="end-title">운동이 종료되었습니다</h3>
-                <p className="end-desc">
-                  <strong>운동결과페이지</strong>로 이동합니다. ({countdown}초 후 자동 이동)
-                </p>
+              {/* ✅ 운동 종료 안내 오버레이 */}
+      {showEndOverlay && (
+        <div style={overlayStyles.overlay}>
+          <div style={overlayStyles.card}>
+            <h3 style={overlayStyles.title}>운동이 종료되었습니다</h3>
+            <p style={overlayStyles.desc}>
+              <strong>운동결과페이지</strong>로 이동합니다. ({countdown}초 후 자동 이동)
+            </p>
 
-                <div className="end-progress">
-                  <div className="end-progress-bar">
-                    <div
-                      className="end-progress-fill"
-                      style={{ width: `${((10 - countdown) / 10) * 100}%` }}
-                    />
-                  </div>
-                  <div className="end-count">자동 이동까지 {countdown}초</div>
-                </div>
-
-                <div className="end-actions">
-                  <button className="end-btn" onClick={goHomeNow}>홈으로 가기</button>
-                  <button className="end-btn end-btn-primary" onClick={goResultNow}>
-                    운동결과페이지로 가기
-                  </button>
-                </div>
+            <div style={overlayStyles.progressWrap}>
+              <div style={overlayStyles.progressBar}>
+                <div style={overlayStyles.progressFill(((10 - countdown) / 10) * 100)} />
               </div>
+              <div style={overlayStyles.countText}>자동 이동까지 {countdown}초</div>
             </div>
-          )}
+
+            <div style={overlayStyles.ctaRow}>
+              <button style={overlayStyles.btn} onClick={goHomeNow}>홈으로 가기</button>
+              <button
+                style={{ ...overlayStyles.btn, ...overlayStyles.primary }}
+                onClick={goResultNow}
+              >
+                운동결과페이지로 가기
+              </button>
+            </div>
+          </div>
         </div>
+      )}
+
       </PageWrapper>
     </CountContext.Provider>
   );

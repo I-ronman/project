@@ -71,7 +71,6 @@ function TrainingCam({
     try {
       wsRef.current = io('http://localhost:525', {
         path: '/socket.io',
-        transports: ['websocket'],
         autoConnect: true,
       });
     } catch (e) {
@@ -245,7 +244,7 @@ function TrainingCam({
         screenshotFormat="image/jpeg"
         videoConstraints={videoConstraints}
         onUserMedia={handleUserMedia}
-        style={{ visibility: 'hidden', position: 'absolute' }}
+        style={{ visibility: 'hidden', position: 'fixed' }}
       />
 
       {/* 분석용 캔버스 (숨김) */}

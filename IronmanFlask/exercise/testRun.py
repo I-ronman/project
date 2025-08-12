@@ -12,7 +12,7 @@ from birddog import BirddogAnalyzer
 # 운동 분석기
 analyzer_class_map = {
     '스쿼트': SquatAnalyzer,
-    'birddog':BirddogAnalyzer
+    '버드독':BirddogAnalyzer
 }
 
 analyzer_map = {}
@@ -61,7 +61,6 @@ def analyze(data):
     # 분석기 인스턴스가 없으면 새로 생성
     if key not in analyzer_map:
         analyzer_map[key] = analyzer_class_map[exercise_name]()
-    
     analyzer = analyzer_map[key]
     frame, result = analyzer.process_frame(frame,view)
     
