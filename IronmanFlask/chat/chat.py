@@ -281,23 +281,23 @@ def routine_parsing(data):
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "루틴 이름": {"type": "string"},
+                    "routineTitle": {"type": "string"},
                     "루틴내 운동": {
                         "type": "array",
                         "items": {
                             "type": "object",
                             "properties": {
-                                "운동 이름": {"type": "string"},
-                                "세트 수": {"type": "integer"},
-                                "운동 횟수": {"type": "integer"},
-                                "세트당 운동시간": {"type": "integer"},
-                                "휴식시간": {"type": "integer"}
+                                "exerciseName": {"type": "string"},
+                                "sets": {"type": "integer"},
+                                "reps": {"type": "integer"},
+                                "exerciseTime": {"type": "integer"},
+                                "breaktime": {"type": "integer"}
                             },
-                            "required": ["운동 이름", "세트 수", "운동 횟수", "세트당 운동시간", "휴식시간"]
+                            "required": ["exerciseName", "sets", "reps", "exerciseTime", "breaktime"]
                         }
                     }
                 },
-                "required": ["루틴 이름", "루틴내 운동"]
+                "required": ["routineTitle", "루틴내 운동"]
             }
         }
     ]

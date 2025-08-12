@@ -18,8 +18,6 @@ def getAngle(a,b,c):
     return int(angle_C_deg)
 
 def get_angle(a, b, c):
-    # 세점을 기준으로 두 선(Vector)를 그리고, 해당 백터사이의 각도를 구한다
-    # dot product 기반 또는 atan 기반의 수학 함수를 통해서.. 각도를 구할수 있음.
     ''' ab와 bc 선분 사이의 각도를 구함. b의 각도를 구하는 것'''
     ang = int(math.degrees(
         math.atan2(c.y - b.y, c.x - b.x) - math.atan2(a.y - b.y, a.x - b.x)
