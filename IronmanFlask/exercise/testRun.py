@@ -62,7 +62,7 @@ def analyze(data):
     if key not in analyzer_map:
         analyzer_map[key] = analyzer_class_map[exercise_name]()
     analyzer = analyzer_map[key]
-    frame, result = analyzer.process_frame(frame,view)
+    frame, result , pose = analyzer.process_frame(frame,view)
     
     if result["bad_pose"]:
         socket_io.emit("short_feed", {"img":frame,"exercise":exercise_name})

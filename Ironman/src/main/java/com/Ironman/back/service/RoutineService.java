@@ -25,7 +25,23 @@ public class RoutineService {
     private final RoutineExerciseRepository routineExerciseRepository;
     private final ExerciseRepository exerciseRepository;
 
-     // 루틴 저장 및 수정
+ // ===== 내부 유틸: exerciseId 없으면 name으로 조회 =====
+    private Long resolveExerciseId(RoutineExerciseDto exDto) {
+        if (exDto.getExerciseId() != null) {
+            return exDto.getExerciseId();
+        }
+        String name = exDto.getName();
+        if (name != null && !name.isBlank()) {
+            ExerciseEntity found = exerciseRepository.findByExerciseName(name);
+            if (found == null) {
+                throw new IllegalArgumentException("운동 이름을 인식할 수 없습니다: " + name);
+            }
+            return found.getExerciseId();
+        }
+        throw new IllegalArgumentException("운동 ID/이름이 모두 없습니다.");
+    }
+
+    // 루틴 저장 및 수정
     @Transactional
     public void saveOrUpdateFullRoutine(FullRoutineDto dto, String email) {
         RoutineEntity routine;
@@ -41,33 +57,30 @@ public class RoutineService {
 
             routine.setTitle(dto.getTitle());
             routine.setSummary(dto.getSummary());
-
-            // 루틴 정보 업데이트
             routineRepository.save(routine);
 
-            // 기존 운동 목록 삭제
+            // 기존 운동 목록 삭제 후 재등록
             routineExerciseRepository.deleteByRoutine(routine);
 
         } else {
-            //  2. 신규 저장
+            // 2. 신규 저장
             routine = RoutineEntity.builder()
                 .email(email)
                 .title(dto.getTitle())
                 .summary(dto.getSummary())
                 .build();
-
             routineRepository.save(routine);
         }
 
-        //  3. 운동 항목 재등록 (공통)
+        // 3. 운동 항목 재등록 (공통)
         List<RoutineExerciseEntity> exerciseEntities = dto.getExercises().stream()
             .map(exDto -> {
-                if (exDto.getExerciseId() == null) {
-                    throw new IllegalArgumentException("운동 ID는 필수입니다.");
-                }
+                // ★ ID 해석 (없으면 name으로 찾아서 보정)
+                Long exId = resolveExerciseId(exDto);
 
-                ExerciseEntity exercise = exerciseRepository.findById(exDto.getExerciseId())
-                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 운동 ID: " + exDto.getExerciseId()));
+                ExerciseEntity exercise = exerciseRepository.findById(exId)
+                    .orElseThrow(() ->
+                        new IllegalArgumentException("유효하지 않은 운동 ID: " + exId));
 
                 return RoutineExerciseEntity.builder()
                     .routine(routine)
@@ -110,10 +123,10 @@ public class RoutineService {
                         int sets = e.getSets() != null ? e.getSets() : 1;
                         int time = e.getExerciseTime() != null ? e.getExerciseTime() : 1;
                         int breakTime = e.getBreaktime() != null ? e.getBreaktime() : 0;
-                        
+
                         int exerciseDuration = sets * time;
                         int totalBreakTime = (sets > 1) ? (sets - 1) * breakTime : 0;
-                        
+
                         return exerciseDuration + totalBreakTime;
                     })
                     .sum();

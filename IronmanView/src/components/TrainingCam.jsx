@@ -119,6 +119,7 @@ function TrainingCam({
           const res = await axios.post("http://localhost:456/short_feed", {
             image: `data:image/jpeg;base64,${data.img}`,
             exercise: data.exercise,
+            pose:data.pose,
             tts: { voiceName: "ko-KR-Standard-A", speakingRate: 1.0, pitch: 0.0, audioEncoding: "MP3" }
           });
           if (res?.data?.audioContent) {

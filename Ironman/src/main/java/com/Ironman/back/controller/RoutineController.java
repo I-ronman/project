@@ -36,14 +36,17 @@ public class RoutineController {
     private final RoutineService routineService;
     private final RoutineRepository routineRepository;
 
-    // 루틴 + 운동 목록 저장
     @RequestMapping(value = "/save", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<?> saveOrUpdateRoutine(@RequestBody FullRoutineDto dto, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("user");
-        System.out.println("📌 루틴 저장/수정 요청 - routineId: " + dto.getRoutineId());
-
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
+        }
+
+        if (dto.getRoutineId() == null) {
+            System.out.println("🆕 루틴 신규 저장 요청");
+        } else {
+            System.out.println("✏️ 루틴 수정 요청 - routineId: " + dto.getRoutineId());
         }
 
         routineService.saveOrUpdateFullRoutine(dto, user.getEmail());

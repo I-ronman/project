@@ -12,7 +12,7 @@ import json
 from google.cloud import texttospeech
 
 db = pymysql.connect(
-	host='project-db-cgi.smhrd.com',
+   host='project-db-cgi.smhrd.com',
     port=3307,
     user='CGI_25IS_CLOUD_P3_1',
     passwd='smhrd1',
@@ -93,7 +93,8 @@ Volume (운동량): 주간 총 시간이나 총 에너지 소비량
 
 질문에 대한 답을 했을 때 약간의 공감을 해.
 루틴 구성시 가장 최우선이 돼야 하는 건 사용자의 목표야. 예를 들어 몸무게 감량이 많이 필요하면 유산소위주의 운동이 들어가야 하고
-원하는 체형이 있다면 그 체형을 달성하기 위한 루틴들로 구성해야해. 복근을 원하면 코어 운동 위주로 등 근육을 원하면 등운동 위주로.
+원하는 체형이 있다면 그 체형을 달성하기 위한 루틴들로 구성해야해. 예를 들어서 복근을 원하면 코어 운동 위주로 등 근육을 원하면 등운동 위주로.
+목표 신체 부위를 강화하기 위한 운동을 주로 루틴을 구성해. 예를 들어 어깨 운동을 하고 싶은데 어깨가 아프다고 하면 어깨에 무리가 덜 가는 어깨 운동을 추천하던가 재활운동을 추천해
 
 마지막 질문에 대한 답을 들었다면 수집한 정보들을 토대로 루틴을 짜주고 요일이 들어가서는 안돼.
 루틴 이름:
@@ -281,23 +282,23 @@ def routine_parsing(data):
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "routineTitle": {"type": "string"},
+                    "루틴 이름": {"type": "string"},
                     "루틴내 운동": {
                         "type": "array",
                         "items": {
                             "type": "object",
                             "properties": {
-                                "exerciseName": {"type": "string"},
-                                "sets": {"type": "integer"},
-                                "reps": {"type": "integer"},
-                                "exerciseTime": {"type": "integer"},
-                                "breaktime": {"type": "integer"}
+                                "운동 이름": {"type": "string"},
+                                "세트 수": {"type": "integer"},
+                                "운동 횟수": {"type": "integer"},
+                                "세트당 운동시간": {"type": "integer"},
+                                "휴식시간": {"type": "integer"}
                             },
-                            "required": ["exerciseName", "sets", "reps", "exerciseTime", "breaktime"]
+                            "required": ["운동 이름", "세트 수", "운동 횟수", "세트당 운동시간", "휴식시간"]
                         }
                     }
                 },
-                "required": ["routineTitle", "루틴내 운동"]
+                "required": ["루틴 이름", "루틴내 운동"]
             }
         }
     ]
@@ -321,7 +322,7 @@ def make_routine(question):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=list(chat_history),
-            max_tokens=2000
+            max_tokens=3000
         )
         chat_history.popleft()
         chat_history.popleft()

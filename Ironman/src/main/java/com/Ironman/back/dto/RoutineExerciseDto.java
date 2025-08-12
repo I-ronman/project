@@ -10,6 +10,7 @@ import lombok.*;
 public class RoutineExerciseDto {
 
     private Long exerciseId;
+    private String name;
     private String exerciseName;       // ✅ 운동 이름
     private String exerciseSummary;    // ✅ 운동 설명
     private String exerciseImg;

@@ -57,7 +57,6 @@ class SquatAnalyzer:
             if not self.position:
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
                 img2 = np.load("./npy/squat.npy")
-                print("frmae",frame.shape,"img2",img2.shape)
                 if frame.shape != img2.shape:
                     raise ValueError("두 이미지의 크기(폭, 높이)가 동일해야 합니다.")
                 # b, g, r, a = cv2.split(img2)
@@ -176,8 +175,8 @@ class SquatAnalyzer:
                     else:
                         self.before_leg_ang = 55
                         self.best_pose = True
-
-
+            
+                print(self.bad_pose)
                 sendImg = encoding(frame)  
             
                 return sendImg, {
@@ -185,7 +184,7 @@ class SquatAnalyzer:
                     "bad_cnt": self.bad_cnt,
                     "bad_pose":self.bad_pose,
                     "best_pose":self.best_pose
-                }
+                },lm
         
         sendImg = encoding(frame)  
         return sendImg, {
@@ -193,5 +192,5 @@ class SquatAnalyzer:
                 "bad_cnt": self.bad_cnt,
                 "bad_pose":self.bad_pose,
                 "best_pose":self.best_pose
-            }
+            },0
             
