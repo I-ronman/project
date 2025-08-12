@@ -10,6 +10,7 @@ import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
 import { AuthContext } from '../context/AuthContext';
 import { AnimatePresence, motion } from 'framer-motion';
+import TrainingCam from '../components/TrainingCam';
 /* ---------------------- utils ---------------------- */
 const formatTime = (sec) => {
   const m = Math.floor((sec ?? 0) / 60);
@@ -99,7 +100,6 @@ const PostureAnalysisPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const routine = location.state?.routine;
-  console.log("📋 루틴 목록:", routine?.exercises);
 
   const { user } = useContext(AuthContext);
 
@@ -554,7 +554,7 @@ useEffect(() => {
       <div className="video-container">
      
         <div className="video-wrapper">
-          <TrainingCamTest
+          <TrainingCam
             isStarted={isStarted}
             viewKnee={viewKnee}
             viewLegHip={viewLegHip}

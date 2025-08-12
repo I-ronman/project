@@ -198,7 +198,7 @@ def chat_short(img, question,exercise):
         messages=[
             {
                 "role": "system",
-                "content": f"당신은 스포츠센터 헬스케어 트레이너 입니다. {exercise}의 자세를 보고 문제점이 있다면 짧게 15글자 이내로 어디가 어떻고 어떻게 해야할지 피드백해줘  "
+                "content": f"당신은 스포츠센터 헬스케어 트레이너 입니다. {exercise}의 자세를 보고 문제점이 있다면 짧게 15자 이내로 어디가 어떻고 어떻게 해야할지 피드백해줘  "
             },
             {
                 "role": "user",
@@ -277,7 +277,7 @@ def routine_parsing(data):
     functions = [
         {
             "name": "make_routine",
-            "description": "루틴 정보를 생성합니다.",
+            "description": "루틴 정보를 생성합니다. 세트당 운동시간과 휴식시간은 초 단위로 생성하세요",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -290,8 +290,8 @@ def routine_parsing(data):
                                 "운동 이름": {"type": "string"},
                                 "세트 수": {"type": "integer"},
                                 "운동 횟수": {"type": "integer"},
-                                "세트당 운동시간": {"type": "string"},
-                                "휴식시간": {"type": "string"}
+                                "세트당 운동시간": {"type": "integer"},
+                                "휴식시간": {"type": "integer"}
                             },
                             "required": ["운동 이름", "세트 수", "운동 횟수", "세트당 운동시간", "휴식시간"]
                         }
@@ -331,6 +331,7 @@ def make_routine(question):
             "content": chat_prompt
             })
         yes_or_no = check_routine(response.choices[0].message.content)
+        print(yes_or_no)
         if yes_or_no == "yes":
             data = routine_parsing(response.choices[0].message.content)
             print(data)

@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 from calcData import get_angle,draw_angle_arc
 import socketio
-from draw import draw_squat,overlay_with_alpha
+from draw import draw_squat
 from encoding import encoding,decoding
 from base_line import base_line
 
@@ -11,14 +11,14 @@ from base_line import base_line
 
 def center_position(point):
     
-    if np.any(point < 500) or np.any(point > 550):
+    if np.any(point < 510) or np.any(point > 540):
         return False
     return True
 
 class SquatAnalyzer:
     def __init__(self):
         self.send_turn = 0
-        self.turn = 0
+        self.turn = 1
         self.good_cnt = 0
         self.bad_cnt = 0
         self.leg_upperbody_parallel = True
@@ -52,9 +52,12 @@ class SquatAnalyzer:
         
         if result.pose_landmarks:
             lm = result.pose_landmarks.landmark
+            points = (np.array([lm[28].x,lm[27].x]) * w).astype(int)
+            self.position = center_position(points)
             if not self.position:
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
                 img2 = np.load("./npy/squat.npy")
+                print("frmae",frame.shape,"img2",img2.shape)
                 if frame.shape != img2.shape:
                     raise ValueError("두 이미지의 크기(폭, 높이)가 동일해야 합니다.")
                 # b, g, r, a = cv2.split(img2)
@@ -66,9 +69,7 @@ class SquatAnalyzer:
                 # img2 = cv2.merge([b, g, r, a])
                 # frame = overlay_with_alpha(frame,img2,1)
                 frame = cv2.addWeighted(frame,0.9,img2,0.5,0)
-                points = (np.array([lm[12].x,lm[11].x,lm[24].x,lm[23].x,lm[26].x,lm[25].x,lm[28].x,lm[27].x]) * w).astype(int)
-
-                self.position = center_position(points)
+                
             else:    
                 # 상체 정강이 평행한지
                 self.l_leg_ang = get_angle(lm[27],lm[25],lm[23])
@@ -82,7 +83,8 @@ class SquatAnalyzer:
                     self.view_leg_hip_angle = True
                     if self.diff_angle >= self.before_diff_angle:
                         self.before_diff_angle = self.diff_angle    
-                    else:
+                    elif self.send_turn != self.turn:
+                        self.send_turn = self.turn
                         self.bad_pose = True
                     # print(bad_pose)
                 # data = {"왼 무릎":l_leg_ang,"왼쪽엉덩이":l_hip_ang}
@@ -94,8 +96,9 @@ class SquatAnalyzer:
                     self.correct_knee = False
                     if knee_over_foot >= self.before_knee_over:
                         self.before_knee_over = knee_over_foot
-                    else:
+                    elif self.send_turn != self.turn:
                         self.before_knee_over = 30
+                        self.send_turn = self.turn
                         self.bad_pose = True
                         # print(bad_pose)
                     view["knee"] = True
@@ -126,8 +129,9 @@ class SquatAnalyzer:
                     # view_upper_body_slope = True
                     if self.before_upper_body_ang <= self.upper_body_angle:
                         self.before_upper_body_ang = self.upper_body_angle
-                    else:
+                    elif self.send_turn != self.turn:
                         self.before_upper_body_ang = 35
+                        self.send_turn = self.turn
                         self.bad_pose = True
                         # print(bad_pose)
                 if view["upper_body_slope"]:
@@ -137,7 +141,7 @@ class SquatAnalyzer:
                 # print(f"diff_angle: {diff_angle} 무릎각도 : {l_leg_ang} 엉덩이 각도: {l_hip_ang} 굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot}",f"upper_body : {upper_body_angle}")
                 #data,getDistance(lm[23], lm[25]),sit,stand,f"굿카운트 : {good_cnt} 배드카운트:{bad_cnt}",f"knee_over_foot : {knee_over_foot} hip_back : {hip_back}
                 
-                if self.l_leg_ang <= 78 and self.l_hip_ang <= 75 : self.sit = True
+                if self.l_leg_ang <= 90 and self.l_hip_ang <= 90 : self.sit = True
 
                 if self.sit and self.l_leg_ang >= 165 and self.l_hip_ang >= 165: 
                     self.stand = True
@@ -148,6 +152,7 @@ class SquatAnalyzer:
                     self.stand = False
                     self.bad_pose = False
                     self.best_pose = False
+                    self.turn += 1
                     # print(f"배드포즈 초기화")
                     if not self.correct_knee or not self.proper_upper_body_tilt or not self.leg_upperbody_parallel or not self.center_of_gravity:
                         # print(self.correct_knee,self.proper_upper_body_tilt,self.leg_upperbody_parallel,self.center_of_gravity)
