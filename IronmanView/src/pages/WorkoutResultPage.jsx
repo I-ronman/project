@@ -163,11 +163,11 @@ export default function WorkoutResultPage() {
               <span>{totalCount}회</span>
             </div>
             <div className="info-box">
-              <span>성공 횟수</span>
+              <span>좋은 자세</span>
               <span>{goodCount}회</span>
             </div>
             <div className="info-box mistakes">
-              <span>틀린 횟수</span>
+              <span>나쁜 자세</span>
               <span>{badCount}회</span>
             </div>
             <div className="info-box">

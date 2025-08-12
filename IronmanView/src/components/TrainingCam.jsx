@@ -25,6 +25,7 @@ function TrainingCam({
   const [imgSrc, setImgSrc] = useState("");
 
   // 카운트/리포트 컨텍스트
+  // 카운트/리포트 컨텍스트
   const {
     setGoodCount,
     setBadCount,

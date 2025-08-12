@@ -10,8 +10,14 @@ import PageWrapper from '../layouts/PageWrapper';
 import { CountContext } from '../context/CountContext';
 import { AuthContext } from '../context/AuthContext';
 import { AnimatePresence, motion } from 'framer-motion';
-import TrainingCam from '../components/TrainingCam';
 /* ---------------------- utils ---------------------- */
+const formatTime = (sec) => {
+  const m = Math.floor((sec ?? 0) / 60);
+  const s = (sec ?? 0) % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+};
+
+
 const calcTotalTime = (routine) =>
   (routine?.exercises ?? []).reduce((acc, cur) => {
     const ex = (cur.exerciseTime ?? 0) * (cur.sets ?? 1);
@@ -408,226 +414,249 @@ useEffect(() => {
       setCapturedList
     }}>
       <PageWrapper>
-        <div className="posture-container">
-          <div className="posture-left">
-            <header className="posture-header">
-              <img className= 'logo' src='./images/ironman_logo4.png' alt="로고" onClick={()=>navigate('/main')} style={{cursor: 'pointer'}}></img>
-              <h2>운동 및 자세분석</h2>
-              <div className="settings-icon" onClick={() => navigate('/settings')} style={{cursor: 'pointer'}}>⚙️</div>
-            </header>
+  <div className="posture-container">
+    {/* 좌측 패널 */}
+    <div className="posture-left">
+      <header className="posture-header">
+        <img className="logo" src="./images/ironman_logo4.png" alt="로고"
+             onClick={() => navigate('/main')} style={{ cursor: 'pointer' }} />
+        <h2>운동 및 자세분석</h2>
+        <div className="settings-icon" onClick={() => navigate('/settings')} style={{ cursor: 'pointer' }}>⚙️</div>
+      </header>
 
-            <div className="posture-stats">
-              <StatBox label="총 횟수" count={goodCount + badCount} />
-              <StatBox label="좋은 자세" count={goodCount} />
-              <StatBox label="나쁜 자세" count={badCount} />
-            </div>
+      <div className="posture-stats">
+        <StatBox label="총 횟수" count={goodCount + badCount} />
+        <StatBox label="좋은 자세" count={goodCount} />
+        <StatBox label="나쁜 자세" count={badCount} />
+      </div>
 
-            <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
-            {isStarted && (
-              <div className="realtime-pills-card">
-                <div className="realtime-row">
-                  {poseHistory.map((p, i) => (
-                    <span key={p.id ?? i} className={`pill-seg ${p.type}`} />
-                  ))}
-                </div>
-              </div>
-            )}
+      <FeedbackToggle isOn={isFeedbackOn} onToggle={toggleFeedback} />
 
-            <div className="exercise-buttons">
-              {exerciseList.map((exercise, idx) => (
-                <button
-                  key={idx}
-                  className={`exercise-btn ${selectedVideo === exercise.videoUrl ? 'active' : ''}`}
-                  onClick={() => setSelectedVideo(exercise.videoUrl)}
-                >
-                  {exercise.name}
-                </button>
-              ))}
-            </div>
-
-            <div className="posture-stats">
-              <button className="stat-box" onClick={() => setViewKnee(v => !v)} style={viewKnee ? { backgroundColor: 'gray' } : undefined}>무릎 발끝 수직선 체크</button>
-              <button className="stat-box" onClick={() => setViewLegHip(v => !v)} style={viewLegHip ? { backgroundColor: 'gray' } : undefined}>무릎 허리 각도보기</button>
-              <button className="stat-box" onClick={() => setViewShoulder(v => !v)} style={viewShoulder ? { backgroundColor: 'gray' } : undefined}>어깨 무게 중심</button>
-              <button className="stat-box" onClick={() => setViewUpper(v => !v)} style={viewUpper ? { backgroundColor: 'gray' } : undefined}>상체 기울기</button>
-            </div>
-            {selectedCapture && (
-              <div className="capture-preview">
-                <h4>📷 선택한 캡처 미리보기</h4>
-                <img src={selectedCapture} alt="선택된 캡처" className="preview-img" />
-                <button onClick={() => setSelectedCapture(null)}>닫기</button>
-              </div>
-            )}
-
-            <div className="capture-thumbnails">
-              {(capturedList ?? []).map((entry, idx) => (
-                <img
-                  key={idx}
-                  src={entry.img}
-                  alt={`캡처 ${idx + 1}`}
-                  className="thumbnail-img"
-                  onClick={() => setSelectedCapture(entry.img)}
-                />
-              ))}
-            </div>
+      {isStarted && (
+        <div className="realtime-pills-card">
+          <div className="realtime-row">
+            {poseHistory.map((p, i) => (
+              <span key={p.id ?? i} className={`pill-seg ${p.type}`} />
+            ))}
           </div>
+        </div>
+      )}
 
-          <div className="posture-right">
-            <div className="video-container">
-              <div className="video-status-bar-modern">
-              <div className="progress-container">
-                <div className="progress-label">
-                  <span>📊 진행률</span>
-                  <span className="progress-percent">
+      <div className="exercise-buttons">
+        {exerciseList.map((exercise, idx) => (
+          <button
+            key={idx}
+            className={`exercise-btn ${selectedVideo === exercise.videoUrl ? 'active' : ''}`}
+            onClick={() => setSelectedVideo(exercise.videoUrl)}
+          >
+            {exercise.name}
+          </button>
+        ))}
+      </div>
+
+      <div className="posture-stats">
+        <button className="stat-box" onClick={() => setViewKnee(v => !v)} style={viewKnee ? { backgroundColor: 'gray' } : undefined}>무릎 발끝 수직선 체크</button>
+        <button className="stat-box" onClick={() => setViewLegHip(v => !v)} style={viewLegHip ? { backgroundColor: 'gray' } : undefined}>무릎 허리 각도보기</button>
+        <button className="stat-box" onClick={() => setViewShoulder(v => !v)} style={viewShoulder ? { backgroundColor: 'gray' } : undefined}>어깨 무게 중심</button>
+        <button className="stat-box" onClick={() => setViewUpper(v => !v)} style={viewUpper ? { backgroundColor: 'gray' } : undefined}>상체 기울기</button>
+      </div>
+
+      {selectedCapture && (
+        <div className="capture-preview">
+          <h4>📷 선택한 캡처 미리보기</h4>
+          <img src={selectedCapture} alt="선택된 캡처" className="preview-img" />
+          <button onClick={() => setSelectedCapture(null)}>닫기</button>
+        </div>
+      )}
+
+      <div className="capture-thumbnails">
+        {(capturedList ?? []).map((entry, idx) => (
+          <img
+            key={idx}
+            src={entry.img}
+            alt={`캡처 ${idx + 1}`}
+            className="thumbnail-img"
+            onClick={() => setSelectedCapture(entry.img)}
+          />
+        ))}
+      </div>
+    </div>
+    {/* ↑ 여기까지가 좌측, 닫지 마시고 바로 우측 패널 이어서 렌더링 */}
+
+    {/* 우측(영상) 패널 */}
+    <div className="posture-right">
+
+               {/* 운동 캐러셀 */}
+        <div
+          className="exercise-now-next exercise-carousel"
+          ref={carouselRef}
+          onWheel={(e) => {
+            const el = e.currentTarget;
+            el.scrollLeft += e.deltaY;
+          }}
+        >
+          <div className="carousel-track">
+            {history.map((ex) => (
+              <motion.div
+                key={`hist-${ex.exerciseId}`}
+                className="card"
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="label">지난 운동</div>
+                <div className="title">{ex.exerciseName ?? ex.name}</div>
+                <div className="info">
+                  {(ex.sets ?? 0)}세트 × {(ex.reps ?? 0)}회
+                </div>
+              </motion.div>
+            ))}
+
+            <AnimatePresence mode="wait">
+              {currentExercise && (
+                <motion.div
+                  key={`current-${currentExercise.exerciseId}`}
+                  className="card active"
+                  initial={{ x: 80, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -80, opacity: 0 }}
+                  transition={{ type: 'tween', duration: 0.28 }}
+                >
+                  <div className="label">지금 운동</div>
+                  <div className="title">
+                    {currentExercise.exerciseName ?? currentExercise.name}
+                  </div>
+                  <div className="info">
+                    {(currentExercise.sets ?? 0)}세트 × {(currentExercise.reps ?? 0)}회
+                    {currentTarget ? ` · 진행 ${doneInExercise}/${currentTarget}` : ''}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <motion.div
+              key={`next-${nextExercise?.exerciseId ?? 'none'}`}
+              className="card"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <div className="label">다음 운동</div>
+              <div className="title">
+                {nextExercise ? (nextExercise.exerciseName ?? nextExercise.name) : '모든 운동 완료'}
+              </div>
+              <div className="info">
+                {nextExercise ? `${nextExercise.sets ?? 0}세트 × ${nextExercise.reps ?? 0}회` : ''}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+      <div className="video-container">
+     
+        <div className="video-wrapper">
+          <TrainingCamTest
+            isStarted={isStarted}
+            viewKnee={viewKnee}
+            viewLegHip={viewLegHip}
+            onVideoEnd={handleVideoEnd}
+            currentExercise={currentExercise}
+            onGoodPosture={onGoodPosture}
+            onBadPosture={onBadPosture}
+            onRepCounted={onRepCounted}
+            viewUpper={viewUpper}
+            viewShoulder={viewShoulder}
+          />
+
+          {/* 영상 상단 HUD */}
+          <div className="video-hud">
+            <div className="hud-row">
+
+              <div className="progress-mini">
+                <div className="mini-head">
+                  <span>📊 진행률 ⏱ 남은 시간 </span>
+                  <strong>{formatTime(remainingTime)}</strong>
+                  <span className="percent">
                     {Math.round(((doneOverall || 0) / (totalReps || 1)) * 100)}%
                   </span>
                 </div>
-                <div className="progress-bar">
+                <div className="mini-bar">
                   <div
-                    className="progress-fill"
+                    className="mini-fill"
                     style={{ width: `${((doneOverall || 0) / (totalReps || 1)) * 100}%` }}
-                  ></div>
+                  />
                 </div>
-                <div className="progress-text">
+                <div className="mini-text">
                   {doneOverall} / {totalReps} 회
                 </div>
               </div>
-
-              <TrainingCam
-                isStarted={isStarted}
-                viewKnee={viewKnee}
-                viewLegHip={viewLegHip}
-                onVideoEnd={handleVideoEnd}
-                currentExercise={currentExercise}
-                onGoodPosture={onGoodPosture}
-                onBadPosture={onBadPosture}
-                onRepCounted={onRepCounted}
-                viewUpper = {viewUpper}
-                viewShoulder = {viewShoulder}
-              />
-
-              {!isStarted && (
-                <div className="start-overlay">
-                  <button
-                    className="start-btn"
-                    onClick={() => {
-                      console.log("✅ 시작 버튼 클릭됨");
-                      if (routine) setRemainingTime(calcTotalTime(routine));
-                      setDoneOverall(0);
-                      setDoneInExercise(0);
-                      setCurrentExerciseIndex(0);
-                      setGoodCount(0);
-                      setBadCount(0);
-                      setExerciseResults({});
-                      setStartAt(Date.now());
-                      hasSavedRef.current = false;
-                      
-                      setIsStarted(true);
-                    }}
-                  >
-                    시작
-                  </button>
-                </div>
-              )}
             </div>
           </div>
-             <div
-  className="exercise-now-next exercise-carousel"
-  ref={carouselRef}
-  onWheel={(e) => { const el = e.currentTarget; el.scrollLeft += e.deltaY; }}
->
-  <div className="carousel-track">
-    {history.map((ex) => (
-      <motion.div
-        key={`hist-${ex.exerciseId}`}
-        className="card"
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0 }}
-      >
-        <div className="label">지난 운동</div>
-        <div className="title">{ex.exerciseName ?? ex.name}</div>
-        <div className="info">{(ex.sets ?? 0)}세트 × {(ex.reps ?? 0)}회</div>
-      </motion.div>
-    ))}
 
-    <AnimatePresence mode="wait">
-      {currentExercise && (
-        <motion.div
-          key={`current-${currentExercise.exerciseId}`}
-          className="card active"
-          initial={{ x: 80, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -80, opacity: 0 }}     
-          transition={{ type: "tween", duration: 0.28 }}
-        >
-          <div className="label">지금 운동</div>
-          <div className="title">{currentExercise.exerciseName ?? currentExercise.name}</div>
-          <div className="info">
-            {(currentExercise.sets ?? 0)}세트 × {(currentExercise.reps ?? 0)}회
-            {currentTarget ? ` · 진행 ${doneInExercise}/${currentTarget}` : ""}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-
-    {/* 다음 운동 */}
-    <motion.div
-      key={`next-${nextExercise?.exerciseId ?? 'none'}`}
-      className="card"
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-    >
-      <div className="label">다음 운동</div>
-      <div className="title">{nextExercise ? (nextExercise.exerciseName ?? nextExercise.name) : "모든 운동 완료"}</div>
-      <div className="info">
-        {nextExercise ? `${nextExercise.sets ?? 0}세트 × ${nextExercise.reps ?? 0}회` : ""}
-      </div>
-    </motion.div>
-  </div>
-</div>
-
-          </div>
-
-          {isStarted && (
-            <div className="live-dots">
-              {liveDots.map((d, i) => (
-                <span key={d.id ?? i} className={`dot ${d.type}`} />
-              ))}
+          {/* 시작 오버레이(영상 위 중앙) */}
+          {!isStarted && (
+            <div className="start-overlay in-wrapper">
+              <button
+                className="start-btn"
+                onClick={() => {
+                  if (routine) setRemainingTime(calcTotalTime(routine));
+                  setDoneOverall(0);
+                  setDoneInExercise(0);
+                  setCurrentExerciseIndex(0);
+                  setGoodCount(0);
+                  setBadCount(0);
+                  setExerciseResults({});
+                  setStartAt(Date.now());
+                  hasSavedRef.current = false;
+                  setIsStarted(true);
+                }}
+              >
+                시작
+              </button>
             </div>
           )}
         </div>
 
-              {/* ✅ 운동 종료 안내 오버레이 */}
-      {showEndOverlay && (
-        <div style={overlayStyles.overlay}>
-          <div style={overlayStyles.card}>
-            <h3 style={overlayStyles.title}>운동이 종료되었습니다</h3>
-            <p style={overlayStyles.desc}>
-              <strong>운동결과페이지</strong>로 이동합니다. ({countdown}초 후 자동 이동)
-            </p>
+      </div>
+    </div>
+    {/* ↑ 여기서 posture-container 를 닫습니다 */}
+  </div>
 
-            <div style={overlayStyles.progressWrap}>
-              <div style={overlayStyles.progressBar}>
-                <div style={overlayStyles.progressFill(((10 - countdown) / 10) * 100)} />
-              </div>
-              <div style={overlayStyles.countText}>자동 이동까지 {countdown}초</div>
-            </div>
+  {/* 라이브 점 표시 */}
+  {isStarted && (
+    <div className="live-dots">
+      {liveDots.map((d, i) => (
+        <span key={d.id ?? i} className={`dot ${d.type}`} />
+      ))}
+    </div>
+  )}
 
-            <div style={overlayStyles.ctaRow}>
-              <button style={overlayStyles.btn} onClick={goHomeNow}>홈으로 가기</button>
-              <button
-                style={{ ...overlayStyles.btn, ...overlayStyles.primary }}
-                onClick={goResultNow}
-              >
-                운동결과페이지로 가기
-              </button>
-            </div>
+  {/* 종료 안내 오버레이 */}
+  {showEndOverlay && (
+    <div style={overlayStyles.overlay}>
+      <div style={overlayStyles.card}>
+        <h3 style={overlayStyles.title}>운동이 종료되었습니다</h3>
+        <p style={overlayStyles.desc}>
+          <strong>운동결과페이지</strong>로 이동합니다. ({countdown}초 후 자동 이동)
+        </p>
+
+        <div style={overlayStyles.progressWrap}>
+          <div style={overlayStyles.progressBar}>
+            <div style={overlayStyles.progressFill(((10 - countdown) / 10) * 100)} />
           </div>
+          <div style={overlayStyles.countText}>자동 이동까지 {countdown}초</div>
         </div>
-      )}
 
-      </PageWrapper>
+        <div style={overlayStyles.ctaRow}>
+          <button style={overlayStyles.btn} onClick={goHomeNow}>홈으로 가기</button>
+          <button style={{ ...overlayStyles.btn, ...overlayStyles.primary }} onClick={goResultNow}>
+            운동결과페이지로 가기
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+</PageWrapper>
+
     </CountContext.Provider>
   );
   
