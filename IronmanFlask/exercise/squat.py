@@ -3,7 +3,7 @@ import numpy as np
 import mediapipe as mp
 from calcData import get_angle,draw_angle_arc
 import socketio
-from draw import draw_squat,overlay_with_alpha
+from draw import draw_squat
 from encoding import encoding,decoding
 from base_line import base_line
 
@@ -54,19 +54,10 @@ class SquatAnalyzer:
             lm = result.pose_landmarks.landmark
             if not self.position:
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
-                img2 = cv2.imread("./img/left_side_standing.png",cv2.IMREAD_UNCHANGED)
+                img2 = np.load("./npy/squat.npy")
                 if frame.shape != img2.shape:
                     raise ValueError("두 이미지의 크기(폭, 높이)가 동일해야 합니다.")
-                b, g, r, a = cv2.split(img2)
-
-                # 투명도 비율 설정 (예: 50% = 0.5)
-                a = np.clip(a.astype(np.float32) * 0.5, 0, 255).astype(np.uint8)
-
-                # 다시 합치기
-                img2 = cv2.merge([b, g, r, a])
-                frame = overlay_with_alpha(frame,img2,1)
-                cv2.line(frame,(500,0),(500,680),(0,0,255),2)
-                cv2.line(frame,(550,0),(550,680),(0,0,255),2)
+                frame = cv2.addWeighted(frame,0.9,img2,0.5,0)
                 points = (np.array([lm[12].x,lm[11].x,lm[24].x,lm[23].x,lm[26].x,lm[25].x,lm[28].x,lm[27].x]) * w).astype(int)
 
                 self.position = center_position(points)

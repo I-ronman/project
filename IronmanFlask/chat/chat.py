@@ -198,7 +198,7 @@ def chat_short(img, question,exercise):
         messages=[
             {
                 "role": "system",
-                "content": f"당신은 스포츠센터 헬스케어 트레이너 입니다. {exercise}의 자세를 보고 문제점이 있다면 짧게 한마디정도로 어디가 어떻고 어떻게 해야할지 피드백해줘  "
+                "content": f"당신은 스포츠센터 헬스케어 트레이너 입니다. {exercise}의 자세를 보고 문제점이 있다면 짧게 15글자 이내로 어디가 어떻고 어떻게 해야할지 피드백해줘  "
             },
             {
                 "role": "user",
