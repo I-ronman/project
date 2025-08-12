@@ -100,15 +100,42 @@ const MainDashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
-  // 설문 완료 여부에 따라 중앙(center)에 설문/빌더를 배치
-  const needSurvey = useMemo(() => !user?.hasSurvey, [user]);
+  /**
+   * ✅ 설문 완료 여부 계산 로직을 보다 견고하게 수정
+   * - AuthContext의 다양한 필드명(hasSurvey/surveyCompleted 등) 모두 체크
+   * - 로컬스토리지 플래그(hasSurvey/surveyCompleted)도 보조 신호로 사용
+   * - useMemo로 캐시하지 않고 매 렌더마다 평가하여 최신 상태 반영
+   */
+  const hasCompletedSurveyFromContext =
+    typeof user?.hasSurvey === 'boolean'
+      ? user.hasSurvey
+      : typeof user?.surveyCompleted === 'boolean'
+      ? user.surveyCompleted
+      : typeof user?.profile?.hasSurvey === 'boolean'
+      ? user.profile.hasSurvey
+      : undefined;
+
+  let hasCompletedSurvey = false;
+  if (typeof hasCompletedSurveyFromContext === 'boolean') {
+    hasCompletedSurvey = hasCompletedSurveyFromContext;
+  } else {
+    try {
+      const lsVal =
+        localStorage.getItem('surveyCompleted') ?? localStorage.getItem('hasSurvey');
+      hasCompletedSurvey = lsVal ? JSON.parse(lsVal) : false;
+    } catch {
+      hasCompletedSurvey = false;
+    }
+  }
+
+  const needSurvey = !hasCompletedSurvey; // ← 이 값으로 카드 노출/그리드 전환
   const gridClass = needSurvey ? 'has-survey' : 'no-survey';
   const hasTodayRoutine = Boolean(todayRoutine?.name);
 
   // 통계축 최대치 보정
   const yMax = useMemo(() => {
     const maxTotal = Math.max(
-      ...statsData.map(d => (d.upper || 0) + (d.core || 0) + (d.lower || 0))
+      ...statsData.map((d) => (d.upper || 0) + (d.core || 0) + (d.lower || 0)),
     );
     const padded = Math.ceil((maxTotal + 8) / 5) * 5;
     return Math.max(25, padded);
@@ -135,9 +162,9 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 오늘의 루틴 시작하기 */}
+        {/* 오늘의 루틴 시작하기 — 1순위 히어로 */}
         <motion.div
-          className={`card dark-card start-card clickable-card ${!hasTodayRoutine ? 'disabled-card' : ''}`}
+          className={`card dark-card start-card hero clickable-card ${!hasTodayRoutine ? 'disabled-card' : ''}`}
           onClick={() => hasTodayRoutine && navigate('/exercise')}
           whileHover={hasTodayRoutine ? { scale: 1.01 } : {}}
         >
@@ -152,7 +179,7 @@ const MainDashboardPage = () => {
           )}
         </motion.div>
 
-        {/* 주간 달성률 (우상단) */}
+        {/* 주간 달성률 */}
         <motion.div className="card dark-card donut-card" whileHover={{ scale: 1.01 }}>
           <div className="card-header">
             <FaCalendarAlt className="card-icon" />
@@ -160,7 +187,7 @@ const MainDashboardPage = () => {
             <span className="card-subtitle">8월 1주차</span>
           </div>
           <div className="calendar-progress" aria-label={`달성률 ${percentage}%`}>
-            <svg width="96" height="96" viewBox="0 0 120 120" role="img">
+            <svg width="120" height="120" viewBox="0 0 120 120" role="img">
               <g transform="rotate(-90,60,60)">
                 <circle cx="60" cy="60" r="44" stroke="#333" strokeWidth="12" fill="none" />
                 <circle
@@ -194,7 +221,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 중앙 설문 카드 (설문 필요 시) */}
+        {/* 설문 카드 (설문이 필요한 경우에만 표시) */}
         {needSurvey && (
           <motion.div
             className="card dark-card survey-card clickable-card"
@@ -211,9 +238,9 @@ const MainDashboardPage = () => {
           </motion.div>
         )}
 
-        {/* 설문이 없을 때 중앙을 채울 빌더 카드 */}
+        {/* 루틴 빌더 — 2순위 */}
         <motion.div
-          className="card dark-card builder-card clickable-card center-on-empty"
+          className="card dark-card builder-card clickable-card"
           onClick={() => navigate('/exercise')}
           whileHover={{ scale: 1.02 }}
         >
@@ -224,7 +251,7 @@ const MainDashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* 통계 (도넛 아래로 붙여 빈공간 최소화) */}
+        {/* 통계 */}
         <motion.div
           className="card dark-card stats-card clickable-card"
           onClick={() => navigate('/statistics')}
@@ -252,7 +279,7 @@ const MainDashboardPage = () => {
           </ResponsiveContainer>
         </motion.div>
 
-        {/* 운동 기록 (넓게 배치) */}
+        {/* 운동 기록 */}
         <motion.div
           className="card dark-card records-card clickable-card"
           onClick={() => navigate('/records')}
